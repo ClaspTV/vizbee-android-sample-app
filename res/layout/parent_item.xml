@@ -1,0 +1,97 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFFFF"
+    android:padding="3dip" >
+
+    <ImageView
+        android:id="@+id/device_icon"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="false"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="3dp"
+        android:adjustViewBounds="true"
+        android:baselineAlignBottom="false"
+        android:src="@drawable/unkown_device" />
+
+    <LinearLayout
+        android:id="@+id/rightblock"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="false"
+        android:layout_centerInParent="false"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_toRightOf="@+id/device_icon"
+        android:orientation="vertical" >
+
+      <TextView
+            android:id="@+id/parent_friendly_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/parent_model_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/parent_manufacturer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:textSize="12sp" />
+        
+        <TextView
+            android:id="@+id/parent_ip"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:textSize="12sp" />
+        
+        </LinearLayout>
+        
+        <ImageView
+        android:id="@+id/check"
+        android:layout_width="25dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="false"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginRight="5dp"
+        android:adjustViewBounds="true"
+        android:baselineAlignBottom="false"
+        android:src="@drawable/greencheck" />
+        
+        <!-- 
+         <TextView
+            android:id="@+id/parent_ip"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/parent_udn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:textSize="12sp" />
+            
+            -->
+            
+    
+
+</RelativeLayout>
