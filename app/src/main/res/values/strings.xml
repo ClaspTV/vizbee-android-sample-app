@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Vizbee Demo</string>
+    <!-- Update with VizbeeAppID assigned to your app -->
+    <string name="vizbee_app_id">vzb2000001</string>
+    <string name="watch_now">Watch Now</string>
+    <string name="hero_image">Hero Image</string>
+</resources>

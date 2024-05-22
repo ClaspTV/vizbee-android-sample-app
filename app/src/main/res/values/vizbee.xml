@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- =============================================================== -->
+    <!-- Basic Style Customization (Required)                            -->
+    <!-- =============================================================== -->
+
+    <!-- RemoteActivity theme -->
+    <style name="Theme.Vizbee.Custom" parent="Theme.Vizbee.Futura">
+
+        <!-- Your app launcher icon -->
+        <item name="vzb_appIcon">@mipmap/ic_launcher</item>
+
+        <!-- Your app's theme colors -->
+        <!--
+          1. Primary Color - this is typically the background color used on most of your app screens
+          2. Secondary Color - this is the highlight or accent color used on buttons etc. in your app screens
+          3. Tertiary Color - this is the text color used in most of your app screens
+          Update the colors below to suit your app.
+        -->
+        <item name="vzb_primaryColor">@color/colorPrimary</item>
+        <item name="vzb_secondaryColor">@color/colorAccent</item>
+        <item name="vzb_tertiaryColor">@color/textColorPrimary</item>
+
+    </style>
+
+</resources>

@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.MainActivity">
+
+    <item
+        android:id="@+id/clasptv_remote_menu_item"
+        app:actionLayout="@layout/menu_item_layout_cast_button"
+        app:showAsAction="always"
+        android:title="Cast Button" />
+
+</menu>
