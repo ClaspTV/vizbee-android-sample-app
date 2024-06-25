@@ -10,6 +10,8 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import tv.vizbee.api.RemoteButton
 import tv.vizbee.api.VizbeeContext
+import tv.vizbee.api.session.SessionState
+import tv.vizbee.api.session.SessionStateListener
 import tv.vizbee.api.session.VizbeeSessionManager
 import tv.vizbee.demo.R
 import tv.vizbee.demo.model.VideoItem
@@ -25,28 +27,31 @@ class MoviePlayerActivity : Activity() {
     private var mVideoItem: VideoItem? = null
 
     private var sessionManager: VizbeeSessionManager? = null
+    private val sessionStateListener = SessionStateListener { newState ->
+        if (SessionState.CONNECTED == newState) {
+            finish()
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_video_player)
         actionBar?.hide()
-
-        mExoPlayerView = findViewById(R.id.exoPlayerView)
-
         sessionManager = VizbeeContext.getInstance().sessionManager
 
-        /*val castButton = findViewById<RemoteButton>(R.id.player_remote_button)
-        castButton.setDrawableTintColor("#0000FF");*/
-
-       /* castButton?.let { remoteButton ->
+        mExoPlayerView = findViewById(R.id.exoPlayerView)
+        val castButton = findViewById<RemoteButton>(R.id.player_remote_button)
+        castButton.setDrawableTintColor("#0000FF");
+        castButton?.let { remoteButton ->
             remoteButton.setOnClickListener {
                 if (sessionManager?.isConnected == true) {
                     remoteButton.click()
                 } else {
-                    remoteButton.click(mVideoItem, mExoPlayerView.player?.currentPosition?: 0)
+                    remoteButton.click(mVideoItem, mExoPlayerView.player?.currentPosition ?: 0)
                 }
             }
-        }*/
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -60,6 +65,7 @@ class MoviePlayerActivity : Activity() {
         // Intended to resume playback when activity enters focus from being partially obscured
         // by another Fragment or dialog.
         mExoPlayerView.player?.playWhenReady = true
+        sessionManager?.addSessionStateListener(sessionStateListener)
     }
 
     override fun onStart() {
@@ -70,6 +76,7 @@ class MoviePlayerActivity : Activity() {
     override fun onPause() {
         super.onPause()
         mExoPlayerView.player?.playWhenReady = false
+        sessionManager?.removeSessionStateListener(sessionStateListener)
     }
 
     override fun onStop() {
@@ -102,6 +109,8 @@ class MoviePlayerActivity : Activity() {
             return
         }
 
+        // Create media source
+        mVideoItem = video
         val videoUri = Uri.parse(video.videoURL)
         val player = ExoPlayer.Builder(this).build()
         mExoPlayerView.player = player

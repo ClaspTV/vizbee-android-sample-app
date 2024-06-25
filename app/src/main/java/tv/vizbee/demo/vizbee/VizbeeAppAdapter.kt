@@ -39,7 +39,7 @@ class VizbeeAppAdapter : ISmartPlayAdapter, CoroutineScope by MainScope() {
             title = video.title
             subtitle = video.description
             imageURL = video.imageURL
-            isLive = false
+            isLive = appVideoObject.isLive
             customMetadata = JSONObject().apply {
                 put("userId", "")
             }

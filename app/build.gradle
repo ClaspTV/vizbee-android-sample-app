@@ -39,7 +39,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    implementation 'tv.vizbee:android-sender-sdk:6.5.7-persistent_mini_cast_bar-rc3-SNAPSHOT'
+    implementation 'tv.vizbee:android-sender-sdk:6.6.3'
     implementation 'tv.vizbee:android-sender-homesso-sdk:1.0.2'
     implementation 'com.squareup.picasso:picasso:2.71828'
 

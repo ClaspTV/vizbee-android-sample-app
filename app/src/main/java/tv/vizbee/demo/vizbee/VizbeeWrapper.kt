@@ -4,12 +4,12 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import java.lang.ref.WeakReference
-
+import com.google.android.gms.cast.framework.CastContext
 import tv.vizbee.api.VizbeeContext
 import tv.vizbee.api.session.*
 import tv.vizbee.api.session.VideoClient.VideoStatusListener
 import tv.vizbee.demo.R
+import java.lang.ref.WeakReference
 
 object VizbeeWrapper: SessionStateListener, VideoStatusListener {
 
@@ -17,6 +17,7 @@ object VizbeeWrapper: SessionStateListener, VideoStatusListener {
     private var isConnected: Boolean = false
     var context: WeakReference<Context>? = null
     private var vizbeeSessionManager: VizbeeSessionManager? = null
+    private val LOG_TAG = "VizbeeWrapper"
 
     // ------------------
     // MARK: - SDK init
@@ -24,7 +25,12 @@ object VizbeeWrapper: SessionStateListener, VideoStatusListener {
 
     fun init(application: Application) {
 
-        Log.d("VizbeeWrapper", "init called")
+        Log.d(LOG_TAG, "init called")
+
+
+        // Init Vizbee after castContext setup for lock/notification controls
+        CastContext.getSharedInstance(application.applicationContext)
+
         context  = WeakReference(application.applicationContext)
 
         /*
@@ -40,7 +46,6 @@ object VizbeeWrapper: SessionStateListener, VideoStatusListener {
          */
         vizbeeSessionManager = VizbeeContext.getInstance().sessionManager
         vizbeeSessionManager?.addSessionStateListener(this)
-
     }
 
     // ----------------------------
