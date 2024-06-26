@@ -45,6 +45,6 @@ class VideoGalleryFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        VizbeeContext.getInstance().smartHelp(requireContext())
+        VizbeeContext.getInstance().smartHelp(requireActivity())
     }
 }

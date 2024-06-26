@@ -22,6 +22,71 @@
         <item name="vzb_secondaryColor">@color/colorAccent</item>
         <item name="vzb_tertiaryColor">@color/textColorPrimary</item>
 
+        <!-- Button -->
+        <item name="vzb_overlayCallToActionButtonStyle">@style/Theme.Vizbee.CallToAction</item>
+        <item name="vzb_deviceStatusViewDisconnectButtonStyle">
+            @style/Theme.Vizbee.DeviceStatusViewDisconnectButton
+        </item>
+
+        <!-- =============================  -->
+        <!-- App install screen style -->
+        <!-- =============================  -->
+
+        <item name="vzb_appInstall_progressBarStyle">@style/VZB_AppInstallProgressBarStyle.Demo</item>
+        <item name="vzb_appInstall_televisionStyle">@style/VZB_TelevisionView.Demo</item>
+        <item name="vzb_appInstall_leaderChainStyle">@style/VZB_AppInstallLeaderChainIconStyle.Demo</item>
+        <item name="vzb_appInstall_remoteControllerIconStyle">@style/VZB_AppInstallRemoteControllerIconStyle.Demo</item>
+        <item name="vzb_appInstall_cancelButtonColor">?attr/vzb_secondaryColor</item>
+        <item name="vzb_appInstall_progressSpinnerColor">?attr/vzb_secondaryColor</item>
+        <item name="vzb_appInstall_select_textStyle">@style/VZB_AppInstallSelectTextStyle.Demo</item>
+
+    </style>
+
+    <style name="Theme.Vizbee.CallToAction" parent="@style/Widget.Vizbee.Futura.Button.CallToAction">
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">24sp</item>
+        <item name="vzb_cornerRadius">4dp</item>
+        <item name="vzb_backgroundEnabled">?attr/vzb_secondaryColor</item>
+        <item name="android:textColor">?attr/vzb_primaryColor</item>
+    </style>
+
+    <style name="Theme.Vizbee.DeviceStatusViewDisconnectButton" parent="Widget.Vizbee.Futura.DeviceStatusViewDisconnectButton">
+        <item name="textAllCaps">false</item>
+        <item name="vzb_cornerRadius">4dp</item>
+        <item name="android:textSize">24sp</item>
+        <item name="vzb_backgroundEnabled">?attr/vzb_secondaryColor</item>
+        <item name="android:textColor">?attr/vzb_primaryColor</item>
+    </style>
+
+    <!-- App install styles -->
+    <style name="VZB_AppInstallRemoteControllerIconStyle.Demo" parent="VZB_TintViewStyle">
+        <item name="vzb_tintColor">?attr/vzb_tertiaryColor</item>
+        <item name="vzb_tintAlpha">1</item>
+        <item name="android:alpha">1</item>
+    </style>
+
+    <style name="VZB_AppInstallLeaderChainIconStyle.Demo" parent="VZB_TintViewStyle">
+        <item name="vzb_tintColor">?attr/vzb_tertiaryColor</item>
+        <item name="android:alpha">1</item>
+    </style>
+    <style name="VZB_AppInstallProgressBarStyle.Demo" parent="VZB_AppInstallProgressBarStyle">
+        <item name="vzb_backgroundProgressColor">@color/ihr_grey_400</item>
+        <item name="vzb_progressColor">@color/ihr_grey_400</item>
+        <item name="vzb_secondaryProgressColor">?attr/vzb_secondaryColor</item>
+    </style>
+
+    <!-- Television bundle view-->
+    <style name="VZB_TelevisionView.Demo">
+        <item name="vzb_televisionColor">?attr/vzb_tertiaryColor</item>
+        <item name="vzb_phoneColor">?attr/vzb_tertiaryColor</item>
+        <item name="vzb_supportedDevicesColor">?attr/vzb_secondaryColor</item>
+        <item name="vzb_appStoreOverlayColor">?attr/vzb_tertiaryColor </item>
+    </style>
+
+    <!-- Sony pairing screen styles -->
+    <style name="VZB_AppInstallSelectTextStyle.Demo" parent="@style/VZB_AppInstallTextStyle">
+        <item name="android:textColor">?attr/vzb_tertiaryColor</item>
+        <item name="android:alpha">1</item>
     </style>
 
 </resources>
