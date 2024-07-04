@@ -1,10 +1,14 @@
 package tv.vizbee.demo.activity
 
 import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
@@ -15,6 +19,7 @@ import tv.vizbee.api.session.SessionStateListener
 import tv.vizbee.api.session.VizbeeSessionManager
 import tv.vizbee.demo.R
 import tv.vizbee.demo.model.VideoItem
+import tv.vizbee.demo.vizbee.VizbeeWrapper
 
 const val EXTRA_VIDEO_ITEM = "extra_video_item"
 const val EXTRA_VIDEO_URL = "extra_video_url"
@@ -42,7 +47,7 @@ class MoviePlayerActivity : Activity() {
 
         mExoPlayerView = findViewById(R.id.exoPlayerView)
         val castButton = findViewById<RemoteButton>(R.id.player_remote_button)
-        castButton.setDrawableTintColor("#0000FF");
+        castButton.setDrawableTintColor("#FFFFFF");
         castButton?.let { remoteButton ->
             remoteButton.setOnClickListener {
                 if (sessionManager?.isConnected == true) {
@@ -52,6 +57,7 @@ class MoviePlayerActivity : Activity() {
                 }
             }
         }
+        registerReceiver()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -85,6 +91,11 @@ class MoviePlayerActivity : Activity() {
         intent?.putExtra(EXTRA_START_POSITION, mExoPlayerView.player?.currentPosition)
         intent?.putExtra(EXTRA_AUTO_PLAY, mExoPlayerView.player?.playWhenReady)
         mExoPlayerView.player?.release()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unRegisterReceiver()
     }
 
     private fun checkIntent() {
@@ -125,6 +136,29 @@ class MoviePlayerActivity : Activity() {
         // Auto Start the playback.
         player.playWhenReady = autoPlay
 
+    }
+
+    private fun registerReceiver() {
+        ContextCompat.registerReceiver(
+            this,
+            mCastConnectedReceiver,
+            IntentFilter(VizbeeWrapper.INTENT_CAST_CONNECTED_KEY),
+            ContextCompat.RECEIVER_EXPORTED
+        )
+    }
+
+    private fun unRegisterReceiver() {
+        unregisterReceiver(
+            mCastConnectedReceiver
+        )
+    }
+
+    private val mCastConnectedReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if ((intent.extras)?.getBoolean("isConnected")!!) {
+                finish()
+            }
+        }
     }
 }
 
