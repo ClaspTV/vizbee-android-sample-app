@@ -21,8 +21,8 @@ class VizbeeHomeSSOAdapter : IVizbeeHomeSSOAdapter {
 
         val mobileSignInInfo =
             VizbeeSignInInfo("MVPD", true, JSONObject())
-        var signInInfo: List<VizbeeSignInInfo> = listOf(mobileSignInInfo)
-            callback.onSuccess(signInInfo)
+        val signInInfo: List<VizbeeSignInInfo> = listOf(mobileSignInInfo)
+        callback.onSuccess(signInInfo)
     }
 
     /**

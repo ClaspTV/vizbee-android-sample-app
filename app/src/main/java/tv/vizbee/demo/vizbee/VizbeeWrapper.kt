@@ -8,16 +8,16 @@ import com.google.android.gms.cast.framework.CastContext
 import tv.vizbee.api.VizbeeContext
 import tv.vizbee.api.session.*
 import tv.vizbee.api.session.VideoClient.VideoStatusListener
+import tv.vizbee.demo.Constants
 import tv.vizbee.demo.R
 import java.lang.ref.WeakReference
 
 object VizbeeWrapper: SessionStateListener, VideoStatusListener {
 
-    var INTENT_CAST_CONNECTED_KEY: String = "CAST_CONNECTED"
     private var isConnected: Boolean = false
     var context: WeakReference<Context>? = null
     private var vizbeeSessionManager: VizbeeSessionManager? = null
-    private val LOG_TAG = "VizbeeWrapper"
+    private const val LOG_TAG = "VizbeeWrapper"
 
     // ------------------
     // MARK: - SDK init
@@ -76,7 +76,7 @@ object VizbeeWrapper: SessionStateListener, VideoStatusListener {
 
         // post cast connected notification
         isConnected = true
-        val intent = Intent(INTENT_CAST_CONNECTED_KEY)
+        val intent = Intent(Constants.INTENT_CAST_CONNECTED_KEY)
         intent.putExtra("isConnected", true)
         context?.get()?.sendBroadcast(intent)
     }
@@ -89,7 +89,7 @@ object VizbeeWrapper: SessionStateListener, VideoStatusListener {
 
             // post cast connected notification
             isConnected = false
-            val intent = Intent(INTENT_CAST_CONNECTED_KEY)
+            val intent = Intent(Constants.INTENT_CAST_CONNECTED_KEY)
             intent.putExtra("isConnected", false)
             context?.get()?.sendBroadcast(intent)
         }

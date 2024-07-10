@@ -1,5 +1,6 @@
 package tv.vizbee.demo.model
 
+import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
 
@@ -110,8 +111,19 @@ class VideoItem() : Parcelable {
         duration = parcel.readInt()
         director = parcel.readString()!!
         cast = parcel.createStringArrayList()!!
-        adCuePoints = parcel.readArrayList(Long::class.java.classLoader) as List<Long>
+        adCuePoints = parcel.readArrayListCompat(Long::class.java.classLoader)
         delayInSeconds = parcel.readLong()
         shouldDelayBeAlternate = parcel.readByte() != 0.toByte()
+    }
+
+    private inline fun <reified Long> Parcel.readArrayListCompat(classLoader: ClassLoader?): List<Long> {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            mutableListOf<Long>().also { list ->
+                readParcelableList(list, classLoader, Long::class.java)
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            readArrayList(classLoader) as? List<Long>?: listOf()
+        }
     }
 }

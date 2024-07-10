@@ -6,10 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
-import androidx.fragment.app.Fragment
 import tv.vizbee.api.VizbeeContext
 import tv.vizbee.demo.R
-import tv.vizbee.demo.activity.IFragmentController
 import tv.vizbee.demo.adapter.BaseVideosAdapter
 import tv.vizbee.demo.adapter.VideosAdapterWithSimpleRows
 import tv.vizbee.demo.model.VideoItem
@@ -29,10 +27,6 @@ class VideoGalleryFragment : BaseFragment() {
         videoAdapter?.setFragmentController(mFragmentController)
         videoListView?.adapter = videoAdapter
         return root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun getVideoAdapter(context: Context): BaseVideosAdapter {

@@ -1,6 +1,7 @@
 package tv.vizbee.demo.fragments
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -16,11 +17,8 @@ import tv.vizbee.api.VizbeeContext
 import tv.vizbee.api.VizbeeRequest
 import tv.vizbee.api.VizbeeStatus
 import tv.vizbee.api.session.VizbeeScreen
+import tv.vizbee.demo.Constants
 import tv.vizbee.demo.R
-import tv.vizbee.demo.activity.EXTRA_AUTO_PLAY
-import tv.vizbee.demo.activity.EXTRA_START_POSITION
-import tv.vizbee.demo.activity.EXTRA_VIDEO_ITEM
-import tv.vizbee.demo.activity.EXTRA_VIDEO_URL
 import tv.vizbee.demo.activity.MoviePlayerActivity
 import tv.vizbee.demo.model.VideoItem
 
@@ -34,7 +32,12 @@ class VideoDetailsFragment : BaseFragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View {
         val root: View = inflater.inflate(R.layout.fragment_video_details, container, false)
-        videoItem = arguments?.getParcelable("video") ?: VideoItem()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            videoItem = arguments?.getParcelable("video", VideoItem::class.java) ?: VideoItem()
+        } else {
+            @Suppress("DEPRECATION")
+            videoItem = arguments?.getParcelable("video") ?: VideoItem()
+        }
 
         val poster = root.findViewById<View>(R.id.iv_poster) as ImageView
         val title: TextView = root.findViewById<View>(R.id.tv_title) as TextView
@@ -56,16 +59,19 @@ class VideoDetailsFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun onWatchNowClicked() {
-            callVizbeeSmartPlay()
+        callVizbeeSmartPlay()
     }
 
     private fun callVizbeeSmartPlay() {
 
-        activity?.let { getVZBRequest(videoItem).let { it1 ->
-            VizbeeContext.getInstance().smartPlay(it,
-                it1
-            )
-        } }
+        activity?.let {
+            getVZBRequest(videoItem).let { it1 ->
+                VizbeeContext.getInstance().smartPlay(
+                    it,
+                    it1
+                )
+            }
+        }
     }
 
     private fun getVZBRequest(videoItem: VideoItem): VizbeeRequest {
@@ -87,10 +93,10 @@ class VideoDetailsFragment : BaseFragment(), View.OnClickListener {
         Log.i(LOG_TAG, "* Starting local playback " + videoItem.title)
         activity?.startActivity(
             Intent(activity, MoviePlayerActivity::class.java)
-                .putExtra(EXTRA_VIDEO_ITEM, videoItem)
-                .putExtra(EXTRA_VIDEO_URL, videoItem.videoURL)
-                .putExtra(EXTRA_START_POSITION, 0L)
-                .putExtra(EXTRA_AUTO_PLAY, true)
+                .putExtra(Constants.EXTRA_VIDEO_ITEM, videoItem)
+                .putExtra(Constants.EXTRA_VIDEO_URL, videoItem.videoURL)
+                .putExtra(Constants.EXTRA_START_POSITION, 0L)
+                .putExtra(Constants.EXTRA_AUTO_PLAY, true)
         )
     }
 

@@ -11,12 +11,8 @@ import tv.vizbee.api.ScreenType
 import tv.vizbee.api.VideoMetadata
 import tv.vizbee.api.VideoStreamInfo
 import tv.vizbee.api.VideoTrackInfo
-import tv.vizbee.demo.activity.EXTRA_AUTO_PLAY
-import tv.vizbee.demo.activity.EXTRA_START_POSITION
-import tv.vizbee.demo.activity.EXTRA_VIDEO_ITEM
-import tv.vizbee.demo.activity.EXTRA_VIDEO_URL
+import tv.vizbee.demo.Constants
 import tv.vizbee.demo.activity.MoviePlayerActivity
-import tv.vizbee.demo.model.Video
 import tv.vizbee.demo.model.VideoItem
 import tv.vizbee.utils.ICommandCallback
 import tv.vizbee.utils.Logger
@@ -154,10 +150,10 @@ class VizbeeAppAdapter : ISmartPlayAdapter, CoroutineScope by MainScope() {
         }
 
         val i = Intent(activityContext, MoviePlayerActivity::class.java)
-            .putExtra(EXTRA_VIDEO_ITEM, myVideo)
-            .putExtra(EXTRA_VIDEO_URL, myVideo.videoURL)
-            .putExtra(EXTRA_START_POSITION, position)
-            .putExtra(EXTRA_AUTO_PLAY, autoPlay)
+            .putExtra(Constants.EXTRA_VIDEO_ITEM, myVideo)
+            .putExtra(Constants.EXTRA_VIDEO_URL, myVideo.videoURL)
+            .putExtra(Constants.EXTRA_START_POSITION, position)
+            .putExtra(Constants.EXTRA_AUTO_PLAY, autoPlay)
 
         activityContext?.startActivity(i)
     }

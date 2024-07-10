@@ -1,5 +1,6 @@
 package tv.vizbee.demo
 
+import android.annotation.SuppressLint
 import android.content.Context
 import com.google.android.gms.cast.framework.OptionsProvider
 import com.google.android.gms.cast.LaunchOptions

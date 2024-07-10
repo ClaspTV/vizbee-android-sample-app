@@ -3,34 +3,13 @@ package tv.vizbee.demo.model
 import android.os.Parcel
 import android.os.Parcelable
 
-open class Video : Parcelable {
-    var guid: String?
-    var title: String?
-    var subtitle: String?
-    var imageURL: String?
-    var videoURL: String?
-    var captionsURL: String?
-
-    constructor(
-        guid: String = "", title: String = "", subtitle: String = "", imageURL: String = "",
-        videoURL: String = "", captionsURL: String = ""
-    ) {
-        this.guid = guid
-        this.title = title
-        this.subtitle = subtitle
-        this.imageURL = imageURL
-        this.videoURL = videoURL
-        this.captionsURL = captionsURL
-    }
-
-    protected constructor(`in`: Parcel) {
-        guid = `in`.readString()
-        title = `in`.readString()
-        subtitle = `in`.readString()
-        imageURL = `in`.readString()
-        videoURL = `in`.readString()
-        captionsURL = `in`.readString()
-    }
+open class Video protected constructor(`in`: Parcel) : Parcelable {
+    private var guid: String? = `in`.readString()
+    private var title: String? = `in`.readString()
+    private var subtitle: String? = `in`.readString()
+    private var imageURL: String? = `in`.readString()
+    private var videoURL: String? = `in`.readString()
+    private var captionsURL: String? = `in`.readString()
 
     override fun describeContents(): Int {
         return 0

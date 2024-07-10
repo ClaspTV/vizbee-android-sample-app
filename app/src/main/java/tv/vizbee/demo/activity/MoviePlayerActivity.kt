@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -17,14 +18,9 @@ import tv.vizbee.api.VizbeeContext
 import tv.vizbee.api.session.SessionState
 import tv.vizbee.api.session.SessionStateListener
 import tv.vizbee.api.session.VizbeeSessionManager
+import tv.vizbee.demo.Constants
 import tv.vizbee.demo.R
 import tv.vizbee.demo.model.VideoItem
-import tv.vizbee.demo.vizbee.VizbeeWrapper
-
-const val EXTRA_VIDEO_ITEM = "extra_video_item"
-const val EXTRA_VIDEO_URL = "extra_video_url"
-const val EXTRA_START_POSITION = "extra_start_position"
-const val EXTRA_AUTO_PLAY = "extra_auto_play"
 
 class MoviePlayerActivity : Activity() {
 
@@ -46,8 +42,9 @@ class MoviePlayerActivity : Activity() {
         sessionManager = VizbeeContext.getInstance().sessionManager
 
         mExoPlayerView = findViewById(R.id.exoPlayerView)
-        val castButton = findViewById<RemoteButton>(R.id.player_remote_button)
-        castButton.setDrawableTintColor("#FFFFFF");
+        val castButton = mExoPlayerView.findViewById<RemoteButton>(R.id.player_remote_button)
+
+        castButton.setDrawableTintColor("#FFFFFF")
         castButton?.let { remoteButton ->
             remoteButton.setOnClickListener {
                 if (sessionManager?.isConnected == true) {
@@ -88,8 +85,8 @@ class MoviePlayerActivity : Activity() {
     override fun onStop() {
         super.onStop()
         // Override intent extras start position and auto play flag
-        intent?.putExtra(EXTRA_START_POSITION, mExoPlayerView.player?.currentPosition)
-        intent?.putExtra(EXTRA_AUTO_PLAY, mExoPlayerView.player?.playWhenReady)
+        intent?.putExtra(Constants.EXTRA_START_POSITION, mExoPlayerView.player?.currentPosition)
+        intent?.putExtra(Constants.EXTRA_AUTO_PLAY, mExoPlayerView.player?.playWhenReady)
         mExoPlayerView.player?.release()
     }
 
@@ -100,10 +97,16 @@ class MoviePlayerActivity : Activity() {
 
     private fun checkIntent() {
         intent?.extras?.let { bundle ->
-            if (bundle.containsKey(EXTRA_VIDEO_URL)) {
-                val videoItem: VideoItem? = bundle.getParcelable(EXTRA_VIDEO_ITEM)
-                val startPosition = (bundle.getLong(EXTRA_START_POSITION).toInt())
-                val autoPlay = (bundle.getBoolean(EXTRA_AUTO_PLAY, true))
+            if (bundle.containsKey(Constants.EXTRA_VIDEO_URL)) {
+                val videoItem: VideoItem? =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        bundle.getParcelable(Constants.EXTRA_VIDEO_ITEM, VideoItem::class.java)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        bundle.getParcelable(Constants.EXTRA_VIDEO_ITEM)
+                    }
+                val startPosition = (bundle.getLong(Constants.EXTRA_START_POSITION).toInt())
+                val autoPlay = (bundle.getBoolean(Constants.EXTRA_AUTO_PLAY, true))
                 intent.replaceExtras(bundle)
 
                 loadMedia(videoItem, startPosition, autoPlay)
@@ -142,7 +145,7 @@ class MoviePlayerActivity : Activity() {
         ContextCompat.registerReceiver(
             this,
             mCastConnectedReceiver,
-            IntentFilter(VizbeeWrapper.INTENT_CAST_CONNECTED_KEY),
+            IntentFilter(Constants.INTENT_CAST_CONNECTED_KEY),
             ContextCompat.RECEIVER_EXPORTED
         )
     }
