@@ -5,8 +5,7 @@
 
     <item
         android:id="@+id/clasptv_remote_menu_item"
-        app:actionLayout="@layout/menu_item_layout_cast_button"
-        app:showAsAction="always"
-        android:title="Cast Button" />
-
+        android:title="@string/vizbee_remote_menu_item_title"
+        app:actionViewClass="tv.vizbee.api.RemoteButton"
+        app:showAsAction="always" />
 </menu>

@@ -4,4 +4,5 @@
     <string name="vizbee_app_id">vzb2000001</string>
     <string name="watch_now">Watch Now</string>
     <string name="hero_image">Hero Image</string>
+    <string name="vizbee_remote_menu_item_title">Cast Button</string>
 </resources>
