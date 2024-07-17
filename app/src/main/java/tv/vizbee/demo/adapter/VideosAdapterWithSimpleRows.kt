@@ -6,24 +6,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import com.squareup.picasso.Picasso
-import tv.vizbee.demo.R
 import tv.vizbee.demo.activity.IFragmentController
+import tv.vizbee.demo.databinding.VideoListItemBinding
 import tv.vizbee.demo.model.VideoItem
 
 class VideosAdapterWithSimpleRows(context: Context, resource: Int, videoItems: List<VideoItem>) :
     BaseVideosAdapter(context, resource, videoItems) {
 
+    private var _binding: VideoListItemBinding? = null // nullable for null safety
+    private val binding get() = _binding!!
     private var fragmentController: IFragmentController? = null
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val inflater =
             parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val rowView =
-            convertView ?: inflater.inflate(R.layout.video_list_item, parent, false)
-        rowView.tag = position
+        _binding = VideoListItemBinding.inflate(inflater, parent, false)
+        val rowView = binding.root
 
+        rowView.tag = position
         rowView.setOnClickListener {
             val videoItem = getItem(position)
             fragmentController?.showVideoDetailsFragment(videoItem)
@@ -31,19 +32,18 @@ class VideosAdapterWithSimpleRows(context: Context, resource: Int, videoItems: L
 
         val item = getItem(position)
 
-        val thumbView: ImageView = rowView.findViewById(R.id.video)
-        val imageUrl = item?.imageURL
-        if (!TextUtils.isEmpty(imageUrl)) {
-            Picasso.get().load(item?.imageURL).into(thumbView)
-        }
+        binding.video.loadImage(item?.imageURL)
 
-        val title: TextView = rowView.findViewById(R.id.text1)
-        title.text = item?.title
-
-        val details: TextView = rowView.findViewById(R.id.text2)
-        details.text = item?.description
+        binding.text1.text = item?.title
+        binding.text2.text = item?.description
 
         return rowView
+    }
+
+    private fun ImageView.loadImage(imageUrl: String?) {
+        if (!TextUtils.isEmpty(imageUrl)) {
+            Picasso.get().load(imageUrl).into(this)
+        }
     }
 
     override fun setFragmentController(fragmentController: IFragmentController) {

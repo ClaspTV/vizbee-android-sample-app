@@ -8,9 +8,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import com.squareup.picasso.Picasso
 import tv.vizbee.api.RequestCallback
 import tv.vizbee.api.VizbeeContext
@@ -20,18 +17,20 @@ import tv.vizbee.api.session.VizbeeScreen
 import tv.vizbee.demo.Constants
 import tv.vizbee.demo.R
 import tv.vizbee.demo.activity.MoviePlayerActivity
+import tv.vizbee.demo.databinding.FragmentVideoDetailsBinding
 import tv.vizbee.demo.model.VideoItem
 
 class VideoDetailsFragment : BaseFragment(), View.OnClickListener {
+    private var _binding: FragmentVideoDetailsBinding? = null
+    private val binding get() = _binding!!
     private lateinit var videoItem: VideoItem
-    private var watchNow: Button? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val root: View = inflater.inflate(R.layout.fragment_video_details, container, false)
+        _binding = FragmentVideoDetailsBinding.inflate(inflater, container, false)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             videoItem = arguments?.getParcelable("video", VideoItem::class.java) ?: VideoItem()
         } else {
@@ -39,17 +38,14 @@ class VideoDetailsFragment : BaseFragment(), View.OnClickListener {
             videoItem = arguments?.getParcelable("video") ?: VideoItem()
         }
 
-        val poster = root.findViewById<View>(R.id.iv_poster) as ImageView
-        val title: TextView = root.findViewById<View>(R.id.tv_title) as TextView
-        watchNow = root.findViewById<View>(R.id.btn_watchNow) as Button
-        watchNow!!.setOnClickListener(this)
+        binding.btnWatchNow.setOnClickListener(this)
         val imageUrl: String = videoItem.imageURL
         if (!TextUtils.isEmpty(imageUrl)) {
-            Picasso.get().load(videoItem.imageURL).into(poster)
+            Picasso.get().load(videoItem.imageURL).into(binding.ivPoster)
         }
-        title.text = videoItem.title
+        binding.tvTitle.text = videoItem.title
 
-        return root
+        return binding.root
     }
 
     override fun onClick(v: View) {

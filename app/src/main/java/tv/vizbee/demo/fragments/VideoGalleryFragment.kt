@@ -5,29 +5,30 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
 import tv.vizbee.api.VizbeeContext
 import tv.vizbee.demo.R
 import tv.vizbee.demo.adapter.BaseVideosAdapter
 import tv.vizbee.demo.adapter.VideosAdapterWithSimpleRows
+import tv.vizbee.demo.databinding.FragmentVideoListBinding
 import tv.vizbee.demo.model.VideoItem
 import tv.vizbee.demo.model.VideoStoreFactory
 
 class VideoGalleryFragment : BaseFragment() {
-    private var videoListView: ListView? = null
 
+    private var _binding: FragmentVideoListBinding? = null
+    private val binding get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val root: View = inflater.inflate(R.layout.fragment_video_list, container, false)
-        videoListView = root.findViewById(R.id.VideoList)
+        _binding = FragmentVideoListBinding.inflate(inflater, container, false)
         val videoAdapter: BaseVideosAdapter? = context?.let { getVideoAdapter(it) }
         videoAdapter?.setFragmentController(mFragmentController)
-        videoListView?.adapter = videoAdapter
-        return root
+        binding.VideoList.adapter = videoAdapter
+        return binding.getRoot()
     }
+
 
     private fun getVideoAdapter(context: Context): BaseVideosAdapter {
         val videoList: List<VideoItem> = VideoStoreFactory.mainVideoStoreList
