@@ -9,8 +9,8 @@ Look for the block comments with text "[BEGIN] Vizbee Integration" and "[END] Vi
 1. Add the Vizbee repository to your Android app’s root [settings.gradle](settings.gradle).
 2. Add Vizbee SDK dependency to your app module's [build.gradle](/app/build.gradle).
 
-### [AndroidManifest Setup](/app/src/main/AndroidManifest.xml)
-1. Add Vizbee RemoteActivity to your app's manifest.
+### AndroidManifest Setup
+1. Add Vizbee RemoteActivity to your app's [AndroidManifest.xml](/app/src/main/AndroidManifest.xml).
 2. Add `android:usesCleartextTraffic="true"` attribute to application tag. If your app instead uses a custom network security config, add the `cleartextTrafficPermitted` flag to your network security config XML file as specified in `network_security_config.xml` snippet.
 3. Enabling casting to Amazon Fire TV for Android 9.0+ devices by adding `<uses-library android:name="org.apache.http.legacy" android:required="false"/>`
 4. Create and implement the [CastOptionsProvider](app/src/main/java/tv/vizbee/demo/CastOptionsProvider.kt) and refer it from [AndroidManifest.xml](/app/src/main/AndroidManifest.xml). 
@@ -32,7 +32,7 @@ Look for the block comments with text "[BEGIN] Vizbee Integration" and "[END] Vi
 1. Integrate the SmartPlay API to start casting content to the receivers or play locally on the sender device [VideoDetailsFragment](app/src/main/java/tv/vizbee/demo/fragments/VideoDetailsFragment.kt)
 
 ### Add Miniplayer
-1. Add miniplayer to all necessary screens to display casting controls to the user while they browse the app during casting [fragment_video_details](app/src/main/res/layout/app/src/main/res/layout/fragment_video_details.xml.xml)
+1. Add miniplayer to all necessary screens to display casting controls to the user while they browse the app during casting [fragment_video_details](app/src/main/res/layout/fragment_video_details.xml)
 
 ## Documentation
 * [Vizbee Android App Overview and Developer Guide](https://console.vizbee.tv/app/vzb2000001/develop/guides/android-continuity)
