@@ -1,4 +1,4 @@
-package tv.vizbee.demo.activity;
+package tv.vizbee.demo.fragments;
 
 import tv.vizbee.demo.model.VideoItem;
 

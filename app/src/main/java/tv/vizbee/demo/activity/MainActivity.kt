@@ -4,11 +4,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import tv.vizbee.demo.R
+import tv.vizbee.demo.fragments.IFragmentController
 import tv.vizbee.demo.fragments.VideoDetailsFragment
 import tv.vizbee.demo.fragments.VideoGalleryFragment
 import tv.vizbee.demo.model.VideoItem
 
-class MainActivity : AppCompatActivity(), IFragmentController {
+class MainActivity : AppCompatActivity(),
+    IFragmentController {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.squareup.picasso.Picasso
-import tv.vizbee.demo.activity.IFragmentController
+import tv.vizbee.demo.fragments.IFragmentController
 import tv.vizbee.demo.databinding.VideoListItemBinding
 import tv.vizbee.demo.model.VideoItem
 

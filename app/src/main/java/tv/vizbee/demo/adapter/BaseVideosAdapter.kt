@@ -2,7 +2,7 @@ package tv.vizbee.demo.adapter
 
 import android.content.Context
 import android.widget.ArrayAdapter
-import tv.vizbee.demo.activity.IFragmentController
+import tv.vizbee.demo.fragments.IFragmentController
 import tv.vizbee.demo.model.VideoItem
 
 open class BaseVideosAdapter(

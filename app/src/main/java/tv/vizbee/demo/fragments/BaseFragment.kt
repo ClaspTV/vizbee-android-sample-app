@@ -3,7 +3,6 @@ package tv.vizbee.demo.fragments
 import android.app.Activity
 import android.content.Context
 import androidx.fragment.app.Fragment
-import tv.vizbee.demo.activity.IFragmentController
 
 open class BaseFragment : Fragment() {
     val LOG_TAG: String = javaClass.simpleName
