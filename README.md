@@ -6,7 +6,7 @@ This example demonstrates how to integrate Vizbee casting functionality into an 
 Look for the block comments with text "[BEGIN] Vizbee Integration" and "[END] Vizbee Integration" in the code for an easy understanding of the integration.
 
 ### Build Setup
-1. Add the Vizbee repository to your Android app’s root [build.gradle](/build.gradle).
+1. Add the Vizbee repository to your Android app’s root [settings.gradle](settings.gradle).
 2. Add Vizbee SDK dependency to your app module's [build.gradle](/app/build.gradle).
 
 ### [AndroidManifest Setup](/app/src/main/AndroidManifest.xml)
