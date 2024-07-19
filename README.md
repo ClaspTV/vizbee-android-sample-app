@@ -2,11 +2,11 @@
 
 This example demonstrates how to integrate Vizbee casting functionality into an Android mobile app.
 
-## Integration Steps for your Android app
+## Integration Steps for your Android mobile app
 Look for the block comments with text "[BEGIN] Vizbee Integration" and "[END] Vizbee Integration" in the code for an easy understanding of the integration.
 
 ### Build Setup
-1. Add the Vizbee repository to your Android app’s root [settings.gradle](settings.gradle).
+1. Add the Vizbee repository to your Android mobile app’s root [settings.gradle](settings.gradle).
 2. Add Vizbee SDK dependency to your app module's [build.gradle](/app/build.gradle).
 
 ### AndroidManifest Setup
@@ -36,13 +36,13 @@ Look for the block comments with text "[BEGIN] Vizbee Integration" and "[END] Vi
 
 ### Styling
 1. The Vizbee SDK components can be customized to match your app's specific theme. Please refer to the below files on how to incorporate them into both light and dark themes.  
-    [vizbee.xml(light)](app/src/main/res/values/vizbee.xml)
+    [vizbee.xml(light)](app/src/main/res/values/vizbee.xml)<br>
     [vizbee.xml(night)](app/src/main/res/values-night/vizbee.xml)
-2. The Vizbee miniPlayer has to be styled from the app level refer the below files for refeerence
-    [colors.xml(light)](app/src/main/res/values/colors.xml)
+2. The Vizbee miniPlayer needs to be styled at the app level. Please refer to the files below for guidance.
+    [colors.xml(light)](app/src/main/res/values/colors.xml)<br>
     [colors.xml(night)](app/src/main/res/values-night/colors.xml)
 
 ## Documentation
-* [Vizbee Android App Developer Guide](https://console.vizbee.tv/app/vzb2000001/develop/guides/android-continuity)
+* [Vizbee Android mobile App Developer Guide](https://console.vizbee.tv/app/vzb2000001/develop/guides/android-continuity)
 * [Code Snippets](https://console.vizbee.tv/app/vzb2000001/develop/guides/android-snippets)
 * [Troubleshooting](https://console.vizbee.tv/app/vzb2000001/develop/guides/sender-troubleshooting-snippets)

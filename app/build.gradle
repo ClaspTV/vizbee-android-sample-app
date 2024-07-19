@@ -17,6 +17,15 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            storeFile file("vizbee_demo.keystore")
+            storePassword "vizbee11"
+            keyAlias "vizbee_demo"
+            keyPassword "vizbee11"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
