@@ -12,8 +12,7 @@ Look for the block comments with text "[BEGIN] Vizbee Integration" and "[END] Vi
 ### AndroidManifest Setup
 1. Add Vizbee RemoteActivity to your app's [AndroidManifest.xml](/app/src/main/AndroidManifest.xml).
 2. Add `android:usesCleartextTraffic="true"` attribute to application tag. If your app instead uses a custom network security config, add the `cleartextTrafficPermitted` flag to your network security config XML file as specified in `network_security_config.xml` snippet.
-3. Enabling casting to Amazon Fire TV for Android 9.0+ devices by adding `<uses-library android:name="org.apache.http.legacy" android:required="false"/>`
-4. Create and implement the [CastOptionsProvider](app/src/main/java/tv/vizbee/demo/CastOptionsProvider.kt) and refer it from [AndroidManifest.xml](/app/src/main/AndroidManifest.xml). 
+3. Create and implement the [CastOptionsProvider](app/src/main/java/tv/vizbee/demo/CastOptionsProvider.kt) and refer it from [AndroidManifest.xml](/app/src/main/AndroidManifest.xml). 
 
 ### Code Setup
 1. Copy the files under [vizbee package](app/src/main/java/tv/vizbee/demo/vizbee) to your app under an appropriate package.
