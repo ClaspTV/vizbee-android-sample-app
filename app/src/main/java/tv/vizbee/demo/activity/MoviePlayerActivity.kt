@@ -63,8 +63,6 @@ class MoviePlayerActivity : Activity() {
     override fun onResume() {
         super.onResume()
 
-        // Intended to resume playback when activity enters focus from being partially obscured
-        // by another Fragment or dialog.
         binding.exoPlayerView.player?.playWhenReady = true
         sessionManager?.addSessionStateListener(sessionStateListener)
     }
@@ -156,7 +154,7 @@ class MoviePlayerActivity : Activity() {
 
     private val mCastConnectedReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            if ((intent.extras)?.getBoolean("isConnected")!!) {
+            if ((intent.extras)?.getBoolean("isConnected") == true) {
                 finish()
             }
         }

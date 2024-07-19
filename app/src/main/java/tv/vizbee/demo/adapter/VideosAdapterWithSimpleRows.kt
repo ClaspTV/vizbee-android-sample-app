@@ -14,14 +14,13 @@ import tv.vizbee.demo.model.VideoItem
 class VideosAdapterWithSimpleRows(context: Context, resource: Int, videoItems: List<VideoItem>) :
     BaseVideosAdapter(context, resource, videoItems) {
 
-    private var _binding: VideoListItemBinding? = null // nullable for null safety
-    private val binding get() = _binding!!
+    private lateinit var binding: VideoListItemBinding
     private var fragmentController: IFragmentController? = null
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val inflater =
             parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        _binding = VideoListItemBinding.inflate(inflater, parent, false)
+        binding = VideoListItemBinding.inflate(inflater, parent, false)
         val rowView = binding.root
 
         rowView.tag = position

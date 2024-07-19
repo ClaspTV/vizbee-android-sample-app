@@ -21,8 +21,7 @@ import tv.vizbee.demo.databinding.FragmentVideoDetailsBinding
 import tv.vizbee.demo.model.VideoItem
 
 class VideoDetailsFragment : BaseFragment(), View.OnClickListener {
-    private var _binding: FragmentVideoDetailsBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentVideoDetailsBinding
     private lateinit var videoItem: VideoItem
 
     override fun onCreateView(
@@ -30,7 +29,7 @@ class VideoDetailsFragment : BaseFragment(), View.OnClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentVideoDetailsBinding.inflate(inflater, container, false)
+        binding = FragmentVideoDetailsBinding.inflate(inflater, container, false)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             videoItem = arguments?.getParcelable("video", VideoItem::class.java) ?: VideoItem()
         } else {

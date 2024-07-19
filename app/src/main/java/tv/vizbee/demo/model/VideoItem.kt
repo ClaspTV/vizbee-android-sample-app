@@ -1,35 +1,76 @@
 package tv.vizbee.demo.model
 
-import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
 
-class VideoItem() : Parcelable {
-
-    var title: String = ""
-    var subTitle: String = ""
-    var guid: String = ""
-    var isLive: Boolean = false
-    var videoURL: String = ""
-    var imageURL: String = ""
-    var description: String = "N/A"
-    var genre: String = "N/A"
-    var rating: String = "N/A"
-    var duration: Int = -1
-    var director: String = ""
-    var cast: List<String> = ArrayList()
-    var adCuePoints: List<Long> = ArrayList()
-    var shouldDelayBeAlternate: Boolean = false
-    var delayInSeconds: Long = 0
+data class VideoItem(
+    var title: String = "",
+    var subTitle: String = "",
+    var guid: String = "",
+    var isLive: Boolean = false,
+    var videoURL: String = "",
+    var imageURL: String = "",
+    var description: String = "N/A",
+    var genre: String = "N/A",
+    var rating: String = "N/A",
+    var duration: Int = -1,
+    var director: String = "",
+    var cast: List<String> = ArrayList(),
+    var adCuePoints: List<Long> = ArrayList(),
+    var shouldDelayBeAlternate: Boolean = false,
+    var delayInSeconds: Long = 0L
+) : Parcelable {
 
     constructor(isLive: Boolean) : this() {
-        this.isLive = isLive
         if (isLive) {
-            // Ad a pre-roll ad for LIVE videos
             this.adCuePoints = arrayListOf(0L)
         } else {
-            this.adCuePoints = arrayListOf(0L, 780L, 1250L, 2200L)
+            this.adCuePoints = listOf(0L, 780L, 1250L, 2200L)
         }
+    }
+
+    constructor(
+        title: String,
+        guid: String,
+        isLive: Boolean,
+        videoURL: String,
+        imageURL: String,
+        description: String,
+        genre: String,
+        rating: String,
+        duration: Int,
+        director: String,
+        cast: List<String>
+    ) : this(isLive) {
+        this.title = title
+        this.guid = guid
+        this.isLive = isLive
+        this.videoURL = videoURL
+        this.imageURL = imageURL
+        this.description = description
+        this.genre = genre
+        this.rating = rating
+        this.duration = duration
+        this.director = director
+        this.cast = cast
+    }
+
+    constructor(
+        title: String,
+        guid: String,
+        isLive: Boolean,
+        videoURL: String,
+        imageURL: String,
+        description: String,
+        duration: Int
+    ) : this(isLive) {
+        this.title = title
+        this.guid = guid
+        this.isLive = isLive
+        this.videoURL = videoURL
+        this.imageURL = imageURL
+        this.description = description
+        this.duration = duration
     }
 
     constructor(
@@ -66,6 +107,66 @@ class VideoItem() : Parcelable {
         this.description = description
     }
 
+    constructor(
+        title: String,
+        subTitle: String,
+        guid: String,
+        isLive: Boolean,
+        videoURL: String,
+        imageURL: String,
+        description: String,
+        delayInSeconds: Long,
+        shouldDelayBeAlternate: Boolean
+    ) : this(isLive) {
+        this.title = title
+        this.subTitle = subTitle
+        this.guid = guid
+        this.isLive = isLive
+        this.videoURL = videoURL
+        this.imageURL = imageURL
+        this.description = description
+        this.delayInSeconds = delayInSeconds
+        this.shouldDelayBeAlternate = shouldDelayBeAlternate
+    }
+
+    constructor(
+        title: String,
+        guid: String,
+        isLive: Boolean,
+        videoURL: String,
+        imageURL: String,
+        description: String,
+        genre: String
+    ) : this(isLive) {
+        this.title = title
+        this.guid = guid
+        this.isLive = isLive
+        this.videoURL = videoURL
+        this.imageURL = imageURL
+        this.description = description
+        this.genre = genre
+    }
+
+    constructor(
+        title: String,
+        subTitle: String,
+        guid: String,
+        isLive: Boolean,
+        videoURL: String,
+        imageURL: String,
+        description: String,
+        genre: String
+    ) : this(isLive) {
+        this.title = title
+        this.subTitle = subTitle
+        this.guid = guid
+        this.isLive = isLive
+        this.videoURL = videoURL
+        this.imageURL = imageURL
+        this.description = description
+        this.genre = genre
+    }
+
     override fun describeContents(): Int {
         return 0
     }
@@ -74,7 +175,7 @@ class VideoItem() : Parcelable {
         dest.writeString(title)
         dest.writeString(subTitle)
         dest.writeString(guid)
-        dest.writeByte((if (isLive) 1 else 0).toByte())
+        dest.writeByte(if (isLive) 1 else 0)
         dest.writeString(videoURL)
         dest.writeString(imageURL)
         dest.writeString(description)
@@ -85,7 +186,7 @@ class VideoItem() : Parcelable {
         dest.writeStringList(cast)
         dest.writeList(adCuePoints)
         dest.writeLong(delayInSeconds)
-        dest.writeByte((if (shouldDelayBeAlternate) 1 else 0).toByte())
+        dest.writeByte(if (shouldDelayBeAlternate) 1 else 0)
     }
 
     companion object CREATOR : Parcelable.Creator<VideoItem> {
@@ -98,32 +199,21 @@ class VideoItem() : Parcelable {
         }
     }
 
-    protected constructor(parcel: Parcel) : this() {
-        title = parcel.readString()!!
-        subTitle = parcel.readString()!!
-        guid = parcel.readString()!!
+    private constructor(parcel: Parcel) : this() {
+        title = parcel.readString() ?: ""
+        subTitle = parcel.readString() ?: ""
+        guid = parcel.readString() ?: ""
         isLive = parcel.readByte() != 0.toByte()
-        videoURL = parcel.readString()!!
-        imageURL = parcel.readString()!!
-        description = parcel.readString()!!
-        genre = parcel.readString()!!
-        rating = parcel.readString()!!
+        videoURL = parcel.readString() ?: ""
+        imageURL = parcel.readString() ?: ""
+        description = parcel.readString() ?: ""
+        genre = parcel.readString() ?: ""
+        rating = parcel.readString() ?: ""
         duration = parcel.readInt()
-        director = parcel.readString()!!
-        cast = parcel.createStringArrayList()!!
-        adCuePoints = parcel.readArrayListCompat(Long::class.java.classLoader)
+        director = parcel.readString() ?: ""
+        cast = parcel.createStringArrayList() ?: ArrayList()
+        adCuePoints = parcel.readArrayList(Long::class.java.classLoader) as ArrayList<Long>
         delayInSeconds = parcel.readLong()
         shouldDelayBeAlternate = parcel.readByte() != 0.toByte()
-    }
-
-    private inline fun <reified Long> Parcel.readArrayListCompat(classLoader: ClassLoader?): List<Long> {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            mutableListOf<Long>().also { list ->
-                readParcelableList(list, classLoader, Long::class.java)
-            }
-        } else {
-            @Suppress("DEPRECATION")
-            readArrayList(classLoader) as? List<Long>?: listOf()
-        }
     }
 }

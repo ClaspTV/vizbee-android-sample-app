@@ -15,14 +15,13 @@ import tv.vizbee.demo.model.VideoStoreFactory
 
 class VideoGalleryFragment : BaseFragment() {
 
-    private var _binding: FragmentVideoListBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentVideoListBinding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentVideoListBinding.inflate(inflater, container, false)
+        binding = FragmentVideoListBinding.inflate(inflater, container, false)
         val videoAdapter: BaseVideosAdapter? = context?.let { getVideoAdapter(it) }
         videoAdapter?.setFragmentController(mFragmentController)
         binding.VideoList.adapter = videoAdapter
