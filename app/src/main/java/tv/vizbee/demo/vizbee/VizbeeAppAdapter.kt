@@ -53,58 +53,23 @@ class VizbeeAppAdapter : ISmartPlayAdapter, CoroutineScope by MainScope() {
      */
     override fun getStreamingInfoFromVideo(appVideoObject: Any, screenType: ScreenType, callback: ICommandCallback<VideoStreamInfo>) {
 
+        Logger.d(LOG_TAG,"getStreamingInfoFromVideo invoked")
+        // read data
         val video = appVideoObject as VideoItem
 
-        val info = VideoStreamInfo()
-        info.guid = video.guid
-        info.videoURL = video.videoURL
-        if (screenType.suggestedProtocol == ScreenType.Protocol.ANY) {
-            info.screenProtocol = ScreenType.Protocol.HLS
-        } else {
-            info.screenProtocol = screenType.suggestedProtocol
-        }
-
-        if (screenType.suggestedDRM == ScreenType.DRM.ANY) {
-            info.drm = ScreenType.DRM.PLAYREADY
-        } else {
-            info.drm = screenType.suggestedDRM
-        }
-
-        info.drmLicenseURL = "http://drm.vizbee.tv/my/custom/url"
-        info.drmCustomData = "Test DRM custom data"
-
-        val customStreamInfo = JSONObject()
-        val jsonObject1 = JSONObject()
-        try {
-            customStreamInfo.put("key1", "streaminfo_value1")
-            customStreamInfo.put("key2", "streaminfo_value2")
-            jsonObject1.put("key3_1", "streaminfo_value3_1")
-            customStreamInfo.put("key3", jsonObject1)
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-
-        info.customStreamInfo = customStreamInfo
-
-        // Tracks
-
-        // Tracks
-        val englishCaptions = VideoTrackInfo.Builder(1, VideoTrackInfo.TYPE_TEXT)
-            .setContentId("https://assets.epix.com/webvtt/rings.vtt")
-            .setContentType("text/vtt")
-            .setLanguage("en-US")
-            .setName("English")
-            .setSubtype(VideoTrackInfo.SUBTYPE_CAPTIONS)
-            .build()
-
-        val tracks: ArrayList<VideoTrackInfo?> = object : ArrayList<VideoTrackInfo?>() {
-            init {
-                add(englishCaptions)
+        Logger.d(LOG_TAG,"getStreamingInfoFromVideo video = $video")
+        // make stream info
+        val streamInfo = VideoStreamInfo().apply {
+            guid = video.guid
+            videoURL = video.videoURL
+            customStreamInfo = JSONObject().apply {
+                put("streamURL", video.videoURL)
             }
         }
-        info.tracks = tracks
-        Logger.d(LOG_TAG, "getStreamingInfoFromVideo:: Send VideoStreamInfo with URL = ${info.videoURL}")
-        callback.onSuccess(info)
+
+        Logger.d(LOG_TAG,"Sending streaming info $streamInfo")
+        // send stream info
+        callback.onSuccess(streamInfo)
     }
 
     /**

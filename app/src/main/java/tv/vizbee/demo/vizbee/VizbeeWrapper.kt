@@ -12,12 +12,11 @@ import tv.vizbee.demo.Constants
 import tv.vizbee.demo.R
 import java.lang.ref.WeakReference
 
-object VizbeeWrapper: SessionStateListener, VideoStatusListener {
+object VizbeeWrapper: SessionStateListener {
 
     private var isConnected: Boolean = false
     var context: WeakReference<Context>? = null
     private var vizbeeSessionManager: VizbeeSessionManager? = null
-    private const val LOG_TAG = "VizbeeWrapper"
 
     // ------------------
     // MARK: - SDK init
@@ -25,12 +24,8 @@ object VizbeeWrapper: SessionStateListener, VideoStatusListener {
 
     fun init(application: Application) {
 
-        Log.d(LOG_TAG, "init called")
-
-
         // Init Vizbee after castContext setup for lock/notification controls
         CastContext.getSharedInstance(application.applicationContext)
-
         context  = WeakReference(application.applicationContext)
 
         /*
@@ -38,6 +33,7 @@ object VizbeeWrapper: SessionStateListener, VideoStatusListener {
          */
         val appId = application.getString(R.string.vizbee_app_id)
         val appAdapter = VizbeeAppAdapter()
+        // Enable Vizbee SDK logging
         VizbeeContext.getInstance().enableVerboseLogging()
         VizbeeContext.getInstance().init(application, appId, appAdapter)
 
@@ -72,9 +68,7 @@ object VizbeeWrapper: SessionStateListener, VideoStatusListener {
 
     private fun onConnected() {
 
-        addVideoStatusListener()
-
-        // post cast connected notification
+        // send cast connected broadcast
         isConnected = true
         val intent = Intent(Constants.INTENT_CAST_CONNECTED_KEY)
         intent.putExtra("isConnected", true)
@@ -85,30 +79,11 @@ object VizbeeWrapper: SessionStateListener, VideoStatusListener {
 
         if (isConnected) {
 
-            removeVideoStatusListener()
-
-            // post cast connected notification
+            // send cast disconnected broadcast
             isConnected = false
             val intent = Intent(Constants.INTENT_CAST_CONNECTED_KEY)
             intent.putExtra("isConnected", false)
             context?.get()?.sendBroadcast(intent)
         }
-    }
-
-
-    // --------------------------------
-    // MARK: - Video Status Management
-    // --------------------------------
-
-    private fun addVideoStatusListener() {
-        vizbeeSessionManager?.currentSession?.videoClient?.addVideoStatusListener(this)
-    }
-
-    private fun removeVideoStatusListener() {
-        vizbeeSessionManager?.currentSession?.videoClient?.removeVideoStatusListener(this)
-    }
-
-    override fun onVideoStatusUpdated(videoStatus: VideoStatus) {
-
     }
 }

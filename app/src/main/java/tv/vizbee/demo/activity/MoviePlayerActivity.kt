@@ -12,7 +12,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.ui.PlayerView
 import tv.vizbee.api.RemoteButton
 import tv.vizbee.api.VizbeeContext
 import tv.vizbee.api.session.SessionState
@@ -28,11 +27,6 @@ class MoviePlayerActivity : Activity() {
     private lateinit var binding: FragmentVideoPlayerBinding
     private var mVideoItem: VideoItem? = null
     private var sessionManager: VizbeeSessionManager? = null
-    private val sessionStateListener = SessionStateListener { newState ->
-        if (SessionState.CONNECTED == newState) {
-            finish()
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +35,11 @@ class MoviePlayerActivity : Activity() {
         actionBar?.hide()
         sessionManager = VizbeeContext.getInstance().sessionManager
 
+        // ---------------------------
+        // [BEGIN] Vizbee Integration
+        // ---------------------------
+
+        // Handle remote button click
         val castButton = binding.exoPlayerView.findViewById<RemoteButton>(R.id.player_remote_button)
         castButton.setDrawableTintColor("#FFFFFF")
         castButton?.let { remoteButton ->
@@ -53,8 +52,15 @@ class MoviePlayerActivity : Activity() {
             }
         }
         registerReceiver()
+
+        // ---------------------------
+        // [END] Vizbee Integration
+        // ---------------------------
     }
 
+    /**
+     * Lifecycle methods
+     */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
@@ -64,22 +70,21 @@ class MoviePlayerActivity : Activity() {
         super.onResume()
 
         binding.exoPlayerView.player?.playWhenReady = true
-        sessionManager?.addSessionStateListener(sessionStateListener)
     }
 
     override fun onStart() {
         super.onStart()
-        checkIntent()
+        processIntentToPlayVideo()
     }
 
     override fun onPause() {
         super.onPause()
         binding.exoPlayerView.player?.playWhenReady = false
-        sessionManager?.removeSessionStateListener(sessionStateListener)
     }
 
     override fun onStop() {
         super.onStop()
+
         // Override intent extras start position and auto play flag
         intent?.putExtra(Constants.EXTRA_START_POSITION, binding.exoPlayerView.player?.currentPosition)
         intent?.putExtra(Constants.EXTRA_AUTO_PLAY, binding.exoPlayerView.player?.playWhenReady)
@@ -88,10 +93,14 @@ class MoviePlayerActivity : Activity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        unRegisterReceiver()
+        unregisterReceiver()
     }
 
-    private fun checkIntent() {
+    /**
+     * Play Video
+     */
+    private fun processIntentToPlayVideo() {
+
         intent?.extras?.let { bundle ->
             if (bundle.containsKey(Constants.EXTRA_VIDEO_URL)) {
                 val videoItem: VideoItem? =
@@ -110,8 +119,12 @@ class MoviePlayerActivity : Activity() {
         }
     }
 
+    /**
+     * Load media to exoplayer
+     */
     private fun loadMedia(video: VideoItem?, startPosition: Int, autoPlay: Boolean) {
         if (null == video) {
+
             AlertDialog.Builder(this)
                 .setMessage("Error: Video is null")
                 .setPositiveButton("OK") { _, _ -> finish() }
@@ -137,6 +150,10 @@ class MoviePlayerActivity : Activity() {
 
     }
 
+    // ---------------------------
+    // [BEGIN] Vizbee Integration
+    // ---------------------------
+
     private fun registerReceiver() {
         ContextCompat.registerReceiver(
             this,
@@ -146,7 +163,7 @@ class MoviePlayerActivity : Activity() {
         )
     }
 
-    private fun unRegisterReceiver() {
+    private fun unregisterReceiver() {
         unregisterReceiver(
             mCastConnectedReceiver
         )
@@ -159,5 +176,9 @@ class MoviePlayerActivity : Activity() {
             }
         }
     }
+
+    // ---------------------------
+    // [END] Vizbee Integration
+    // ---------------------------
 }
 

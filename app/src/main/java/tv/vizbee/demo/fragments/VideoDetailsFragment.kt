@@ -30,11 +30,11 @@ class VideoDetailsFragment : BaseFragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentVideoDetailsBinding.inflate(inflater, container, false)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            videoItem = arguments?.getParcelable("video", VideoItem::class.java) ?: VideoItem()
+        videoItem = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable("video", VideoItem::class.java) ?: VideoItem()
         } else {
             @Suppress("DEPRECATION")
-            videoItem = arguments?.getParcelable("video") ?: VideoItem()
+            arguments?.getParcelable("video") ?: VideoItem()
         }
 
         binding.btnWatchNow.setOnClickListener(this)
@@ -64,7 +64,7 @@ class VideoDetailsFragment : BaseFragment(), View.OnClickListener {
     private fun callVizbeeSmartPlay() {
 
         activity?.let {
-            getVZBRequest(videoItem).let { it1 ->
+            getVizbeeRequest(videoItem).let { it1 ->
                 VizbeeContext.getInstance().smartPlay(
                     it,
                     it1
@@ -73,7 +73,7 @@ class VideoDetailsFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    private fun getVZBRequest(videoItem: VideoItem): VizbeeRequest {
+    private fun getVizbeeRequest(videoItem: VideoItem): VizbeeRequest {
         val request = VizbeeRequest(videoItem, videoItem.guid, 0)
         request.setCallback(object : RequestCallback {
             override fun doPlayOnPhone(status: VizbeeStatus) {

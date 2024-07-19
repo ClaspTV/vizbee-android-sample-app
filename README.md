@@ -1,6 +1,6 @@
 # Vizbee Android Demo App
 
-This example demonstrates how to integrate Vizbee casting functionality into an Android app.
+This example demonstrates how to integrate Vizbee casting functionality into an Android mobile app.
 
 ## Integration Steps for your Android app
 Look for the block comments with text "[BEGIN] Vizbee Integration" and "[END] Vizbee Integration" in the code for an easy understanding of the integration.
@@ -34,7 +34,15 @@ Look for the block comments with text "[BEGIN] Vizbee Integration" and "[END] Vi
 ### Add Miniplayer
 1. Add miniplayer to all necessary screens to display casting controls to the user while they browse the app during casting [fragment_video_details](app/src/main/res/layout/fragment_video_details.xml)
 
+### Styling
+1. The Vizbee SDK components can be customized to match your app's specific theme. Please refer to the below files on how to incorporate them into both light and dark themes.  
+    [vizbee.xml(light)](app/src/main/res/values/vizbee.xml)
+    [vizbee.xml(night)](app/src/main/res/values-night/vizbee.xml)
+2. The Vizbee miniPlayer has to be styled from the app level refer the below files for refeerence
+    [colors.xml(light)](app/src/main/res/values/colors.xml)
+    [colors.xml(night)](app/src/main/res/values-night/colors.xml)
+
 ## Documentation
-* [Vizbee Android App Overview and Developer Guide](https://console.vizbee.tv/app/vzb2000001/develop/guides/android-continuity)
+* [Vizbee Android App Developer Guide](https://console.vizbee.tv/app/vzb2000001/develop/guides/android-continuity)
 * [Code Snippets](https://console.vizbee.tv/app/vzb2000001/develop/guides/android-snippets)
 * [Troubleshooting](https://console.vizbee.tv/app/vzb2000001/develop/guides/sender-troubleshooting-snippets)
