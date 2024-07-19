@@ -1,6 +1,6 @@
 # Vizbee Android Demo App
 
-This example demonstrates how to integrate Vizbee casting functionality into an Android mobile app.
+Vizbee Android Demo App demonstrates how to integrate Vizbee casting functionality into an Android mobile app.
 
 ## Integration Steps for your Android mobile app
 Look for the block comments with text "[BEGIN] Vizbee Integration" and "[END] Vizbee Integration" in the code for an easy understanding of the integration.
