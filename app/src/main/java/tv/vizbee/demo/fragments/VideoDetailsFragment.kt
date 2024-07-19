@@ -58,6 +58,10 @@ class VideoDetailsFragment : BaseFragment(), View.OnClickListener {
         callVizbeeSmartPlay()
     }
 
+    // ---------------------------
+    // [BEGIN] Vizbee Integration
+    // ---------------------------
+
     private fun callVizbeeSmartPlay() {
 
         activity?.let {
@@ -95,6 +99,10 @@ class VideoDetailsFragment : BaseFragment(), View.OnClickListener {
                 .putExtra(Constants.EXTRA_AUTO_PLAY, true)
         )
     }
+
+    // ---------------------------
+    // [END] Vizbee Integration
+    // ---------------------------
 
     companion object {
         fun newInstance(video: VideoItem): VideoDetailsFragment {

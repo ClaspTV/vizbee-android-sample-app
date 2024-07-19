@@ -3,9 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activity.MainActivity">
 
+    <!--[BEGIN] Vizbee Integration-->
+
     <item
         android:id="@+id/clasptv_remote_menu_item"
         android:title="@string/vizbee_remote_menu_item_title"
-        app:actionViewClass="tv.vizbee.api.RemoteButton"
+        app:actionLayout="@layout/menu_item_layout_cast_button"
         app:showAsAction="always" />
+
+    <!--[END] Vizbee Integration-->
 </menu>

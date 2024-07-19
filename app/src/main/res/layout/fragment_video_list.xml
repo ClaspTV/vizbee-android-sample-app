@@ -14,14 +14,16 @@
         app:layout_constraintBottom_toTopOf="@+id/vizbee_cast_controller_mini_container"
         />
 
+    <!--[BEGIN] Vizbee Integration-->
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/vizbee_cast_controller_mini_container"
         android:name="tv.vizbee.api.CastBarFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <!--[END] Vizbee Integration-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

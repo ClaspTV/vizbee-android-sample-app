@@ -24,15 +24,114 @@
 
         <!-- Button -->
         <item name="vzb_overlayCallToActionButtonStyle">@style/Theme.Vizbee.CallToAction</item>
+        <item name="vzb_deviceStatusViewDisconnectButtonStyle">
+            @style/Theme.Vizbee.DeviceStatusViewDisconnectButton
+        </item>
+
+        <!-- App install screen style -->
+        <item name="vzb_appInstall_progressBarStyle">@style/VZB_AppInstallProgressBarStyle.Demo</item>
+        <item name="vzb_appInstall_televisionStyle">@style/VZB_TelevisionView.Demo</item>
+        <item name="vzb_appInstall_leaderChainStyle">@style/VZB_AppInstallLeaderChainIconStyle.Demo</item>
+        <item name="vzb_appInstall_remoteControllerIconStyle">@style/VZB_AppInstallRemoteControllerIconStyle.Demo</item>
+        <item name="vzb_appInstall_cancelButtonColor">?attr/vzb_secondaryColor</item>
+        <item name="vzb_appInstall_progressSpinnerColor">?attr/vzb_secondaryColor</item>
+        <item name="vzb_appInstall_select_textStyle">@style/VZB_AppInstallSelectTextStyle.Demo</item>
+
+        <!-- Player Card -->
+        <!--        <item name="vzb_contentStatusViewLabelStyle">@style/Widget.Vizbee.Custom.ContentStatusView.Label</item>-->
+        <!--        <item name="vzb_contentStatusViewProgressBarStyle">@style/Widget.Vizbee.Custom.ContentStatusView.ProgressBar</item>-->
+        <item name="vzb_videoPlayerControlButtonStyle">@style/VizbeeTheme.VideoPlayerControlButton</item>
+        <item name="vzb_playerControlsViewPlayPauseButtonStyle">@style/VizbeeTheme.VideoPlayerPlayPauseButton</item>
+
+        <!-- Video & Audio SeekBars -->
+        <item name="vzb_seekBarVideoStyle">@style/VizbeeTheme.VideoControlSeekBar</item>
+        <item name="vzb_seekBarAudioStyle">@style/VizbeeTheme.AudioControlSeekBar</item>
 
     </style>
 
-    <style name="Theme.Vizbee.CallToAction" parent="@style/Widget.Vizbee.Futura.Button.CallToAction">
-        <item name="vzb_backgroundEnabled">?attr/vzb_secondaryColor</item>
+    <style name="Theme.Vizbee.CallToAction" parent="@style/Widget.Vizbee.Futura.Light.Button.CallToAction">
         <item name="textAllCaps">false</item>
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="vzb_cornerRadius">4dp</item>
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="vzb_backgroundEnabled">?attr/vzb_secondaryColor</item>
+        <item name="android:textColor">?attr/vzb_tertiaryColor</item>
+    </style>
+
+    <style name="Theme.Vizbee.DeviceStatusViewDisconnectButton" parent="Widget.Vizbee.Futura.Light.DeviceStatusViewDisconnectButton">
+        <item name="textAllCaps">false</item>
+        <item name="vzb_cornerRadius">4dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="vzb_backgroundEnabled">?attr/vzb_secondaryColor</item>
+        <item name="android:textColor">?attr/vzb_tertiaryColor</item>
+    </style>
+
+    <!-- App install styles -->
+    <style name="VZB_AppInstallRemoteControllerIconStyle.Demo" parent="VZB_TintViewStyle">
+        <item name="vzb_tintColor">?attr/vzb_tertiaryColor</item>
+        <item name="vzb_tintAlpha">1</item>
+        <item name="android:alpha">1</item>
+    </style>
+
+    <style name="VZB_AppInstallLeaderChainIconStyle.Demo" parent="VZB_TintViewStyle">
+        <item name="vzb_tintColor">?attr/vzb_tertiaryColor</item>
+        <item name="android:alpha">1</item>
+    </style>
+    <style name="VZB_AppInstallProgressBarStyle.Demo" parent="VZB_AppInstallProgressBarStyle">
+        <item name="vzb_backgroundProgressColor">@color/grey_400</item>
+        <item name="vzb_progressColor">@color/grey_400</item>
+        <item name="vzb_secondaryProgressColor">?attr/vzb_secondaryColor</item>
+    </style>
+
+    <!-- Television bundle view-->
+    <style name="VZB_TelevisionView.Demo">
+        <item name="vzb_televisionColor">?attr/vzb_tertiaryColor</item>
+        <item name="vzb_phoneColor">?attr/vzb_tertiaryColor</item>
+        <item name="vzb_supportedDevicesColor">?attr/vzb_secondaryColor</item>
+        <item name="vzb_appStoreOverlayColor">?attr/vzb_tertiaryColor </item>
+    </style>
+
+    <!-- Sony pairing screen styles -->
+    <style name="VZB_AppInstallSelectTextStyle.Demo" parent="@style/VZB_AppInstallTextStyle">
+        <item name="android:textColor">?attr/vzb_tertiaryColor</item>
+        <item name="android:alpha">1</item>
+    </style>
+
+    <style name="VizbeeTheme.VideoPlayerControlButton" parent="Widget.Vizbee.Futura.Light.Button.VideoPlayerControl">
+        <item name="vzb_srcColor">?attr/vzb_primaryColor</item>
+        <item name="vzb_backgroundEnabled">@color/button_selected_color</item>
+        <item name="vzb_checkedSrcColor">?attr/vzb_primaryColor</item>
+        <item name="vzb_checkedBackgroundColor">?attr/vzb_secondaryColor</item>
+        <item name="vzb_strokeSize">0dp</item>
+        <item name="vzb_strokeColor">@android:color/transparent</item>
+    </style>
+
+    <style name="VizbeeTheme.VideoPlayerPlayPauseButton" parent="Widget.Vizbee.Futura.Light.Button.VideoPlayerControl.PlayPause">
+        <item name="vzb_srcColor">?attr/vzb_primaryColor</item>
+        <item name="vzb_backgroundEnabled">@color/button_selected_color</item>
+        <item name="vzb_strokeSize">0dp</item>
+        <item name="vzb_strokeColor">@android:color/transparent</item>
+    </style>
+
+    <style name="VizbeeTheme.VideoControlSeekBar" parent="Widget.Vizbee.Futura.Light.VideoControlSeekBar">
+        <item name="vzb_backgroundProgressColor">@color/grey_400</item>
+        <item name="vzb_useCircularThumb">true</item>
+        <item name="vzb_thumbColor">?attr/vzb_secondaryColor</item>
+        <item name="vzb_progressColor">?attr/vzb_secondaryColor</item>
+        <item name="vzb_progressHeight">1dp</item>
+        <item name="vzb_thumbHeight">12dp</item>
+        <item name="vzb_thumbWidth">6dp</item>
+        <item name="android:layout_height">46dp</item>
+    </style>
+
+    <style name="VizbeeTheme.AudioControlSeekBar" parent="Widget.Vizbee.Futura.Light.AudioControlSeekBar">
+        <item name="vzb_backgroundProgressColor">@color/grey_400</item>
+        <item name="vzb_useCircularThumb">true</item>
+        <item name="vzb_thumbColor">?attr/vzb_secondaryColor</item>
+        <item name="vzb_progressColor">?attr/vzb_secondaryColor</item>
+        <item name="vzb_progressHeight">1dp</item>
+        <item name="vzb_thumbHeight">12dp</item>
+        <item name="vzb_thumbWidth">6dp</item>
+        <item name="android:layout_height">46dp</item>
     </style>
 
 </resources>

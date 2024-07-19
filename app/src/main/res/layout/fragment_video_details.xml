@@ -51,13 +51,16 @@
         android:text="@string/watch_now"
         android:textColor="#ffffff" />
 
-    <fragment
+    <!--[BEGIN] Vizbee Integration-->
+
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/vizbee_cast_controller_mini_container"
-        class="tv.vizbee.api.CastBarFragment"
+        android:name="tv.vizbee.api.CastBarFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <!--[END] Vizbee Integration-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

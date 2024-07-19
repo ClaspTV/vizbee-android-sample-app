@@ -7,6 +7,8 @@
         android:layout_height="0dp"
         android:background="@color/exo_black_opacity_60"/>
 
+    <!--[BEGIN] Vizbee Integration-->
+
     <tv.vizbee.api.RemoteButton
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/player_remote_button"
@@ -16,6 +18,8 @@
         android:layout_gravity="end|top"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <!--[END] Vizbee Integration-->
 
     <FrameLayout android:id="@id/exo_bottom_bar"
         android:layout_width="match_parent"
