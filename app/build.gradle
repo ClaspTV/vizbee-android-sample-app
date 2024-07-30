@@ -59,10 +59,18 @@ dependencies {
     // ---------------------------
 
     implementation 'tv.vizbee:android-sender-sdk:6.6.6'
+    implementation 'tv.vizbee:android-sender-homesso-sdk:1.0.2'
 
     // ---------------------------
     // [END] Vizbee Integration
     // ---------------------------
+
+    // retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.11.0'
+    // gson converter
+    implementation 'com.squareup.retrofit2:converter-gson:2.11.0'
+    // retrofit logging interceptor
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
 
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.google.android.material:material:1.12.0'
@@ -70,4 +78,5 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+
 }

@@ -6,6 +6,11 @@
     <!--[BEGIN] Vizbee Integration-->
 
     <item
+        android:id="@+id/account"
+        android:title="@string/sign_in"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/clasptv_remote_menu_item"
         android:title="@string/vizbee_remote_menu_item_title"
         app:actionLayout="@layout/menu_item_layout_cast_button"

@@ -5,4 +5,12 @@
     <string name="watch_now">Watch Now</string>
     <string name="hero_image">Hero Image</string>
     <string name="vizbee_remote_menu_item_title">Cast Button</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="vizbee_login">Vizbee Login</string>
+    <string name="user_name">User Name</string>
+    <string name="password">Password</string>
+    <string name="invalid_credentials">Invalid Credentials</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_out">Sign Out</string>
 </resources>
