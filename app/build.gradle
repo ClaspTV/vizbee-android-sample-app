@@ -58,7 +58,9 @@ dependencies {
     // [BEGIN] Vizbee Integration
     // ---------------------------
 
+    // vizbee sender sdk
     implementation 'tv.vizbee:android-sender-sdk:6.6.6'
+    // vizbee homesso sdk
     implementation 'tv.vizbee:android-sender-homesso-sdk:1.0.2'
 
     // ---------------------------

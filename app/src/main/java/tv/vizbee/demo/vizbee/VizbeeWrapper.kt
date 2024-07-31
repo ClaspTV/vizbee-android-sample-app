@@ -34,6 +34,7 @@ object VizbeeWrapper: SessionStateListener {
         val appAdapter = VizbeeAppAdapter()
         // Enable Vizbee SDK logging
         VizbeeContext.getInstance().enableVerboseLogging()
+
         // Initialise Vizbee SDK
         VizbeeContext.getInstance().init(application, appId, appAdapter)
 

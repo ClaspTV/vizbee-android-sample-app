@@ -29,8 +29,17 @@ class MainActivity : AppCompatActivity(),
         setContentView(R.layout.activity_main)
         showVideoGalleryFragment()
         handleLogin(intent)
+        Logger.d(LOG_TAG, "handleLogin onCreate")
+
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let {
+            Logger.d(LOG_TAG, "handleLogin onNewIntent")
+            handleLogin(it)
+        }
+    }
     private fun handleLogin(intent: Intent) {
         val bundle = intent.extras
         if (bundle != null) {

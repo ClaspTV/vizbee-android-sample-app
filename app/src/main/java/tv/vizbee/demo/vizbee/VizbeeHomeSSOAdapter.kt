@@ -21,6 +21,10 @@ import tv.vizbee.utils.appstatemonitor.AppStateMonitor
 
 class VizbeeHomeSSOAdapter : IVizbeeHomeSSOAdapter {
 
+    // ---------------------------
+    // [BEGIN] Vizbee Integration
+    // ---------------------------
+
     /**
      * This method lets the HomeSSO SDK know whether the mobile app is already signed in
      * or not.
@@ -55,12 +59,10 @@ class VizbeeHomeSSOAdapter : IVizbeeHomeSSOAdapter {
             LOG_TAG,
             "Received sign in status = $status context = ${VizbeeWrapper.context?.get()}"
         )
-        if (status.vizbeeSignInState == VizbeeSignInState.SIGN_IN_IN_PROGRESS && status.signInType.equals(
-                "MVPD"
-            )
+        if (status.vizbeeSignInState == VizbeeSignInState.SIGN_IN_IN_PROGRESS && status.signInType == "MVPD"
         ) {
 
-            var regCode = status.customData.optString("regcode")
+            val regCode = status.customData.optString("regcode")
             if (regCode.isNotEmpty()) {
 
                 val sharedPreferenceHelper = VizbeeWrapper.context?.get()
@@ -71,7 +73,7 @@ class VizbeeHomeSSOAdapter : IVizbeeHomeSSOAdapter {
                 if (sharedPreferenceHelper?.getAuthToken()?.isEmpty() == true) {
                     launchLoginScreen()
                 } else {
-                    updateRegCodeStatus(sharedPreferenceHelper?.getAuthToken() ?: "");
+                    updateRegCodeStatus(sharedPreferenceHelper?.getAuthToken() ?: "")
                 }
             } else {
                 Logger.i(LOG_TAG, "onTVSignInStatus received RegCode is empty")
@@ -119,8 +121,11 @@ class VizbeeHomeSSOAdapter : IVizbeeHomeSSOAdapter {
     }
 
     companion object {
-        private const val LOG_TAG = "VZBApp_VizbeeHomeSSOAdapter"
+        private const val LOG_TAG = "VizbeeHomeSSOAdapter"
         var INTENT_LAUNCH_LOGIN_SCREEN: String = "INTENT_LAUNCH_LOGIN_SCREEN"
     }
 
+    // ---------------------------
+    // [END] Vizbee Integration
+    // ---------------------------
 }
