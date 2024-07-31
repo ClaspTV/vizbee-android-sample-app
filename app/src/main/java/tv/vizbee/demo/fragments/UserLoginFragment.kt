@@ -70,7 +70,15 @@ class UserLoginFragment : BaseFragment(), View.OnClickListener {
                         if (response.isSuccessful && body != null) {
                             VizbeeWrapper.context?.get()?.let {
                                 SharedPreferenceHelper(it).saveAuthToken(body.authToken)
+
+                                // ---------------------------
+                                // [BEGIN] Vizbee Integration
+                                // ---------------------------
                                 VizbeeHomeSSOAdapter().updateRegCodeStatus(body.authToken)
+                                // ---------------------------
+                                // [END] Vizbee Integration
+                                // ---------------------------
+
                                 activity?.invalidateOptionsMenu()
                                 mFragmentController.popBackStack()
                                 Toast.makeText(it, "Signin success", Toast.LENGTH_LONG).show()
