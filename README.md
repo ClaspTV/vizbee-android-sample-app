@@ -13,3 +13,6 @@ Look for the block comments with text "[BEGIN] Vizbee Integration" and "[END] Vi
 
 ### SDK Initialisation
 1. Initialize the VizbeeHomeSSO SDK by initializing `VizbeeHomeSSOManager` via `initialize(application, adapter)` method just after initialising the Vizbee Continuity SDK [VizbeeWrapper](app/src/main/java/tv/vizbee/demo/vizbee/VizbeeWrapper.kt).
+
+### Update Reg Code
+1. After a successful login on the app, you can update the regCode for TV login by calling the `VizbeeHomeSSOAdapter().updateRegCodeStatus(authToken)` method with the authToken [UserLoginFragment](app/src/main/java/tv/vizbee/demo/fragments/UserLoginFragment.kt).
