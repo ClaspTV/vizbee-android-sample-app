@@ -1,11 +1,11 @@
-package tv.vizbee.demo.retrofit
+package tv.vizbee.demo.network
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object RetrofitInstance {
+object NetworkInstance {
     private const val BASE_URL = "https://homesso.vizbee.tv/"
 
     fun getInstance(): Retrofit {

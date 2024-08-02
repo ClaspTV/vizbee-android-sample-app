@@ -16,8 +16,8 @@ import tv.vizbee.demo.fragments.VideoDetailsFragment
 import tv.vizbee.demo.fragments.VideoGalleryFragment
 import tv.vizbee.demo.helper.SharedPreferenceHelper
 import tv.vizbee.demo.model.VideoItem
-import tv.vizbee.demo.retrofit.ApiInterface
-import tv.vizbee.demo.retrofit.RetrofitInstance
+import tv.vizbee.demo.network.ApiInterface
+import tv.vizbee.demo.network.NetworkInstance
 import tv.vizbee.demo.vizbee.VizbeeHomeSSOAdapter
 import tv.vizbee.demo.vizbee.VizbeeWrapper
 import tv.vizbee.utils.Logger
@@ -28,9 +28,8 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         showVideoGalleryFragment()
-        handleLogin(intent)
         Logger.d(LOG_TAG, "handleLogin onCreate")
-
+        handleLogin(intent)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -40,11 +39,10 @@ class MainActivity : AppCompatActivity(),
             handleLogin(it)
         }
     }
-    private fun handleLogin(intent: Intent) {
-        val bundle = intent.extras
-        if (bundle != null) {
 
-            var launchLogin = bundle.getBoolean(VizbeeHomeSSOAdapter.INTENT_LAUNCH_LOGIN_SCREEN)
+    private fun handleLogin(intent: Intent) {
+        intent.extras?.let {
+            var launchLogin = it.getBoolean(VizbeeHomeSSOAdapter.INTENT_LAUNCH_LOGIN_SCREEN)
             if (launchLogin) {
                 Logger.d(LOG_TAG, "LoginFragment Launch Called")
                 showUserLoginFragment()
@@ -110,7 +108,7 @@ class MainActivity : AppCompatActivity(),
         val item = menu.findItem(R.id.account)
         val context = VizbeeWrapper.context?.get()
         context?.let {
-            val isUserLoggedIn = (SharedPreferenceHelper(it).getAuthToken()?.isNotEmpty() == true)
+            val isUserLoggedIn = (SharedPreferenceHelper.getAuthToken()?.isNotEmpty() == true)
             item.title =
                 if (isUserLoggedIn) getString(R.string.sign_out) else getString(R.string.sign_in)
         }
@@ -121,7 +119,7 @@ class MainActivity : AppCompatActivity(),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val context = VizbeeWrapper.context?.get()
         context?.let {
-            val authToken = SharedPreferenceHelper(it).getAuthToken()
+            val authToken = SharedPreferenceHelper.getAuthToken()
             val isUserLoggedIn = (authToken?.isNotEmpty() == true)
             when (item.itemId) {
                 R.id.account -> if (isUserLoggedIn) {
@@ -137,7 +135,7 @@ class MainActivity : AppCompatActivity(),
     private fun signOut(authToken: String?) {
 
         authToken?.let {
-            val apiInterface = RetrofitInstance.getInstance().create(ApiInterface::class.java)
+            val apiInterface = NetworkInstance.getInstance().create(ApiInterface::class.java)
 
             val call = apiInterface.signOut(authToken)
             call.enqueue(
@@ -147,7 +145,7 @@ class MainActivity : AppCompatActivity(),
                         response: Response<Any>
                     ) {
                         VizbeeWrapper.context?.get()?.let {
-                            SharedPreferenceHelper(it).saveAuthToken("")
+                            SharedPreferenceHelper.saveAuthToken("")
                             Toast.makeText(it, "Signout success", Toast.LENGTH_LONG).show()
                             invalidateOptionsMenu()
                         }

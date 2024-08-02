@@ -3,14 +3,16 @@ package tv.vizbee.demo.helper
 import android.content.Context
 import android.content.SharedPreferences
 
-class SharedPreferenceHelper(context: Context) {
+object SharedPreferenceHelper {
 
-    private val sharedPreferences: SharedPreferences =
-        context.getSharedPreferences("vizbee_mobile_demo_app_shared_prefs", Context.MODE_PRIVATE)
+    private const val SHARED_PREF_NAME = "vizbee_mobile_demo_app_shared_prefs"
+    private lateinit var sharedPreferences: SharedPreferences
 
-    companion object {
-        private const val KEY_AUTH_TOKEN = "AUTH_TOKEN"
-        private const val KEY_REG_CODE = "REG_CODE"
+    private const val KEY_AUTH_TOKEN = "AUTH_TOKEN"
+    private const val KEY_REG_CODE = "REG_CODE"
+
+    fun init(context: Context) {
+        sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
     }
 
     fun saveAuthToken(value: String) {

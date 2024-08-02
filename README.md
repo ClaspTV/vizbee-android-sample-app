@@ -57,7 +57,7 @@ Look for the block comments with text "[BEGIN] Vizbee Integration" and "[END] Vi
 2. Add Vizbee HomeSSO SDK dependency to your app module's [build.gradle](/app/build.gradle).
 
 ### Code Setup
-1. Copy [VizbeeHomeSSOAdapter](app/src/main/java/tv/vizbee/demo/vizbee/VizbeeHomeSSOAdapter.kt) class, it serves as an implementation of the `IVizbeeHomeSSOAdapter` protocol, providing methods required by the VizbeeHomeSSO SDK during its initialization and operation.
+1. Copy [VizbeeHomeSSOAdapter](app/src/main/java/tv/vizbee/demo/vizbee/VizbeeHomeSSOAdapter.kt) class, it serves as an implementation of the `IVizbeeHomeSSOAdapter` interface, providing methods required by the VizbeeHomeSSO SDK during its initialization and operation.
 
 ### SDK Initialisation
 1. Initialize the VizbeeHomeSSO SDK by initializing `VizbeeHomeSSOManager` via `initialize(application, adapter)` method just after initialising the Vizbee Continuity SDK [VizbeeWrapper](app/src/main/java/tv/vizbee/demo/vizbee/VizbeeWrapper.kt).
