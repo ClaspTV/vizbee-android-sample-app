@@ -9,8 +9,8 @@ import tv.vizbee.config.controller.IDUtils
 import tv.vizbee.demo.activity.MainActivity
 import tv.vizbee.demo.helper.SharedPreferenceHelper
 import tv.vizbee.demo.model.RegCodeStatusRequest
-import tv.vizbee.demo.retrofit.ApiInterface
-import tv.vizbee.demo.retrofit.RetrofitInstance
+import tv.vizbee.demo.network.ApiInterface
+import tv.vizbee.demo.network.NetworkInstance
 import tv.vizbee.homesso.IVizbeeHomeSSOAdapter
 import tv.vizbee.homesso.model.VizbeeSignInInfo
 import tv.vizbee.homesso.model.VizbeeSignInState
@@ -35,10 +35,8 @@ class VizbeeHomeSSOAdapter : IVizbeeHomeSSOAdapter {
         // Implement this method to verify whether the user has signed in via
         // the given sign-in method or not and invoke callback.onSuccess(isSignedIn)
 
-        val sharedPreferenceHelper = VizbeeWrapper.context?.get()
-            ?.let { SharedPreferenceHelper(it) }
 
-        val authToken = sharedPreferenceHelper?.getAuthToken()
+        val authToken = SharedPreferenceHelper.getAuthToken()
         val isSignedIn = (authToken?.isNotEmpty() == true)
         val mobileSignInInfo =
             VizbeeSignInInfo("MVPD", isSignedIn, JSONObject())
@@ -65,15 +63,12 @@ class VizbeeHomeSSOAdapter : IVizbeeHomeSSOAdapter {
             val regCode = status.customData.optString("regcode")
             if (regCode.isNotEmpty()) {
 
-                val sharedPreferenceHelper = VizbeeWrapper.context?.get()
-                    ?.let { SharedPreferenceHelper(it) }
+                SharedPreferenceHelper.saveRegCode(regCode)
 
-                sharedPreferenceHelper?.saveRegCode(regCode)
-
-                if (sharedPreferenceHelper?.getAuthToken()?.isEmpty() == true) {
+                if (SharedPreferenceHelper.getAuthToken()?.isEmpty() == true) {
                     launchLoginScreen()
                 } else {
-                    updateRegCodeStatus(sharedPreferenceHelper?.getAuthToken() ?: "")
+                    updateRegCodeStatus(SharedPreferenceHelper.getAuthToken() ?: "")
                 }
             } else {
                 Logger.i(LOG_TAG, "onTVSignInStatus received RegCode is empty")
@@ -91,15 +86,12 @@ class VizbeeHomeSSOAdapter : IVizbeeHomeSSOAdapter {
     }
 
     fun updateRegCodeStatus(authToken: String) {
-        val apiInterface = RetrofitInstance.getInstance().create(ApiInterface::class.java)
+        val apiInterface = NetworkInstance.getInstance().create(ApiInterface::class.java)
         val regCodeStatusRequest = RegCodeStatusRequest(
             IDUtils.getMyDeviceID()
         )
-        val sharedPreferenceHelper = VizbeeWrapper.context?.get()
-            ?.let { SharedPreferenceHelper(it) }
-
         val call = apiInterface.getAccountRegCodeStatus(
-            sharedPreferenceHelper?.getRegCode() ?: "",
+            SharedPreferenceHelper.getRegCode() ?: "",
             authToken,
             regCodeStatusRequest
         )
@@ -122,7 +114,7 @@ class VizbeeHomeSSOAdapter : IVizbeeHomeSSOAdapter {
 
     companion object {
         private const val LOG_TAG = "VizbeeHomeSSOAdapter"
-        var INTENT_LAUNCH_LOGIN_SCREEN: String = "INTENT_LAUNCH_LOGIN_SCREEN"
+        const val INTENT_LAUNCH_LOGIN_SCREEN: String = "INTENT_LAUNCH_LOGIN_SCREEN"
     }
 
     // ---------------------------

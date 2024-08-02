@@ -1,4 +1,4 @@
-package tv.vizbee.demo.retrofit
+package tv.vizbee.demo.network
 
 import retrofit2.Call
 import retrofit2.http.Body

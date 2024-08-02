@@ -8,14 +8,13 @@ import android.widget.Toast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import tv.vizbee.config.controller.IDUtils
 import tv.vizbee.demo.R
 import tv.vizbee.demo.databinding.FragmentUserLoginBinding
 import tv.vizbee.demo.helper.SharedPreferenceHelper
 import tv.vizbee.demo.model.LoginRequest
 import tv.vizbee.demo.model.LoginResponse
-import tv.vizbee.demo.retrofit.ApiInterface
-import tv.vizbee.demo.retrofit.RetrofitInstance
+import tv.vizbee.demo.network.ApiInterface
+import tv.vizbee.demo.network.NetworkInstance
 import tv.vizbee.demo.vizbee.VizbeeHomeSSOAdapter
 import tv.vizbee.demo.vizbee.VizbeeWrapper
 import tv.vizbee.utils.Logger
@@ -49,14 +48,13 @@ class UserLoginFragment : BaseFragment(), View.OnClickListener {
 
     private fun login() {
         val email = binding.loginUsername.text.toString()
-        val pwd = binding.loginPassword.text.toString()
+        val password = binding.loginPassword.text.toString()
 
-        if (email.isNotEmpty() && pwd.isNotEmpty()) {
-            val apiInterface = RetrofitInstance.getInstance().create(ApiInterface::class.java)
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            val apiInterface = NetworkInstance.getInstance().create(ApiInterface::class.java)
             val loginRequest = LoginRequest(
                 email,
-                pwd,
-                IDUtils.getMyDeviceID()
+                password
             )
 
             val call = apiInterface.signIn(loginRequest)
@@ -69,7 +67,7 @@ class UserLoginFragment : BaseFragment(), View.OnClickListener {
                         val body = response.body()
                         if (response.isSuccessful && body != null) {
                             VizbeeWrapper.context?.get()?.let {
-                                SharedPreferenceHelper(it).saveAuthToken(body.authToken)
+                                SharedPreferenceHelper.saveAuthToken(body.authToken)
 
                                 // ---------------------------
                                 // [BEGIN] Vizbee Integration
@@ -89,7 +87,7 @@ class UserLoginFragment : BaseFragment(), View.OnClickListener {
                     override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                         Logger.e(LOG_TAG, "Signin Failure", t)
                         VizbeeWrapper.context?.get()?.let {
-                            Toast.makeText(it, "Signin success", Toast.LENGTH_LONG).show()
+                            Toast.makeText(it, "Signin Failure", Toast.LENGTH_LONG).show()
                         }
                         mFragmentController.popBackStack()
                     }
