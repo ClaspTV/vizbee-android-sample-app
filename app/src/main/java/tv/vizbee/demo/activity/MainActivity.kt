@@ -16,10 +16,9 @@ import tv.vizbee.demo.fragments.VideoDetailsFragment
 import tv.vizbee.demo.fragments.VideoGalleryFragment
 import tv.vizbee.demo.helper.SharedPreferenceHelper
 import tv.vizbee.demo.model.VideoItem
-import tv.vizbee.demo.network.ApiInterface
+import tv.vizbee.demo.network.LoginApiInterface
 import tv.vizbee.demo.network.NetworkInstance
 import tv.vizbee.demo.vizbee.VizbeeHomeSSOAdapter
-import tv.vizbee.demo.vizbee.VizbeeWrapper
 import tv.vizbee.utils.Logger
 
 class MainActivity : AppCompatActivity(),
@@ -45,7 +44,7 @@ class MainActivity : AppCompatActivity(),
             var launchLogin = it.getBoolean(VizbeeHomeSSOAdapter.INTENT_LAUNCH_LOGIN_SCREEN)
             if (launchLogin) {
                 Logger.d(LOG_TAG, "LoginFragment Launch Called")
-                showUserLoginFragment()
+                showUserLoginFragment(true)
             }
         }
     }
@@ -80,7 +79,7 @@ class MainActivity : AppCompatActivity(),
             .commit()
     }
 
-    override fun showUserLoginFragment() {
+    override fun showUserLoginFragment(isHomeSSOLogin: Boolean?) {
         val tag = UserLoginFragment::class.java.simpleName
 
         if (supportFragmentManager.findFragmentByTag(tag) != null) {
@@ -88,10 +87,15 @@ class MainActivity : AppCompatActivity(),
             return
         }
 
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, UserLoginFragment.newInstance(), tag)
-            .addToBackStack(null)
-            .commit()
+        isHomeSSOLogin?.let {
+            supportFragmentManager.beginTransaction()
+                .replace(
+                    R.id.container,
+                    UserLoginFragment.newInstance(it), tag
+                )
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     override fun popBackStack() {
@@ -106,27 +110,20 @@ class MainActivity : AppCompatActivity(),
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         val item = menu.findItem(R.id.account)
-        val context = VizbeeWrapper.context?.get()
-        context?.let {
-            val isUserLoggedIn = (SharedPreferenceHelper.getAuthToken()?.isNotEmpty() == true)
-            item.title =
-                if (isUserLoggedIn) getString(R.string.sign_out) else getString(R.string.sign_in)
-        }
-
+        val isUserLoggedIn = (SharedPreferenceHelper.getAuthToken()?.isNotEmpty() == true)
+        item.title =
+            if (isUserLoggedIn) getString(R.string.sign_out) else getString(R.string.sign_in)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val context = VizbeeWrapper.context?.get()
-        context?.let {
-            val authToken = SharedPreferenceHelper.getAuthToken()
-            val isUserLoggedIn = (authToken?.isNotEmpty() == true)
-            when (item.itemId) {
-                R.id.account -> if (isUserLoggedIn) {
-                    signOut(authToken)
-                } else {
-                    showUserLoginFragment()
-                }
+        val authToken = SharedPreferenceHelper.getAuthToken()
+        val isUserLoggedIn = (authToken?.isNotEmpty() == true)
+        when (item.itemId) {
+            R.id.account -> if (isUserLoggedIn) {
+                signOut(authToken)
+            } else {
+                showUserLoginFragment(false)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -135,27 +132,24 @@ class MainActivity : AppCompatActivity(),
     private fun signOut(authToken: String?) {
 
         authToken?.let {
-            val apiInterface = NetworkInstance.getInstance().create(ApiInterface::class.java)
+            val loginApiInterface =
+                NetworkInstance.getInstance().create(LoginApiInterface::class.java)
 
-            val call = apiInterface.signOut(authToken)
+            val call = loginApiInterface.signOut(authToken)
             call.enqueue(
                 object : Callback<Any> {
                     override fun onResponse(
                         call: Call<Any>,
                         response: Response<Any>
                     ) {
-                        VizbeeWrapper.context?.get()?.let {
-                            SharedPreferenceHelper.saveAuthToken("")
-                            Toast.makeText(it, "Signout success", Toast.LENGTH_LONG).show()
-                            invalidateOptionsMenu()
-                        }
+                        SharedPreferenceHelper.saveAuthToken("")
+                        Toast.makeText(baseContext, "Signout success", Toast.LENGTH_LONG).show()
+                        invalidateOptionsMenu()
                     }
 
                     override fun onFailure(call: Call<Any>, t: Throwable) {
                         Logger.e(LOG_TAG, "Signout Failure", t)
-                        VizbeeWrapper.context?.get()?.let {
-                            Toast.makeText(it, "Signout success", Toast.LENGTH_LONG).show()
-                        }
+                        Toast.makeText(baseContext, "Signout success", Toast.LENGTH_LONG).show()
                     }
                 })
         }

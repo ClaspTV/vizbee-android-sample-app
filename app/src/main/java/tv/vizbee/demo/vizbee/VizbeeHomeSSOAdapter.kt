@@ -6,10 +6,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import tv.vizbee.config.controller.IDUtils
+import tv.vizbee.demo.Constants
 import tv.vizbee.demo.activity.MainActivity
 import tv.vizbee.demo.helper.SharedPreferenceHelper
 import tv.vizbee.demo.model.RegCodeStatusRequest
-import tv.vizbee.demo.network.ApiInterface
+import tv.vizbee.demo.network.LoginApiInterface
 import tv.vizbee.demo.network.NetworkInstance
 import tv.vizbee.homesso.IVizbeeHomeSSOAdapter
 import tv.vizbee.homesso.model.VizbeeSignInInfo
@@ -35,11 +36,10 @@ class VizbeeHomeSSOAdapter : IVizbeeHomeSSOAdapter {
         // Implement this method to verify whether the user has signed in via
         // the given sign-in method or not and invoke callback.onSuccess(isSignedIn)
 
-
         val authToken = SharedPreferenceHelper.getAuthToken()
         val isSignedIn = (authToken?.isNotEmpty() == true)
         val mobileSignInInfo =
-            VizbeeSignInInfo("MVPD", isSignedIn, JSONObject())
+            VizbeeSignInInfo(Constants.LOGIN_TYPE_MVPD, isSignedIn, JSONObject())
         val signInInfo: List<VizbeeSignInInfo> = listOf(mobileSignInInfo)
         callback.onSuccess(signInInfo)
     }
@@ -57,7 +57,7 @@ class VizbeeHomeSSOAdapter : IVizbeeHomeSSOAdapter {
             LOG_TAG,
             "Received sign in status = $status context = ${VizbeeWrapper.context?.get()}"
         )
-        if (status.vizbeeSignInState == VizbeeSignInState.SIGN_IN_IN_PROGRESS && status.signInType == "MVPD"
+        if (status.vizbeeSignInState == VizbeeSignInState.SIGN_IN_IN_PROGRESS && status.signInType == Constants.LOGIN_TYPE_MVPD
         ) {
 
             val regCode = status.customData.optString("regcode")
@@ -86,11 +86,11 @@ class VizbeeHomeSSOAdapter : IVizbeeHomeSSOAdapter {
     }
 
     fun updateRegCodeStatus(authToken: String) {
-        val apiInterface = NetworkInstance.getInstance().create(ApiInterface::class.java)
+        val loginApiInterface = NetworkInstance.getInstance().create(LoginApiInterface::class.java)
         val regCodeStatusRequest = RegCodeStatusRequest(
             IDUtils.getMyDeviceID()
         )
-        val call = apiInterface.getAccountRegCodeStatus(
+        val call = loginApiInterface.updateRegCodeStatus(
             SharedPreferenceHelper.getRegCode() ?: "",
             authToken,
             regCodeStatusRequest

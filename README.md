@@ -2,7 +2,7 @@
 
 This example demonstrates how to integrate Vizbee casting functionality into an Android mobile app.
 
-## Integration Steps for your Android mobile app
+## Vizbee Continuity Integration Steps for your Android mobile app
 Look for the block comments with text "[BEGIN] Vizbee Integration" and "[END] Vizbee Integration" in the code for an easy understanding of the integration.
 
 ### Build Setup
@@ -46,11 +46,8 @@ Look for the block comments with text "[BEGIN] Vizbee Integration" and "[END] Vi
 * [Code Snippets](https://console.vizbee.tv/app/vzb2000001/develop/guides/android-snippets)
 * [Troubleshooting](https://console.vizbee.tv/app/vzb2000001/develop/guides/sender-troubleshooting-snippets)
 
-# Vizbee HomeSSO Demo App
-The Vizbee Android HomeSSO Demo App showcases the integration of the VizbeeHomeSSO Mobile SDK (a wrapper built on top of the Vizbee Continuity SDK) within an Android mobile app.
-
-## Integration Steps for your Android mobile app
-Look for the block comments with text "[BEGIN] Vizbee Integration" and "[END] Vizbee Integration" in the code for an easy understanding of the integration.
+## Vizbee HomeSSO Integration Steps for your Android mobile app
+The Vizbee Android HomeSSO Demo App showcases the integration of the VizbeeHomeSSO Mobile SDK (a wrapper built on top of the Vizbee Continuity SDK) within an Android mobile app. Look for the block comments with text "[BEGIN] Vizbee Integration" and "[END] Vizbee Integration" in the code for an easy understanding of the integration.
 
 ### Build Setup
 1. Add the Vizbee repository to your Android mobile app’s root [settings.gradle](settings.gradle).
@@ -62,5 +59,5 @@ Look for the block comments with text "[BEGIN] Vizbee Integration" and "[END] Vi
 ### SDK Initialisation
 1. Initialize the VizbeeHomeSSO SDK by initializing `VizbeeHomeSSOManager` via `initialize(application, adapter)` method just after initialising the Vizbee Continuity SDK [VizbeeWrapper](app/src/main/java/tv/vizbee/demo/vizbee/VizbeeWrapper.kt).
 
-### Update Reg Code
-1. After a successful login on the app, you can update the regCode for TV login by calling the `VizbeeHomeSSOAdapter().updateRegCodeStatus(authToken)` method with the authToken [UserLoginFragment](app/src/main/java/tv/vizbee/demo/fragments/UserLoginFragment.kt).
+### Update Reg Code Status with Mobile Access Token
+1. After a successful login on the app, you can update the regCode status with mobile access token for TV login by calling the `VizbeeHomeSSOAdapter().updateRegCodeStatus(authToken)` method with the authToken [UserLoginFragment](app/src/main/java/tv/vizbee/demo/fragments/UserLoginFragment.kt).

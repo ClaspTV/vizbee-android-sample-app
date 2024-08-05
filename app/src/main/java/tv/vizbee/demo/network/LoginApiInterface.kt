@@ -9,7 +9,7 @@ import tv.vizbee.demo.model.LoginRequest
 import tv.vizbee.demo.model.LoginResponse
 import tv.vizbee.demo.model.RegCodeStatusRequest
 
-interface ApiInterface {
+interface LoginApiInterface {
     @POST("v1/signin")
     fun signIn(@Body loginRequest: LoginRequest): Call<LoginResponse>
 
@@ -19,7 +19,7 @@ interface ApiInterface {
     ): Call<Any>
 
     @POST("v1/accountregcode/{regCode}/status")
-    fun getAccountRegCodeStatus(
+    fun updateRegCodeStatus(
         @Path("regCode") regCode: String,
         @Header("Authorization") authToken: String,
         @Body regCodeStatusRequest: RegCodeStatusRequest
