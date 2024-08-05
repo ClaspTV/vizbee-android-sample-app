@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -13,16 +14,15 @@ import tv.vizbee.demo.databinding.FragmentUserLoginBinding
 import tv.vizbee.demo.helper.SharedPreferenceHelper
 import tv.vizbee.demo.model.LoginRequest
 import tv.vizbee.demo.model.LoginResponse
-import tv.vizbee.demo.network.ApiInterface
+import tv.vizbee.demo.network.LoginApiInterface
 import tv.vizbee.demo.network.NetworkInstance
 import tv.vizbee.demo.vizbee.VizbeeHomeSSOAdapter
-import tv.vizbee.demo.vizbee.VizbeeWrapper
 import tv.vizbee.utils.Logger
 
 class UserLoginFragment : BaseFragment(), View.OnClickListener {
 
     private lateinit var binding: FragmentUserLoginBinding
-
+    var isHomeSSOLogin = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +37,9 @@ class UserLoginFragment : BaseFragment(), View.OnClickListener {
         Logger.d(LOG_TAG, "onCreateView called")
         binding = FragmentUserLoginBinding.inflate(inflater, container, false)
         binding.loginSubmit.setOnClickListener(this)
+
+        isHomeSSOLogin = arguments?.getBoolean(ARG_HOME_SSO_LOGIN, false) ?: false
+
         return binding.root
     }
 
@@ -51,13 +54,14 @@ class UserLoginFragment : BaseFragment(), View.OnClickListener {
         val password = binding.loginPassword.text.toString()
 
         if (email.isNotEmpty() && password.isNotEmpty()) {
-            val apiInterface = NetworkInstance.getInstance().create(ApiInterface::class.java)
+            val loginApiInterface =
+                NetworkInstance.getInstance().create(LoginApiInterface::class.java)
             val loginRequest = LoginRequest(
                 email,
                 password
             )
 
-            val call = apiInterface.signIn(loginRequest)
+            val call = loginApiInterface.signIn(loginRequest)
             call.enqueue(
                 object : Callback<LoginResponse> {
                     override fun onResponse(
@@ -66,29 +70,27 @@ class UserLoginFragment : BaseFragment(), View.OnClickListener {
                     ) {
                         val body = response.body()
                         if (response.isSuccessful && body != null) {
-                            VizbeeWrapper.context?.get()?.let {
-                                SharedPreferenceHelper.saveAuthToken(body.authToken)
+                            SharedPreferenceHelper.saveAuthToken(body.authToken)
 
-                                // ---------------------------
-                                // [BEGIN] Vizbee Integration
-                                // ---------------------------
+                            // ---------------------------
+                            // [BEGIN] Vizbee Integration
+                            // ---------------------------
+                            if (isHomeSSOLogin) {
                                 VizbeeHomeSSOAdapter().updateRegCodeStatus(body.authToken)
-                                // ---------------------------
-                                // [END] Vizbee Integration
-                                // ---------------------------
-
-                                activity?.invalidateOptionsMenu()
-                                mFragmentController.popBackStack()
-                                Toast.makeText(it, "Signin success", Toast.LENGTH_LONG).show()
                             }
+                            // ---------------------------
+                            // [END] Vizbee Integration
+                            // ---------------------------
+
+                            activity?.invalidateOptionsMenu()
+                            mFragmentController.popBackStack()
+                            Toast.makeText(context, "Signin success", Toast.LENGTH_LONG).show()
                         }
                     }
 
                     override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                         Logger.e(LOG_TAG, "Signin Failure", t)
-                        VizbeeWrapper.context?.get()?.let {
-                            Toast.makeText(it, "Signin Failure", Toast.LENGTH_LONG).show()
-                        }
+                        Toast.makeText(context, "Signin Failure", Toast.LENGTH_LONG).show()
                         mFragmentController.popBackStack()
                     }
                 })
@@ -98,8 +100,10 @@ class UserLoginFragment : BaseFragment(), View.OnClickListener {
     }
 
     companion object {
-        fun newInstance(): UserLoginFragment {
-            return UserLoginFragment()
+        private const val ARG_HOME_SSO_LOGIN = "HOME_SSO_LOGIN"
+
+        fun newInstance(isHomeSSOLogin: Boolean) = UserLoginFragment().apply {
+            arguments = bundleOf(ARG_HOME_SSO_LOGIN to isHomeSSOLogin)
         }
     }
 
