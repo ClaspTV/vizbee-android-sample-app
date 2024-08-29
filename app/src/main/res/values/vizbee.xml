@@ -6,7 +6,7 @@
     <!-- =============================================================== -->
 
     <!-- RemoteActivity theme -->
-    <style name="Theme.Vizbee.Custom" parent="Theme.Vizbee.Futura">
+    <style name="Theme.Vizbee.Custom" parent="Theme.Vizbee.Futura.Light">
 
         <!-- Your app launcher icon -->
         <item name="vzb_appIcon">@mipmap/ic_launcher</item>
