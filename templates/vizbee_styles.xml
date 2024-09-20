@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- =============================================================== -->
+    <!-- Basic Style Customization (Required)                            -->
+    <!-- =============================================================== -->
+
+    <!-- Update with VizbeeAppID assigned to your app -->
+    <string name="vizbee_app_id">vzb*********</string>
+
+    <!-- RemoteActivity theme -->
+    <style name="Theme.Vizbee.Custom" parent="Theme.Vizbee.Futura">
+
+        <!-- Your app launcher icon -->
+        <item name="vzb_appIcon">@mipmap/ic_launcher</item>
+
+        <!-- Your app's theme colors -->
+        <!--
+          1. Primary Color - this is typically the background color used on most of your app screens
+          2. Secondary Color - this is the highlight or accent color used on buttons etc. in your app screens
+          3. Tertiary Color - this is the text color used in most of your app screens
+          Update the colors below to suit your app.
+        -->
+        <item name="vzb_primaryColor">#000000</item>
+        <item name="vzb_secondaryColor">#0000FF</item>
+        <item name="vzb_tertiaryColor">#FFFFFF</item>
+
+        <!-- Your app's theme fonts -->
+        <!--
+          Provide fonts located in your assets folder including any nested directories.
+          i.e 'yourFont.<extension>' or 'fonts/yourFont.<extension>.
+          Update the fonts below to suit your app.
+         -->
+        <item name="vzb_primaryFont">fonts/<ProximaNova-Bold.otf></item>
+        <item name="vzb_secondaryFont">fonts/<ProximaNova-Reg.otf></item>
+
+        <!-- =============================================================== -->
+        <!-- Advanced Style Customization (Optional)                         -->
+        <!-- =============================================================== -->
+
+        <!-- Card background -->
+        <!--
+          Set this attribute if you prefer an image background for Vizbee screens
+        -->
+        <!-- <item name="vzb_backgroundLayerStyle">@style/Theme.Vizbee.Custom.BackgroundStyle</item> -->
+
+        <!-- -->
+        <!-- OVERLAY CARD -->
+        <!-- -->
+
+        <!--
+            Customize the Overlay cards as shown here
+            https://gist.github.com/vizbee/7e9613f76a546c8f9ed9087e91bdc7b1#customize-overlay-cards
+        -->
+
+        <!-- -->
+        <!-- INTERSTITIAL CARD -->
+        <!-- -->
+
+        <!--
+            Customize the Interstitial cards as shown here
+            https://gist.github.com/vizbee/7e9613f76a546c8f9ed9087e91bdc7b1#customize-interstitial-cards
+        -->
+
+        <!-- -->
+        <!-- SPECIFIC CARD ATTRIBUTES -->
+        <!-- -->
+
+        <!-- Player Card -->
+        <!--
+            Customize the Player card as shown here
+            https://gist.github.com/vizbee/7e9613f76a546c8f9ed9087e91bdc7b1#customize-player-card
+        -->
+
+        <!-- -->
+        <!-- SPECIFIC VIEW ATTRIBUTES -->
+        <!-- -->
+
+        <!-- Device Info view -->
+        <!--
+            Uncomment and set this attribute to update discovered device name labels' font size,
+            textCapitalization, textColor, line separation between devices etc.
+        -->
+
+        <!--
+        <item name="vzb_deviceInfoViewNameLabelStyle">@style/Theme.Vizbee.Custom.DeviceInfoViewNameLabelStyle</item>
+        -->
+
+    </style>
+
+    <!-- <style name="Theme.Vizbee.Custom.BackgroundStyle">
+         The background image your app will display in Vizbee's UI
+         <item name="vzb_drawable">@drawable/vizbee_cards_background</item>
+    </style> -->
+
+    <!-- Device Info view -->
+    <!--<style name="Theme.Vizbee.Custom.DeviceInfoViewNameLabelStyle" parent="Widget.Vizbee.Futura.DeviceInfoViewNameLabel">
+        <item name="android:textAppearance">?attr/vzb_textAppearanceBody</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="vzb_typeface">?attr/vzb_primaryFont</item>
+        <item name="android:singleLine">false</item>
+    </style> -->
+
+</resources>
