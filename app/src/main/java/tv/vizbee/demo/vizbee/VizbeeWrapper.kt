@@ -3,13 +3,12 @@ package tv.vizbee.demo.vizbee
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import com.google.android.gms.cast.framework.CastContext
 import tv.vizbee.api.VizbeeContext
 import tv.vizbee.api.session.*
-import tv.vizbee.api.session.VideoClient.VideoStatusListener
 import tv.vizbee.demo.Constants
 import tv.vizbee.demo.R
+import tv.vizbee.homesso.VizbeeHomeSSOManager
 import java.lang.ref.WeakReference
 
 object VizbeeWrapper: SessionStateListener {
@@ -35,7 +34,12 @@ object VizbeeWrapper: SessionStateListener {
         val appAdapter = VizbeeAppAdapter()
         // Enable Vizbee SDK logging
         VizbeeContext.getInstance().enableVerboseLogging()
+
+        // Initialise Vizbee SDK
         VizbeeContext.getInstance().init(application, appId, appAdapter)
+
+        // Initialise HomeSSO
+        VizbeeHomeSSOManager.initialize(application.applicationContext, VizbeeHomeSSOAdapter())
 
         /*
          * Setup session manager
