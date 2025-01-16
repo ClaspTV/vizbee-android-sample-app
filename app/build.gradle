@@ -42,6 +42,16 @@ android {
     viewBinding {
         enabled = true
     }
+
+    // Enable Compose
+    buildFeatures {
+        compose true
+    }
+
+    // Configure Compose
+    composeOptions {
+        kotlinCompilerExtensionVersion "1.5.4"  // Match your compose version
+    }
 }
 
 dependencies {
@@ -58,7 +68,7 @@ dependencies {
     // [BEGIN] Vizbee Integration
     // ---------------------------
 
-    implementation 'tv.vizbee:android-sender-sdk:6.6.6'
+    implementation 'tv.vizbee:android-sender-sdk:6.7.6'
 
     // ---------------------------
     // [END] Vizbee Integration
@@ -66,6 +76,20 @@ dependencies {
 
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.google.android.material:material:1.12.0'
+
+    // Compose Core
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.material:material:$compose_version"
+    implementation "androidx.compose.material3:material3:1.1.2"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+
+    // Optional but recommended
+    implementation "androidx.activity:activity-compose:1.8.2"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0"
+
+    // For testing
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'

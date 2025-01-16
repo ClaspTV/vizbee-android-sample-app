@@ -33,6 +33,13 @@
             android:launchMode="singleTop"
             android:screenOrientation="sensorLandscape" />
 
+        <activity
+            android:name=".compose.ComposeExamplesActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".compose.RemoteButtonIntegrationActivity"
+            android:exported="false"/>
+
         <!--[BEGIN] Vizbee Integration-->
 
         <meta-data

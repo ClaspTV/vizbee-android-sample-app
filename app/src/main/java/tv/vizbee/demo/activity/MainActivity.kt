@@ -1,9 +1,12 @@
 package tv.vizbee.demo.activity
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import tv.vizbee.demo.R
+import tv.vizbee.demo.compose.ComposeExamplesActivity
 import tv.vizbee.demo.fragments.IFragmentController
 import tv.vizbee.demo.fragments.VideoDetailsFragment
 import tv.vizbee.demo.fragments.VideoGalleryFragment
@@ -51,6 +54,19 @@ class MainActivity : AppCompatActivity(),
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            // ... existing menu items ...
+
+            R.id.compose_examples -> {
+                startActivity(Intent(this, ComposeExamplesActivity::class.java))
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
 }
