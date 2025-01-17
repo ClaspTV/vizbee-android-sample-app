@@ -18,15 +18,24 @@ import tv.vizbee.api.RemoteButton
 @Composable
 fun VizbeeRemoteButton(
     modifier: Modifier = Modifier,
-    onButtonClick: (() -> Unit)? = null
+    overrideClick: Boolean = false,
+    onButtonClick: ((RemoteButton) -> Unit) = {}
 ) {
     AndroidView(
         modifier = modifier,
         factory = { context ->
             RemoteButton(context).apply {
-                if (onButtonClick != null) {
-                    setOnClickListener { onButtonClick() }
+                // Only set custom click listener if overrideClick is true
+                if (overrideClick) {
+                    setOnClickListener { onButtonClick(this) }
                 }
+            }
+        },
+        update = { view ->
+            // Only update click listener if overrideClick is true
+            if (overrideClick) {
+                view.setOnClickListener(null)
+                view.setOnClickListener { onButtonClick(view) }
             }
         }
     )

@@ -18,6 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import tv.vizbee.demo.model.Video
+import tv.vizbee.demo.model.VideoItem
 
 class RemoteButtonIntegrationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +64,27 @@ class RemoteButtonIntegrationActivity : ComponentActivity() {
                     ) {
                         VizbeeRemoteButton(
                             modifier = Modifier.size(48.dp)
+                        )
+                    }
+
+                    // Example 4: RemoteButton in AndroidView with click override
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Text(
+                        "AndroidView Example with RemoteButton click override:",
+                        color = Color.White,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        val startPosition = 0
+                        VizbeeRemoteButton(
+                            modifier = Modifier.size(48.dp),
+                            overrideClick = true,
+                            onButtonClick = { remoteButton ->
+                                remoteButton.click(VideoItem(), startPosition.toLong())
+                            }
                         )
                     }
                 }
