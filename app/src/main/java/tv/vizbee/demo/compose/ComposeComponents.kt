@@ -2,6 +2,8 @@ package tv.vizbee.demo.compose
 
 // ComposeComponents.kt
 
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -13,6 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.fragment.app.FragmentContainerView
+import androidx.fragment.app.FragmentManager
+import tv.vizbee.api.CastBarFragment
 import tv.vizbee.api.RemoteButton
 
 @Composable
@@ -113,4 +118,37 @@ fun CustomToolbar(
             modifier = Modifier.size(48.dp)
         )
     }
+}
+
+/**
+ * CastBarComposable: A composable wrapper for the CastBarFragment
+ *
+ * Use this wrapper to integrate the Cast Bar into any Compose layout.
+ * It uses `FragmentContainerView` to host the `CastBarFragment`.
+ *
+ * @param modifier Modifier for customizing the layout, e.g., width and height.
+ * @param fragmentManager An optional instance of FragmentManager to manage the fragment transaction.
+ *                        If not provided, it will attempt to derive it from the provided context.
+ */
+@Composable
+fun CastBarComposable(
+    modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .wrapContentHeight(),
+    fragmentManager: FragmentManager? = null
+) {
+    AndroidView(
+        factory = { context ->
+            FragmentContainerView(context).apply {
+                id = View.generateViewId()
+
+                // Obtain FragmentManager from the provided context or parameter
+                val fm = fragmentManager ?: (context as? AppCompatActivity)?.supportFragmentManager
+                fm?.beginTransaction()
+                    ?.replace(this.id, CastBarFragment())
+                    ?.commit()
+            }
+        },
+        modifier = modifier
+    )
 }
