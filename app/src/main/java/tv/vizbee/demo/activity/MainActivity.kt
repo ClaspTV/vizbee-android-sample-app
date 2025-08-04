@@ -1,7 +1,9 @@
 package tv.vizbee.demo.activity
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -9,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import tv.vizbee.api.VizbeeContext
 import tv.vizbee.demo.R
 import tv.vizbee.demo.fragments.IFragmentController
 import tv.vizbee.demo.fragments.UserLoginFragment
@@ -29,6 +32,7 @@ class MainActivity : AppCompatActivity(),
         showVideoGalleryFragment()
         Logger.d(LOG_TAG, "handleLogin onCreate")
         handleLogin(intent)
+        handleIntent(intent)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -36,6 +40,7 @@ class MainActivity : AppCompatActivity(),
         intent?.let {
             Logger.d(LOG_TAG, "handleLogin onNewIntent")
             handleLogin(it)
+            handleIntent(it)
         }
     }
 
@@ -45,6 +50,17 @@ class MainActivity : AppCompatActivity(),
             if (launchLogin) {
                 Logger.d(LOG_TAG, "LoginFragment Launch Called")
                 showUserLoginFragment(true)
+            }
+        }
+    }
+
+    private fun handleIntent(intent: Intent?) {
+        Logger.d(LOG_TAG, "Handling the intent")
+        val data: Uri? = intent?.data
+        data?.let { uri ->
+            Log.d(LOG_TAG, "The intent contains: uri = $uri")
+            if (uri.host?.equals("demo.vizbee.tv") == true && uri.path?.equals("/deeplink") == true) {
+                VizbeeContext.getInstance().handleDeeplink(this, uri)
             }
         }
     }
