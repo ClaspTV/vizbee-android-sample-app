@@ -8,12 +8,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.net.toUri
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import tv.vizbee.api.VizbeeContext
 import tv.vizbee.demo.R
+import tv.vizbee.demo.databinding.ActivityMainBinding
 import tv.vizbee.demo.fragments.IFragmentController
 import tv.vizbee.demo.fragments.UserLoginFragment
 import tv.vizbee.demo.fragments.VideoDetailsFragment
@@ -25,12 +26,15 @@ import tv.vizbee.demo.network.NetworkInstance
 import tv.vizbee.demo.vizbee.VizbeeHomeSSOAdapter
 import tv.vizbee.utils.Logger
 
-class MainActivity : AppCompatActivity(),
-    IFragmentController {
+class MainActivity : AppCompatActivity(), IFragmentController {
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
 //        installSplashScreen()
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         showVideoGalleryFragment()
         Logger.d(LOG_TAG, "handleLogin onCreate")
         handleLogin(intent)
@@ -80,7 +84,7 @@ class MainActivity : AppCompatActivity(),
         }
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container, VideoGalleryFragment(), tag)
+            .replace(R.id.content_container, VideoGalleryFragment(), tag)
             .commit()
     }
 
@@ -92,7 +96,7 @@ class MainActivity : AppCompatActivity(),
             return
         }
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container, VideoDetailsFragment.newInstance(videoItem), tag)
+            .replace(R.id.content_container, VideoDetailsFragment.newInstance(videoItem), tag)
             .addToBackStack(null)
             .commit()
     }
@@ -108,7 +112,7 @@ class MainActivity : AppCompatActivity(),
         isHomeSSOLogin?.let {
             supportFragmentManager.beginTransaction()
                 .replace(
-                    R.id.container,
+                    R.id.content_container,
                     UserLoginFragment.newInstance(it), tag
                 )
                 .addToBackStack(null)
@@ -138,10 +142,19 @@ class MainActivity : AppCompatActivity(),
         val authToken = SharedPreferenceHelper.getAuthToken()
         val isUserLoggedIn = (authToken?.isNotEmpty() == true)
         when (item.itemId) {
-            R.id.account -> if (isUserLoggedIn) {
-                signOut(authToken)
-            } else {
-                showUserLoginFragment(false)
+            R.id.account -> {
+                if (isUserLoggedIn) {
+                    signOut(authToken)
+                } else {
+                    showUserLoginFragment(false)
+                }
+            }
+
+            R.id.menu_item_help -> {
+                // Take user to a webview with a url
+                val url = "https://developer.vizbee.tv/"
+                val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+                startActivity(intent)
             }
         }
         return super.onOptionsItemSelected(item)

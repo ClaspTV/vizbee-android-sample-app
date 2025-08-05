@@ -12,8 +12,8 @@
         android:layout_width="0dp"
         android:layout_height="130dp"
         android:layout_weight="1"
-        android:scaleType="centerInside"
-        android:contentDescription="@string/hero_image"/>
+        android:contentDescription="@string/hero_image"
+        android:scaleType="centerInside" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -36,7 +36,5 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/textColorSecondary" />
-
     </LinearLayout>
-
 </LinearLayout>

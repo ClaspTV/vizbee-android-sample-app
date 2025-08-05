@@ -16,5 +16,11 @@
         app:actionLayout="@layout/menu_item_layout_cast_button"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/menu_item_help"
+        android:icon="@drawable/help"
+        android:title="Help"
+        app:showAsAction="always" />
+
     <!--[END] Vizbee Integration-->
 </menu>
