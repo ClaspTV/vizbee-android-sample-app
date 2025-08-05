@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Vizbee Demo</string>
+    <string name="app_name">DemoFlix</string>
     <!-- Update with VizbeeAppID assigned to your app -->
     <string name="vizbee_app_id">vzb3932863298</string>
     <string name="watch_now">Watch Now</string>

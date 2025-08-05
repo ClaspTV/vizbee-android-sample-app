@@ -8,7 +8,7 @@
     <color name="colorSecondary">#000000</color>
     <color name="colorPrimaryDark">#512DA8</color>
     <color name="colorAccent">#512DA8</color>
-    <color name="background">#CCffffff</color>
+    <color name="background">@color/colorPrimary</color>
 
     <color name="textColorPrimary">#212121</color>
     <color name="textColorSecondary">#757575</color>
@@ -22,4 +22,7 @@
     <color name="vzb_cast_bar_subtitle_text_color" tools:override="true">#80000000</color>
     <color name="vzb_cast_bar_progress_bar_background_color" tools:override="true">#80512DA8</color>
     <color name="vzb_cast_bar_progress_bar_color" tools:override="true">@color/colorAccent</color>
+
+    <!--  SplashScreen  -->
+    <color name="color_splash_bg">#F00F0F0F</color>
 </resources>

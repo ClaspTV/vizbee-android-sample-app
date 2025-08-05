@@ -7,5 +7,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="Theme.VizbeeDemo" parent="Base.Theme.VizbeeDemo" />
+    <!-- Splash Screen Theme -->
+    <style name="Base.Theme.VizbeeDemo.SplashScreen" >
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+
+        <!-- Splash screen icon animation duration (optional) -->
+        <item name="windowSplashScreenAnimationDuration">5000</item>
+    </style>
 </resources>
