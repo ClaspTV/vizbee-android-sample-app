@@ -45,12 +45,6 @@
                 android:id="@id/exo_position"
                 style="@style/ExoStyledControls.TimeText.Position" />
 
-            <TextView style="@style/ExoStyledControls.TimeText.Separator" />
-
-            <TextView
-                android:id="@id/exo_duration"
-                style="@style/ExoStyledControls.TimeText.Duration" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -78,7 +72,8 @@
 
             <ImageButton
                 android:id="@id/exo_settings"
-                style="@style/ExoStyledControls.Button.Bottom.Settings" />
+                style="@style/ExoStyledControls.Button.Bottom.Settings"
+                android:visibility="gone" />
 
             <ImageButton
                 android:id="@id/exo_fullscreen"
@@ -89,6 +84,12 @@
                 style="@style/ExoStyledControls.Button.Bottom.OverflowShow" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@id/exo_duration"
+            style="@style/ExoStyledControls.TimeText.Duration"
+            android:layout_gravity="center_vertical|end"
+            android:paddingEnd="@dimen/exo_styled_bottom_bar_time_padding" />
 
         <HorizontalScrollView
             android:id="@id/exo_extra_controls_scroll_view"
@@ -154,7 +155,5 @@
             style="@style/ExoStyledControls.Button.Center.PlayPause" />
 
         <include layout="@layout/exo_player_control_ffwd_button" />
-
     </LinearLayout>
-
 </merge>
