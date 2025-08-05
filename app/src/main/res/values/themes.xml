@@ -1,14 +1,14 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.VizbeeDemo" parent="Theme.AppCompat.DayNight">
-        <!-- Customize your light theme here. -->
+        <!-- Customize your dark theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <!-- Splash Screen Theme -->
-    <style name="Base.Theme.VizbeeDemo.SplashScreen">
+    <style name="Base.Theme.VizbeeDemo.SplashScreen" >
         <item name="android:windowBackground">@drawable/splash_screen</item>
 
         <!-- Splash screen icon animation duration (optional) -->
