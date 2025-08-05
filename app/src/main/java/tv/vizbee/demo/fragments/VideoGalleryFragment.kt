@@ -32,6 +32,7 @@ class VideoGalleryFragment : BaseFragment() {
 
         binding.playlistRecyclerView.adapter = PlaylistAdapter(
             onItemClick = { playlistItem ->
+                playlistItem.description = playlistItem.title
                 callVizbeeSmartPlay(playlistItem)
             }
         ).apply {
