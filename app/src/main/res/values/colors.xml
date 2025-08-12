@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimary">#0F0F0F</color>
     <color name="colorSecondary">#FFFFFF</color>
-    <color name="colorPrimaryDark">#512DA8</color>
-    <color name="colorAccent">#512DA8</color>
+    <color name="colorAccent">#C494CC</color>
 
-    <color name="textColorPrimary">#FFFFFF</color>
-    <color name="textColorSecondary">#757575</color>
+    <color name="textColorPrimary">#F5F5F5</color>
+    <color name="textColorSecondary">#CBCBCB</color>
 
     <color name="background">@color/colorPrimary</color>
 
@@ -14,10 +13,10 @@
     <color name="button_selected_color">#cad3e0</color>
 
     <!-- MiniPlayer-->
-    <color name="vzb_cast_bar_primary_color" tools:override="true">#ffffff</color>
+    <color name="vzb_cast_bar_primary_color" tools:override="true">@color/colorPrimary</color>
     <color name="vzb_cast_bar_secondary_color" tools:override="true">@color/colorAccent</color>
-    <color name="vzb_cast_bar_title_text_color" tools:override="true">#000000</color>
-    <color name="vzb_cast_bar_subtitle_text_color" tools:override="true">#80000000</color>
+    <color name="vzb_cast_bar_title_text_color" tools:override="true">@color/textColorPrimary</color>
+    <color name="vzb_cast_bar_subtitle_text_color" tools:override="true">@color/textColorSecondary</color>
     <color name="vzb_cast_bar_progress_bar_background_color" tools:override="true">#80512DA8</color>
     <color name="vzb_cast_bar_progress_bar_color" tools:override="true">@color/colorAccent</color>
 
