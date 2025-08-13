@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import retrofit2.Call
@@ -26,6 +27,7 @@ import tv.vizbee.demo.network.NetworkInstance
 import tv.vizbee.demo.vizbee.VizbeeHomeSSOAdapter
 import tv.vizbee.utils.Logger
 
+
 class MainActivity : AppCompatActivity(), IFragmentController {
     private lateinit var binding: ActivityMainBinding
 
@@ -39,6 +41,14 @@ class MainActivity : AppCompatActivity(), IFragmentController {
         Logger.d(LOG_TAG, "handleLogin onCreate")
         handleLogin(intent)
         handleIntent(intent)
+
+        val actionBar: ActionBar? = supportActionBar
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false) // Hide title
+            actionBar.setDisplayUseLogoEnabled(true)
+            actionBar.setDisplayShowHomeEnabled(true)
+            actionBar.setLogo(R.drawable.app_logo) // Set your logo
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
