@@ -55,7 +55,7 @@
             android:name="tv.vizbee.api.RemoteActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.Vizbee.Custom">
+            android:theme="@style/Theme.DemoFlix.Common">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
