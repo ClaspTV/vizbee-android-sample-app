@@ -60,7 +60,8 @@
         -->
 
         <item name="vzb_luminosityLayerOverlayStyle">@style/Theme.Vizbee.DemoFlix.LuminosityLayerOverlayStyle</item>
-
+        <item name="vzb_overlayDismissStyle">@style/Theme.Vizbee.DemoFlix.OverlayDismissStyle</item>
+        <item name="vzb_overlayContentLayout">@style/Theme.Vizbee.DemoFlix.OverlayContentLayout</item>
         <item name="vzb_overlayTitleLabelStyle">@style/Theme.Vizbee.DemoFlix.OverlayTitleLabelStyle</item>
         <item name="vzb_overlaySubtitleLabelStyle">@style/Theme.Vizbee.DemoFlix.OverlaySubtitleLabelStyle</item>
         <item name="vzb_overlayCallToActionButtonStyle">@style/Theme.Vizbee.DemoFlix.OverlayCallToActionButton</item>
@@ -166,27 +167,42 @@
         <item name="android:alpha">0</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.OverlayTitleLabelStyle" parent="@style/Widget.Vizbee.OverlayTitleLabel">
-        <item name="android:textAllCaps">false</item>
-        <item name="vzb_deviceListTitleTextAppearance" tools:ignore="PrivateResource">?attr/vzb_textAppearanceTitle2
-        </item>
-        <item name="android:textSize">16sp</item>
+    <style name="Theme.Vizbee.DemoFlix.OverlayContentLayout" parent="Widget.Vizbee.OverlayContentLayout">
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">48dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.OverlaySubtitleLabelStyle" parent="@style/Widget.Vizbee.OverlaySubtitleLabel">
+    <style name="Theme.Vizbee.DemoFlix.OverlayDismissStyle" parent="Widget.Vizbee.Image.OverlayDismiss">
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
+
+    <style name="Theme.Vizbee.DemoFlix.OverlayTitleLabelStyle" parent="Widget.Vizbee.OverlayTitleLabel">
+        <item name="android:textAllCaps">true</item>
+        <item name="vzb_deviceListTitleTextAppearance" tools:ignore="PrivateResource">?attr/vzb_textAppearanceTitle2
+        </item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:paddingBottom">4dp</item>
+    </style>
+
+    <style name="Theme.Vizbee.DemoFlix.OverlaySubtitleLabelStyle" parent="Widget.Vizbee.OverlaySubtitleLabel">
         <item name="android:textAppearance" tools:ignore="PrivateResource">?attr/vzb_textAppearanceBody</item>
+        <item name="android:textColor">#C6CBD7</item>
         <item name="android:textSize">14sp</item>
     </style>
 
     <style name="Theme.Vizbee.DemoFlix.OverlayCallToActionButton" parent="@style/Widget.Vizbee.Futura.Button.OverlayCallToAction">
         <item name="android:textSize">14sp</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textAppearance">?attr/vzb_textAppearanceBody</item>
+        <item name="android:fontFamily">fonts/AllProDisplayC-Regular.otf</item>
         <item name="android:textColor">?attr/vzb_tertiaryColor</item>
-        <item name="android:layout_marginTop">32dp</item>
-        <item name="vzb_cornerRadius">8dp</item>
-        <item name="vzb_backgroundEnabled">?attr/vzb_secondaryColor</item>
-        <item name="vzb_typeface">graphik_medium</item>
+        <item name="android:textAppearance" tools:ignore="PrivateResource">?attr/vzb_textAppearanceBody</item>
+        <item name="vzb_cornerRadius">6dp</item>
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="vzb_backgroundEnabled">?attr/vzb_tertiaryColor</item>
     </style>
 
     <!-- title label style-->
