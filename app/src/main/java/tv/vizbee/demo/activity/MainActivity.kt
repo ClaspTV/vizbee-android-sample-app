@@ -162,7 +162,7 @@ class MainActivity : AppCompatActivity(), IFragmentController {
 
             R.id.menu_item_help -> {
                 // Take user to a webview with a url
-                val url = "https://developer.vizbee.tv/"
+                val url = "https://developer.vizbee.tv/omni/demo/intro"
                 val intent = Intent(Intent.ACTION_VIEW, url.toUri())
                 startActivity(intent)
             }
