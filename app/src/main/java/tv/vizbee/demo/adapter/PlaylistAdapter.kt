@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import tv.vizbee.demo.databinding.ItemPlaylistBinding
 import tv.vizbee.demo.model.VideoItem
+import tv.vizbee.demo.util.GlideUtil
 
 class PlaylistAdapter(
     private val onItemClick: (VideoItem) -> Unit
@@ -37,10 +38,7 @@ class PlaylistAdapter(
         fun bind(movie: VideoItem) {
             binding.apply {
                 // Load movie poster with Glide
-                Glide.with(ivMoviePoster)
-                    .load(movie.imageURL)
-                    .transform(RoundedCorners(16))
-                    .into(ivMoviePoster)
+                GlideUtil.loadImage(ivMoviePoster, movie.imageURL, shimmerView = itemPlaylistImageShimmer)
 
                 // Set movie details
                 tvMovieTitle.text = movie.title
