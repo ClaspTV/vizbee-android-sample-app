@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,7 +33,12 @@ class MainActivity : AppCompatActivity(), IFragmentController {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-//        installSplashScreen()
+        val splashInitTime = System.currentTimeMillis()
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition {
+            return@setKeepOnScreenCondition System.currentTimeMillis() - splashInitTime < 2000
+        }
+
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -194,6 +200,11 @@ class MainActivity : AppCompatActivity(), IFragmentController {
                     }
                 })
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.i(LOG_TAG, "* MainActivity onResume")
     }
 
     companion object {

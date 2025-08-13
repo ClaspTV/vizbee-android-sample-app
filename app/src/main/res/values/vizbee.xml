@@ -79,6 +79,7 @@
         <!-- Titles & subtitles -->
         <item name="vzb_textAppearanceTitle1">@style/Theme.Vizbee.DemoFlix.TitleLabelStyle</item>
         <item name="vzb_titledImageViewTitleLabelStyle">@style/Theme.Vizbee.DemoFlix.TitledImageViewTitleLabelStyle</item>
+        <item name="vzb_titledImageViewSubtitleLabelStyle">@style/Theme.Vizbee.DemoFlix.TitledImageViewSubtitleLabelStyle</item>
 
         <!-- Buttons -->
         <item name="vzb_callToActionButtonStyle">@style/Theme.Vizbee.DemoFlix.CallToActionFilled</item>
@@ -197,6 +198,13 @@
         <item name="vzb_deviceListTitleTextAppearance" tools:ignore="PrivateResource">?attr/vzb_textAppearanceTitle2
         </item>
         <item name="android:textSize">20sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Theme.Vizbee.DemoFlix.TitledImageViewSubtitleLabelStyle" parent="Widget.Vizbee.Futura.TitledImageViewSubtitleLabel">
+        <item name="vzb_deviceListTitleTextAppearance" tools:ignore="PrivateResource">?attr/vzb_textAppearanceTitle2
+        </item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textAllCaps">false</item>
     </style>
 

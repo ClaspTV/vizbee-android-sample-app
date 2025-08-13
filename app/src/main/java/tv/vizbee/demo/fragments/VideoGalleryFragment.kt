@@ -2,6 +2,8 @@ package tv.vizbee.demo.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -80,8 +82,9 @@ class VideoGalleryFragment : BaseFragment() {
         // ---------------------------
         // [BEGIN] Vizbee Integration
         // ---------------------------
-
-        VizbeeContext.getInstance().smartHelp(requireActivity())
+        Handler(Looper.getMainLooper()).postDelayed({
+            VizbeeContext.getInstance().smartHelp(requireActivity())
+        }, 2000)
 
         // ---------------------------
         // [END] Vizbee Integration

@@ -51,7 +51,7 @@ object VideoStoreFactory {
                 false,
                 "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/TearsOfSteel.m3u8",
                 "https://image.tmdb.org/t/p/original/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
-                "HLS"
+                "Sci-Fi"
             ),
             VideoItem(
                 "Inception",
@@ -60,7 +60,7 @@ object VideoStoreFactory {
                 false,
                 "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/ElephantsDream.m3u8",
                 "https://image.tmdb.org/t/p/original/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg",
-                "HLS"
+                "Sci-Fi/Thriller"
             ),
             VideoItem(
                 "Iron Man",
@@ -69,10 +69,10 @@ object VideoStoreFactory {
                 false,
                 "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/ElephantsDream.m3u8",
                 "https://image.tmdb.org/t/p/original/78lPtwv72eTNqFW9COBYI0dWDJa.jpg",
-                "HLS"
+                "Superhero"
             ),
 
-            // Trending Movies
+// Trending Movies
             VideoItem(
                 "The Matrix",
                 "Set in the 22nd century, The Matrix tells the story of a computer hacker who joins a group of underground insurgents fighting the vast and powerful computers who now rule the earth.",
@@ -80,7 +80,7 @@ object VideoStoreFactory {
                 false,
                 "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/TearsOfSteel.m3u8",
                 "https://image.tmdb.org/t/p/original/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg",
-                "HLS"
+                "Sci-Fi/Action"
             ),
             VideoItem(
                 "Joker",
@@ -89,7 +89,7 @@ object VideoStoreFactory {
                 false,
                 "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/ElephantsDream.m3u8",
                 "https://image.tmdb.org/t/p/original/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
-                "HLS"
+                "Crime/Drama"
             ),
             VideoItem(
                 "Captain America: Civil War",
@@ -98,7 +98,7 @@ object VideoStoreFactory {
                 false,
                 "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/ElephantsDream.m3u8",
                 "https://image.tmdb.org/t/p/original/rAGiXaUfPzY7CDEyNKUofk3Kw2e.jpg",
-                "HLS"
+                "Superhero/Action"
             ),
             VideoItem(
                 "Inglourious Basterds",
@@ -107,7 +107,7 @@ object VideoStoreFactory {
                 false,
                 "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/ElephantsDream.m3u8",
                 "https://image.tmdb.org/t/p/original/7sfbEnaARXDDhKm0CZ7D7uc2sbo.jpg",
-                "HLS"
+                "War/Drama"
             ),
             VideoItem(
                 "Captain America: The First Avenger",
@@ -116,10 +116,10 @@ object VideoStoreFactory {
                 false,
                 "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/ElephantsDream.m3u8",
                 "https://image.tmdb.org/t/p/original/vSNxAJTlD0r02V9sPYpOjqDZXUK.jpg",
-                "HLS"
+                "Superhero/War"
             ),
 
-            // Popular Movies (some duplicates already included above)
+// Popular Movies
             VideoItem(
                 "The Lord of the Rings: The Two Towers",
                 "Frodo and Sam are trekking to Mordor to destroy the One Ring of Power while Gimli, Legolas and Aragorn search for the orc-captured Merry and Pippin.",
@@ -127,7 +127,7 @@ object VideoStoreFactory {
                 false,
                 "http://adultswimhls-i.akamaihd.net/hls/live/238460/adultswim/main/1/master.m3u8",
                 "https://image.tmdb.org/t/p/original/5VTN0pR8gcqV3EPUHHfMGnJYN9L.jpg",
-                "HLS"
+                "Fantasy/Adventure"
             ),
             VideoItem(
                 "Mad Max: Fury Road",
@@ -136,7 +136,7 @@ object VideoStoreFactory {
                 false,
                 "http://adultswimhls-i.akamaihd.net/hls/live/238460/adultswim/main/1/master.m3u8",
                 "https://image.tmdb.org/t/p/original/8tZYtuWezp8JbcsvHYO0O46tFbo.jpg",
-                "HLS"
+                "Action/Post-Apocalyptic"
             )
         )
 
