@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.google.android.gms.cast.framework.CastContext
 import tv.vizbee.api.VizbeeContext
+import tv.vizbee.api.plugin.*
 import tv.vizbee.api.session.*
 import tv.vizbee.demo.Constants
 import tv.vizbee.demo.R
@@ -46,7 +47,60 @@ object VizbeeWrapper: SessionStateListener {
          */
         vizbeeSessionManager = VizbeeContext.getInstance().sessionManager
         vizbeeSessionManager?.addSessionStateListener(this)
+
+        val pluginManager = VizbeeContext.getInstance().pluginManager
+
+        // Configure rules
+        val rules = createPluginRules()
+        pluginManager.configure(rules)
     }
+
+    // TODO: Replace with desired search plugin ID (searchPluginId, or AISearchPlugin.AI_SEARCH_PLUGIN_ID
+    val searchPluginId = "device_search"
+    val coreDevicePluginId = "core_device_card"
+    private fun createPluginRules(): List<LayoutRule> = listOf(
+        // Rule 1: When device core plugin is tapped in full-minus-mini mode, expand it to full
+        LayoutRule(
+            name = "Device Core Expand",
+            trigger = CardPluginEvent.OnViewTapped(coreDevicePluginId),
+            condition = { _, layout ->
+                layout[coreDevicePluginId] == CardPluginViewType.MINI
+            },
+            actions = listOf(
+                LayoutAction(
+                    coreDevicePluginId,
+                    CardPluginViewType.FULL_MINUS_MINI,
+                    CardPluginPosition.TOP
+                ),
+                LayoutAction(
+                    searchPluginId,
+                    CardPluginViewType.MINI,
+                    CardPluginPosition.BOTTOM
+                )
+            )
+        ),
+
+        // Rule 2: When search plugin is tapped in mini mode, expand it to full-minus-mini and show device core in mini
+        LayoutRule(
+            name = "Search Expand - Show Search Full",
+            trigger = CardPluginEvent.OnViewTapped(searchPluginId),
+            condition = { _, layout ->
+                layout[searchPluginId] == CardPluginViewType.MINI
+            },
+            actions = listOf(
+                LayoutAction(
+                    coreDevicePluginId,
+                    CardPluginViewType.MINI,
+                    CardPluginPosition.TOP
+                ),
+                LayoutAction(
+                    searchPluginId,
+                    CardPluginViewType.FULL_MINUS_MINI,
+                    CardPluginPosition.BOTTOM
+                )
+            )
+        )
+    )
 
     // ----------------------------
     // MARK: - Session Management
