@@ -5,6 +5,9 @@
     <!-- Basic Style Customization (Required)                            -->
     <!-- =============================================================== -->
 
+<!--    <color name="colorAccent">#C494CC</color>-->
+<!--    <color name="textColorPrimary">#F5F5F5</color>-->
+<!--    <color name="lighterPrimary">#333333</color>-->
 
     <!-- RemoteActivity theme -->
     <style name="Theme.DemoFlix.Common" parent="Theme.Vizbee.Futura">
@@ -50,6 +53,7 @@
           Set this attribute if you prefer an image background for Vizbee screens
         -->
         <!-- <item name="vzb_backgroundLayerStyle">@style/Theme.Vizbee.Custom.BackgroundStyle</item> -->
+        <item name="vzb_backgroundLayerStyle">@style/Theme.Vizbee.TBSTemp.Background</item>
 
         <!-- -->
         <!-- OVERLAY CARD -->
@@ -119,6 +123,9 @@
             https://gist.github.com/vizbee/7e9613f76a546c8f9ed9087e91bdc7b1#customize-player-card
         -->
         <!-- Player Card -->
+        <!-- tplay style player card -->
+        <item name="vzb_playerCardV4Style">@style/Theme.Vizbee.TPlay.PlayerCardV4Style</item>
+
         <item name="vzb_contentStatusViewStyle">@style/Theme.Vizbee.TPlay.PlayerBufferingStyle</item>
         <item name="vzb_adStatusViewStyle">@style/Theme.Vizbee.TPlay.AdStatusView</item>
         <item name="vzb_playerControlsViewStyle">@style/Theme.Vizbee.TPlay.PlayerControlsView</item>
@@ -126,6 +133,32 @@
         <item name="vzb_playerControlsViewPlayPauseButtonStyle">@style/Theme.Vizbee.TPlay.VideoPlayerPlayPauseButton</item>
         <item name="vzb_seekBarVideoStyle">@style/Theme.Vizbee.TPlay.VideoControlSeekBar</item>
         <item name="vzb_videoControlSeekBarLabelStyle">@style/Theme.Vizbee.TPlay.VideoControlSeekBarLabel</item>
+
+        <!-- Player Card -->
+        <!--
+            Customize the Player card as shown here
+            https://gist.github.com/vizbee/7e9613f76a546c8f9ed9087e91bdc7b1#customize-player-card
+        -->
+
+        <item name="vzb_playerV3LayoutStyle">@style/Theme.Vizbee.TBSTemp.PlayerV3LayoutStyle</item>
+
+        <!-- Widget styles: HeaderPlayerLayout -->
+        <item name="vzb_headerPlayerLayoutStyle">@style/Theme.Vizbee.TBSTemp.HeaderPlayerLayout</item>
+
+        <!-- Widget styles: BodyPlayerLayout -->
+        <item name="vzb_bodyPlayerLayoutStyle">@style/Theme.Vizbee.TBSTemp.BodyPlayerLayout</item>
+
+        <!-- Widget styles: FooterPlayerLayout -->
+        <item name="vzb_footerPlayerLayoutStyle">@style/Theme.Vizbee.TBSTemp.FooterPlayerLayout</item>
+
+        <!--        <item name="vzb_playerControlsStackViewStyle">@style/Theme.Vizbee.TBSTemp.PlayerControlsStackView</item>-->
+        <!--        <item name="vzb_videoPlayerControlButtonStyle">@style/Theme.Vizbee.TBSTemp.VideoPlayerControlButton</item>-->
+        <!--        <item name="vzb_playerControlsViewPlayPauseButtonStyle">@style/Theme.Vizbee.TBSTemp.VideoPlayerPlayPauseButton</item>-->
+
+        <!-- Video & Audio SeekBars -->
+        <item name="vzb_videoControlSeekBarStyle">@style/Theme.Vizbee.TBSTemp.VideoControlSeekBar</item>
+        <!--        <item name="vzb_seekBarVideoStyle">@style/Theme.Vizbee.TBSTemp.SeekBarVideo</item>-->
+        <item name="vzb_seekBarAudioStyle">@style/Theme.Vizbee.TBSTemp.AudioControlSeekBar</item>
 
         <!-- -->
         <!-- SPECIFIC VIEW ATTRIBUTES -->
@@ -141,6 +174,10 @@
         <!-- Device Info view -->
         <item name="vzb_deviceInfoViewIconStyle">@style/Theme.Vizbee.DemoFlix.DeviceInfoViewIconStyle</item>
         <item name="vzb_deviceInfoViewNameLabelStyle">@style/Theme.Vizbee.DemoFlix.DeviceInfoViewLabelStyle</item>
+    </style>
+
+    <style name="Theme.Vizbee.TBSTemp.Background" parent="Widget.Vizbee.Futura.BackgroundLayer">
+        <!--        <item name="vzb_drawable">@drawable/demoflix_background</item>-->
     </style>
 
     <style name="Theme.Vizbee.DemoFlix.LuminosityLayerOverlayStyle" parent="Widget.Vizbee.Futura.LuminosityLayer.Overlay">
@@ -282,9 +319,9 @@
         <item name="vzb_deviceListTitleTextAppearance" tools:ignore="PrivateResource">?attr/vzb_textAppearanceTitle2
         </item>
         <item name="android:textSize">16sp</item>
-        <item name="vzb_typeface">roboto_medium</item>
-<!--        <item name="android:paddingTop">19dp</item>-->
-<!--        <item name="android:paddingBottom">19dp</item>-->
+        <item name="vzb_typeface">roboto_regular</item>
+        <!--        <item name="android:paddingTop">19dp</item>-->
+        <!--        <item name="android:paddingBottom">19dp</item>-->
     </style>
 
     <style name="Theme.Vizbee.DemoFlix.DeviceInfoViewIconStyle" parent="Widget.Vizbee.Futura.DeviceInfoViewIcon">
@@ -292,19 +329,97 @@
     </style>
 
     <!-- Player Card -->
+
+    <!-- tplay style player card -->
+    <style name="Theme.Vizbee.TPlay.PlayerCardV4Style" parent="Widget.Vizbee.Futura.PlayerCardV4Layout">
+        <item name="vzb_titledImageV4Style">@style/Theme.Vizbee.TPlay.TitledImageViewV4</item>
+    </style>
+
+    <style name="Theme.Vizbee.TPlay.TitledImageViewV4" parent="Widget.Vizbee.Futura.TitledImageViewV4">
+        <item name="vzb_titleViewStyle">@style/Theme.Vizbee.TPlay.TitledImageViewV4TitleLabel</item>
+        <item name="vzb_subtitleViewStyle">@style/Theme.Vizbee.TPlay.TitledImageViewV4SubtitleLabel</item>
+    </style>
+
+    <style name="Theme.Vizbee.TPlay.TitledImageViewV4TitleLabel" parent="Widget.Vizbee.Futura.TitledImageViewV4TitleLabel">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Theme.Vizbee.TPlay.TitledImageViewV4SubtitleLabel" parent="Widget.Vizbee.Futura.TitledImageViewV4SubtitleLabel">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+
+    <!-- turner style player card -->
+    <style name="Theme.Vizbee.TBSTemp.PlayerV3LayoutStyle" parent="Widget.Vizbee.Futura.PlayerV3Layout">
+        <item name="android:paddingLeft">14dp</item>
+        <item name="android:paddingRight">14dp</item>
+    </style>
+
+    <style name="Theme.Vizbee.TBSTemp.HeaderPlayerLayout" parent="Widget.Vizbee.Futura.HeaderPlayerLayout">
+        <!-- Example values to test overriding of the styles -->
+        <!--<item name="android:paddingRight">160dp</item>-->
+        <!--<item name="android:background">@android:color/holo_blue_bright</item>-->
+    </style>
+
+    <style name="Theme.Vizbee.TBSTemp.BodyPlayerLayout" parent="Widget.Vizbee.Futura.BodyPlayerLayout">
+        <!-- Example values to test overriding of the styles -->
+        <!--        <item name="android:paddingLeft">30dp</item>-->
+        <!--        <item name="android:paddingRight">30dp</item>-->
+        <!--<item name="vzb_imageOverlayDimmerColor">#c0780099</item>-->
+<!--        <item name="vzb_defaultImageDrawable">@drawable/tbs_fallback_image</item>-->
+        <item name="vzb_defaultImageDrawableAlpha">1</item>
+        <item name="vzb_defaultImageDrawableTint">@null</item>
+        <item name="vzb_showAudioControlsSeekbarAboveImage">true</item>
+    </style>
+
+    <style name="Theme.Vizbee.TBSTemp.FooterPlayerLayout" parent="Widget.Vizbee.Futura.FooterPlayerLayout">
+        <!-- Example values to test overriding of the styles -->
+        <!--        <item name="android:paddingLeft">30dp</item>-->
+        <!--        <item name="android:paddingRight">30dp</item>-->
+    </style>
+
+    <style name="Theme.Vizbee.TBSTemp.SeekBarVideo" parent="Widget.Vizbee.Futura.SeekBar.Video">
+        <item name="vzb_useCircularThumb">true</item>
+        <item name="vzb_thumbColor">?attr/vzb_secondaryColor</item>
+        <item name="vzb_progressColor">?attr/vzb_secondaryColor</item>
+        <item name="vzb_progressHeight">1dp</item>
+        <item name="vzb_thumbHeight">12dp</item>
+        <item name="vzb_thumbWidth">6dp</item>
+        <item name="android:layout_height">46dp</item>
+    </style>
+
+    <style name="Theme.Vizbee.TBSTemp.VideoControlSeekBar" parent="Widget.Vizbee.Futura.VideoControlSeekBar">
+        <item name="vzb_textAlignment">center_vertical</item>
+    </style>
+
+    <style name="Theme.Vizbee.TBSTemp.AudioControlSeekBar" parent="Widget.Vizbee.Futura.AudioControlSeekBar">
+        <item name="vzb_useCircularThumb">true</item>
+        <item name="vzb_thumbColor">?attr/vzb_secondaryColor</item>
+        <item name="vzb_progressColor">?attr/vzb_secondaryColor</item>
+        <item name="vzb_progressHeight">1dp</item>
+        <item name="vzb_thumbHeight">12dp</item>
+        <item name="vzb_thumbWidth">6dp</item>
+        <item name="android:layout_height">46dp</item>
+    </style>
+
+
+
+
     <style name="Theme.Vizbee.TPlay.PlayerBufferingStyle" parent="Widget.Vizbee.Futura.ContentStatusView">
-        <item name="android:background">#B3FFFFFF</item>
+        <item name="android:background">#66FFFFFF</item>
     </style>
 
     <style name="Theme.Vizbee.TPlay.AdStatusView" parent="Widget.Vizbee.Futura.AdStatusView">
-        <item name="android:background">#B3FFFFFF</item>
+        <item name="android:background">#66FFFFFF</item>
     </style>
 
     <style name="Theme.Vizbee.TPlay.PlayerControlsView" parent="Widget.Vizbee.Futura.PlayerControlsView">
-<!--        <item name="vzb_playButtonDrawable">@drawable/tplay_ic_play_button</item>-->
-<!--        <item name="vzb_pauseButtonDrawable">@drawable/tplay_ic_pause_button</item>-->
-<!--        <item name="vzb_stopButtonDrawable">@drawable/tplay_ic_stop_button</item>-->
-<!--        <item name="vzb_rewindButtonDrawable">@drawable/tplay_ic_rewind_30s_button</item>-->
+        <item name="vzb_playButtonDrawable">@drawable/tplay_ic_play_button</item>
+        <item name="vzb_pauseButtonDrawable">@drawable/tplay_ic_pause_button</item>
+        <item name="vzb_stopButtonDrawable">@drawable/tplay_ic_stop_button</item>
+        <item name="vzb_rewindButtonDrawable">@drawable/tplay_ic_rewind_30s_button</item>
     </style>
 
     <style name="Theme.Vizbee.TPlay.VideoPlayerControlButton" parent="Widget.Vizbee.Futura.Button.VideoPlayerControl">
@@ -312,9 +427,13 @@
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginRight">10dp</item>
-        <item name="vzb_checkedSrcColor">?attr/vzb_secondaryColor</item>
-        <item name="vzb_backgroundEnabled">?attr/vzb_secondaryColor</item>
+        <item name="vzb_checkedSrcColor">#2b2b2b</item>
+        <item name="vzb_backgroundEnabled">#2b2b2b</item>
         <item name="vzb_srcColor">?attr/vzb_tertiaryColor</item>
+
+        <!--        <item name="vzb_checkedSrcColor">?attr/vzb_tertiaryColor</item>-->
+        <!--        <item name="vzb_backgroundEnabled">?attr/vzb_tertiaryColor</item>-->
+        <!--        <item name="vzb_srcColor">#2b2b2b</item>-->
     </style>
 
     <style name="Theme.Vizbee.TPlay.VideoPlayerPlayPauseButton" parent="Widget.Vizbee.Futura.Button.VideoPlayerControl.PlayPause">
@@ -323,12 +442,26 @@
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:padding">16dp</item>
-        <item name="vzb_backgroundEnabled">?attr/vzb_secondaryColor</item>
+        <item name="vzb_checkedSrcColor">#2b2b2b</item>
+        <item name="vzb_backgroundEnabled">#2b2b2b</item>
         <item name="vzb_srcColor">?attr/vzb_tertiaryColor</item>
+
+        <!--        <item name="vzb_checkedSrcColor">?attr/vzb_tertiaryColor</item>-->
+        <!--        <item name="vzb_backgroundEnabled">?attr/vzb_tertiaryColor</item>-->
+        <!--        <item name="vzb_srcColor">#2b2b2b</item>-->
     </style>
 
     <style name="Theme.Vizbee.TPlay.VideoControlSeekBar" parent="Widget.Vizbee.Futura.VideoControlSeekBar">
         <item name="vzb_useCircularThumb">true</item>
+
+        <item name="vzb_thumbColor">?attr/vzb_secondaryColor</item>
+        <item name="vzb_progressColor">?attr/vzb_secondaryColor</item>
+        <item name="vzb_backgroundProgressColor">?attr/vzb_tertiaryColor</item>
+        <!--        <item name="vzb_progressHeight">4dp</item>. The SDK isn't respecting these heights-->
+        <!--        <item name="vzb_backgroundHeight">4dp</item>-->
+        <item name="vzb_thumbHeight">12dp</item>
+        <item name="vzb_thumbWidth">6dp</item>
+        <item name="android:layout_height">46dp</item>
     </style>
 
     <style name="Theme.Vizbee.TPlay.VideoControlSeekBarLabel" parent="Widget.Vizbee.Futura.VideoControlSeekBarLabel">
@@ -365,6 +498,4 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">?attr/vzb_secondaryColor</item>
     </style>
-
-    <string name="casting_to">Casting to %1$s</string>
 </resources>
