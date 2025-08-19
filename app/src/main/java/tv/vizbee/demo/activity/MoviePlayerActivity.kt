@@ -17,8 +17,6 @@ import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import tv.vizbee.api.RemoteButton
 import tv.vizbee.api.VizbeeContext
-import tv.vizbee.api.session.SessionState
-import tv.vizbee.api.session.SessionStateListener
 import tv.vizbee.api.session.VizbeeSessionManager
 import tv.vizbee.demo.Constants
 import tv.vizbee.demo.R
@@ -191,5 +189,9 @@ class MoviePlayerActivity : Activity() {
     // ---------------------------
     // [END] Vizbee Integration
     // ---------------------------
+
+    companion object {
+        private const val TAG = "MoviePlayerActivity"
+    }
 }
 

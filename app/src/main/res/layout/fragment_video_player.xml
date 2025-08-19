@@ -13,5 +13,4 @@
         app:controller_layout_id="@layout/exo_player_controls"
         app:hide_on_touch="true"
         app:show_timeout="3000" />
-
 </FrameLayout>
