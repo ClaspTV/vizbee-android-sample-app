@@ -10,6 +10,6 @@
     <!--    </item>-->
     <item android:drawable="@color/colorPrimary" />
     <item
-        android:drawable="@drawable/app_logo"
+        android:drawable="@drawable/splash_logo"
         android:gravity="center" />
 </layer-list>
