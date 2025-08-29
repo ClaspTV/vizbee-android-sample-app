@@ -6,7 +6,7 @@
     <!-- =============================================================== -->
 
     <!-- RemoteActivity theme -->
-    <style name="Theme.DemoFlix.Common" parent="Theme.Vizbee.Futura">
+    <style name="Theme.OmniDemo.Common" parent="Theme.Vizbee.Futura">
 
         <item name="vzb_appIcon">@drawable/app_logo</item>
 
@@ -60,12 +60,12 @@
             https://gist.github.com/vizbee/7e9613f76a546c8f9ed9087e91bdc7b1#customize-overlay-cards
         -->
 
-        <item name="vzb_luminosityLayerOverlayStyle">@style/Theme.Vizbee.DemoFlix.LuminosityLayerOverlayStyle</item>
-        <item name="vzb_overlayDismissStyle">@style/Theme.Vizbee.DemoFlix.OverlayDismissStyle</item>
-        <item name="vzb_overlayContentLayout">@style/Theme.Vizbee.DemoFlix.OverlayContentLayout</item>
-        <item name="vzb_overlayTitleLabelStyle">@style/Theme.Vizbee.DemoFlix.OverlayTitleLabelStyle</item>
-        <item name="vzb_overlaySubtitleLabelStyle">@style/Theme.Vizbee.DemoFlix.OverlaySubtitleLabelStyle</item>
-        <item name="vzb_overlayCallToActionButtonStyle">@style/Theme.Vizbee.DemoFlix.OverlayCallToActionButton</item>
+        <item name="vzb_luminosityLayerOverlayStyle">@style/Theme.Vizbee.OmniDemo.LuminosityLayerOverlayStyle</item>
+        <item name="vzb_overlayDismissStyle">@style/Theme.Vizbee.OmniDemo.OverlayDismissStyle</item>
+        <item name="vzb_overlayContentLayout">@style/Theme.Vizbee.OmniDemo.OverlayContentLayout</item>
+        <item name="vzb_overlayTitleLabelStyle">@style/Theme.Vizbee.OmniDemo.OverlayTitleLabelStyle</item>
+        <item name="vzb_overlaySubtitleLabelStyle">@style/Theme.Vizbee.OmniDemo.OverlaySubtitleLabelStyle</item>
+        <item name="vzb_overlayCallToActionButtonStyle">@style/Theme.Vizbee.OmniDemo.OverlayCallToActionButton</item>
 
         <!-- -->
         <!-- INTERSTITIAL CARD -->
@@ -77,14 +77,14 @@
         -->
 
         <!-- Titles & subtitles -->
-        <item name="vzb_textAppearanceTitle1">@style/Theme.Vizbee.DemoFlix.TitleLabelStyle</item>
-        <item name="vzb_titledImageViewTitleLabelStyle">@style/Theme.Vizbee.DemoFlix.TitledImageViewTitleLabelStyle</item>
-        <item name="vzb_titledImageViewSubtitleLabelStyle">@style/Theme.Vizbee.DemoFlix.TitledImageViewSubtitleLabelStyle</item>
+        <item name="vzb_textAppearanceTitle1">@style/Theme.Vizbee.OmniDemo.TitleLabelStyle</item>
+        <item name="vzb_titledImageViewTitleLabelStyle">@style/Theme.Vizbee.OmniDemo.TitledImageViewTitleLabelStyle</item>
+        <item name="vzb_titledImageViewSubtitleLabelStyle">@style/Theme.Vizbee.OmniDemo.TitledImageViewSubtitleLabelStyle</item>
 
         <!-- Buttons -->
-        <item name="vzb_callToActionButtonStyle">@style/Theme.Vizbee.DemoFlix.CallToActionFilled</item>
+        <item name="vzb_callToActionButtonStyle">@style/Theme.Vizbee.OmniDemo.CallToActionFilled</item>
         <item name="vzb_deviceStatusViewDisconnectButtonStyle">
-            @style/Theme.Vizbee.DemoFlix.DeviceStatusViewCallToActionFilled
+            @style/Theme.Vizbee.OmniDemo.DeviceStatusViewCallToActionFilled
         </item>
 
         <!-- -->
@@ -92,26 +92,26 @@
         <!-- -->
 
         <!-- CastIntroduction Card -->
-        <item name="vzb_castIntroductionView">@style/Theme.Vizbee.DemoFlix.CastIntroductionView</item>
+        <item name="vzb_castIntroductionView">@style/Theme.Vizbee.OmniDemo.CastIntroductionView</item>
 
         <!-- MultiDeviceSmartInstall Card -->
-        <item name="vzb_multiDeviceSmartInstallViewStyle">@style/Theme.Vizbee.DemoFlix.MultiDeviceSmartInstallView</item>
+        <item name="vzb_multiDeviceSmartInstallViewStyle">@style/Theme.Vizbee.OmniDemo.MultiDeviceSmartInstallView</item>
 
         <!-- CastIcon Card -->
         <item name="vzb_smartPlayDeviceSelectionCardDeviceListViewOverlayStyle">
-            @style/Theme.Vizbee.DemoFlix.DeviceListView.CastIconCard
+            @style/Theme.Vizbee.OmniDemo.DeviceListView.CastIconCard
         </item>
 
         <!-- AppInstall Card -->
-        <item name="vzb_appInstall_textStyle">@style/Theme.Vizbee.DemoFlix.AppInstallTextStyle</item>
-        <item name="vzb_appInstall_subTextStyle">@style/Theme.Vizbee.DemoFlix.AppInstallSubTextStyle</item>
-        <item name="vzb_appInstall_refresh_buttonStyle">@style/Theme.Vizbee.DemoFlix.MinorAction</item>
+        <item name="vzb_appInstall_textStyle">@style/Theme.Vizbee.OmniDemo.AppInstallTextStyle</item>
+        <item name="vzb_appInstall_subTextStyle">@style/Theme.Vizbee.OmniDemo.AppInstallSubTextStyle</item>
+        <item name="vzb_appInstall_refresh_buttonStyle">@style/Theme.Vizbee.OmniDemo.MinorAction</item>
 
         <!-- Pairing Card -->
-        <item name="vzb_pairingScreen_pinNumberStyle">@style/Theme.Vizbee.DemoFlix.PairingPinPadButton</item>
-        <item name="vzb_pairingScreen_numPadButtonStyle">@style/Theme.Vizbee.DemoFlix.PairingPinPadButton</item>
-        <item name="vzb_pairingScreen_numPadSubmitButtonStyle">@style/Theme.Vizbee.DemoFlix.PairingPinPadSubmitButton</item>
-        <item name="vzb_pairingScreen_refresh_buttonStyle">@style/Theme.Vizbee.DemoFlix.MinorAction</item>
+        <item name="vzb_pairingScreen_pinNumberStyle">@style/Theme.Vizbee.OmniDemo.PairingPinPadButton</item>
+        <item name="vzb_pairingScreen_numPadButtonStyle">@style/Theme.Vizbee.OmniDemo.PairingPinPadButton</item>
+        <item name="vzb_pairingScreen_numPadSubmitButtonStyle">@style/Theme.Vizbee.OmniDemo.PairingPinPadSubmitButton</item>
+        <item name="vzb_pairingScreen_refresh_buttonStyle">@style/Theme.Vizbee.OmniDemo.MinorAction</item>
 
         <!-- Player Card -->
         <!--
@@ -120,15 +120,15 @@
         -->
         <!-- Player Card -->
         <!-- tplay style player card -->
-        <item name="vzb_playerCardV4Style">@style/Theme.Vizbee.DemoFlix.PlayerCardV4Style</item>
+        <item name="vzb_playerCardV4Style">@style/Theme.Vizbee.OmniDemo.PlayerCardV4Style</item>
 
-        <item name="vzb_contentStatusViewStyle">@style/Theme.Vizbee.DemoFlix.PlayerBufferingStyle</item>
-        <item name="vzb_adStatusViewStyle">@style/Theme.Vizbee.DemoFlix.AdStatusView</item>
-        <item name="vzb_playerControlsViewStyle">@style/Theme.Vizbee.DemoFlix.PlayerControlsView</item>
-        <item name="vzb_videoPlayerControlButtonStyle">@style/Theme.Vizbee.DemoFlix.VideoPlayerControlButton</item>
-        <item name="vzb_playerControlsViewPlayPauseButtonStyle">@style/Theme.Vizbee.DemoFlix.VideoPlayerPlayPauseButton</item>
-        <item name="vzb_seekBarVideoStyle">@style/Theme.Vizbee.DemoFlix.VideoControlSeekBar</item>
-        <item name="vzb_videoControlSeekBarLabelStyle">@style/Theme.Vizbee.DemoFlix.VideoControlSeekBarLabel</item>
+        <item name="vzb_contentStatusViewStyle">@style/Theme.Vizbee.OmniDemo.PlayerBufferingStyle</item>
+        <item name="vzb_adStatusViewStyle">@style/Theme.Vizbee.OmniDemo.AdStatusView</item>
+        <item name="vzb_playerControlsViewStyle">@style/Theme.Vizbee.OmniDemo.PlayerControlsView</item>
+        <item name="vzb_videoPlayerControlButtonStyle">@style/Theme.Vizbee.OmniDemo.VideoPlayerControlButton</item>
+        <item name="vzb_playerControlsViewPlayPauseButtonStyle">@style/Theme.Vizbee.OmniDemo.VideoPlayerPlayPauseButton</item>
+        <item name="vzb_seekBarVideoStyle">@style/Theme.Vizbee.OmniDemo.VideoControlSeekBar</item>
+        <item name="vzb_videoControlSeekBarLabelStyle">@style/Theme.Vizbee.OmniDemo.VideoControlSeekBarLabel</item>
 
         <!-- Player Card -->
         <!--
@@ -161,39 +161,39 @@
         <!-- -->
 
         <!-- Used both in App install and Device Status View -->
-        <item name="vzb_deviceSelection_vizbeeIconStyle">@style/Theme.Vizbee.DemoFlix.AnimatedVizbeeIcon</item>
+        <item name="vzb_deviceSelection_vizbeeIconStyle">@style/Theme.Vizbee.OmniDemo.AnimatedVizbeeIcon</item>
 
         <!-- Device Status view -->
-        <item name="vzb_deviceStatusViewStyle">@style/Theme.Vizbee.DemoFlix.DeviceStatusView</item>
-        <item name="vzb_deviceStatusViewLabelStyle">@style/Theme.Vizbee.DemoFlix.DeviceStatusViewLabelStyle</item>
+        <item name="vzb_deviceStatusViewStyle">@style/Theme.Vizbee.OmniDemo.DeviceStatusView</item>
+        <item name="vzb_deviceStatusViewLabelStyle">@style/Theme.Vizbee.OmniDemo.DeviceStatusViewLabelStyle</item>
 
         <!-- Device Info view -->
-        <item name="vzb_deviceInfoViewIconStyle">@style/Theme.Vizbee.DemoFlix.DeviceInfoViewIconStyle</item>
-        <item name="vzb_deviceInfoViewNameLabelStyle">@style/Theme.Vizbee.DemoFlix.DeviceInfoViewLabelStyle</item>
+        <item name="vzb_deviceInfoViewIconStyle">@style/Theme.Vizbee.OmniDemo.DeviceInfoViewIconStyle</item>
+        <item name="vzb_deviceInfoViewNameLabelStyle">@style/Theme.Vizbee.OmniDemo.DeviceInfoViewLabelStyle</item>
     </style>
 
     <style name="Theme.Vizbee.TBSTemp.Background" parent="Widget.Vizbee.Futura.BackgroundLayer">
-        <!--        <item name="vzb_drawable">@drawable/demoflix_background</item>-->
+        <!--        <item name="vzb_drawable">@drawable/omnidemo_background</item>-->
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.LuminosityLayerOverlayStyle" parent="Widget.Vizbee.Futura.LuminosityLayer.Overlay">
+    <style name="Theme.Vizbee.OmniDemo.LuminosityLayerOverlayStyle" parent="Widget.Vizbee.Futura.LuminosityLayer.Overlay">
         <item name="android:alpha">0</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.OverlayContentLayout" parent="Widget.Vizbee.OverlayContentLayout">
+    <style name="Theme.Vizbee.OmniDemo.OverlayContentLayout" parent="Widget.Vizbee.OverlayContentLayout">
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">48dp</item>
         <item name="android:paddingLeft">20dp</item>
         <item name="android:paddingRight">20dp</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.OverlayDismissStyle" parent="Widget.Vizbee.Image.OverlayDismiss">
+    <style name="Theme.Vizbee.OmniDemo.OverlayDismissStyle" parent="Widget.Vizbee.Image.OverlayDismiss">
         <item name="android:paddingTop">16dp</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.OverlayTitleLabelStyle" parent="Widget.Vizbee.OverlayTitleLabel">
+    <style name="Theme.Vizbee.OmniDemo.OverlayTitleLabelStyle" parent="Widget.Vizbee.OverlayTitleLabel">
         <item name="android:textAllCaps">false</item>
         <item name="vzb_deviceListTitleTextAppearance" tools:ignore="PrivateResource">?attr/vzb_textAppearanceTitle2
         </item>
@@ -201,13 +201,13 @@
         <item name="android:paddingBottom">4dp</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.OverlaySubtitleLabelStyle" parent="Widget.Vizbee.OverlaySubtitleLabel">
+    <style name="Theme.Vizbee.OmniDemo.OverlaySubtitleLabelStyle" parent="Widget.Vizbee.OverlaySubtitleLabel">
         <item name="android:textAppearance" tools:ignore="PrivateResource">?attr/vzb_textAppearanceBody</item>
         <item name="android:textColor">#C6CBD7</item>
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.OverlayCallToActionButton" parent="@style/Widget.Vizbee.Futura.Button.OverlayCallToAction">
+    <style name="Theme.Vizbee.OmniDemo.OverlayCallToActionButton" parent="@style/Widget.Vizbee.Futura.Button.OverlayCallToAction">
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">roboto_regular</item>
@@ -220,13 +220,13 @@
     </style>
 
     <!-- title label style-->
-    <style name="Theme.Vizbee.DemoFlix.TitleLabelStyle" parent="TextAppearance.Vizbee.Title1">
+    <style name="Theme.Vizbee.OmniDemo.TitleLabelStyle" parent="TextAppearance.Vizbee.Title1">
         <item name="vzb_deviceListTitleTextAppearance" tools:ignore="PrivateResource">?attr/vzb_textAppearanceTitle2
         </item>
         <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.TitledImageViewTitleLabelStyle" parent="Widget.Vizbee.Futura.TitledImageViewTitleLabel">
+    <style name="Theme.Vizbee.OmniDemo.TitledImageViewTitleLabelStyle" parent="Widget.Vizbee.Futura.TitledImageViewTitleLabel">
         <item name="android:paddingTop">28dp</item>
         <item name="vzb_deviceListTitleTextAppearance" tools:ignore="PrivateResource">?attr/vzb_textAppearanceTitle2
         </item>
@@ -234,19 +234,19 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.TitledImageViewSubtitleLabelStyle" parent="Widget.Vizbee.Futura.TitledImageViewSubtitleLabel">
+    <style name="Theme.Vizbee.OmniDemo.TitledImageViewSubtitleLabelStyle" parent="Widget.Vizbee.Futura.TitledImageViewSubtitleLabel">
         <item name="vzb_deviceListTitleTextAppearance" tools:ignore="PrivateResource">?attr/vzb_textAppearanceTitle2
         </item>
         <item name="android:textSize">16sp</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.DeviceListViewTitleLabel" parent="Widget.Vizbee.Futura.DeviceListViewTitleLabel">
+    <style name="Theme.Vizbee.OmniDemo.DeviceListViewTitleLabel" parent="Widget.Vizbee.Futura.DeviceListViewTitleLabel">
         <item name="android:textSize">20sp</item>
     </style>
 
     <!-- CTA -->
-    <style name="Theme.Vizbee.DemoFlix.CallToActionFilled" parent="Widget.Vizbee.Futura.Button.CallToAction">
+    <style name="Theme.Vizbee.OmniDemo.CallToActionFilled" parent="Widget.Vizbee.Futura.Button.CallToAction">
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">roboto_regular</item>
         <item name="android:textColor">@color/textColorPrimary</item>
@@ -257,52 +257,52 @@
         <item name="vzb_backgroundEnabled">?attr/vzb_secondaryColor</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.DeviceStatusViewCallToActionFilled" parent="Theme.Vizbee.DemoFlix.CallToActionFilled">
+    <style name="Theme.Vizbee.OmniDemo.DeviceStatusViewCallToActionFilled" parent="Theme.Vizbee.OmniDemo.CallToActionFilled">
         <item name="android:layout_marginTop">28dp</item>
     </style>
 
     <!-- CastIntroductionView -->
-    <style name="Theme.Vizbee.DemoFlix.CastIntroductionView" parent="Widget.Vizbee.Futura.SpacedLinearLayout.CastIntroductionView">
-        <item name="vzb_deviceListViewStyle">@style/Theme.Vizbee.DemoFlix.DeviceListView</item>
+    <style name="Theme.Vizbee.OmniDemo.CastIntroductionView" parent="Widget.Vizbee.Futura.SpacedLinearLayout.CastIntroductionView">
+        <item name="vzb_deviceListViewStyle">@style/Theme.Vizbee.OmniDemo.DeviceListView</item>
     </style>
 
     <!-- MultiDeviceSmartInstallView -->
-    <style name="Theme.Vizbee.DemoFlix.MultiDeviceSmartInstallView" parent="Widget.Vizbee.Futura.SpacedLinearLayout.MultiDeviceSmartInstallView">
-        <item name="vzb_deviceListViewStyle">@style/Theme.Vizbee.DemoFlix.DeviceListView</item>
-        <item name="vzb_headerStackViewStyle">@style/Theme.Vizbee.DemoFlix.MultiDeviceSmartInstallView.HeaderStackView</item>
+    <style name="Theme.Vizbee.OmniDemo.MultiDeviceSmartInstallView" parent="Widget.Vizbee.Futura.SpacedLinearLayout.MultiDeviceSmartInstallView">
+        <item name="vzb_deviceListViewStyle">@style/Theme.Vizbee.OmniDemo.DeviceListView</item>
+        <item name="vzb_headerStackViewStyle">@style/Theme.Vizbee.OmniDemo.MultiDeviceSmartInstallView.HeaderStackView</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.MultiDeviceSmartInstallView.HeaderStackView" parent="Widget.Vizbee.Futura.Light.SpacedLinearLayout.MultiDeviceSmartInstallView.HeaderStackView">
-        <item name="vzb_overlaySubtitleLabelStyle">@style/Theme.Vizbee.DemoFlix.OverlaySubtitleLabelStyle</item>
+    <style name="Theme.Vizbee.OmniDemo.MultiDeviceSmartInstallView.HeaderStackView" parent="Widget.Vizbee.Futura.Light.SpacedLinearLayout.MultiDeviceSmartInstallView.HeaderStackView">
+        <item name="vzb_overlaySubtitleLabelStyle">@style/Theme.Vizbee.OmniDemo.OverlaySubtitleLabelStyle</item>
     </style>
 
     <!-- DeviceListView -->
-    <style name="Theme.Vizbee.DemoFlix.DeviceListView" parent="Widget.Vizbee.Futura.DeviceListView">
+    <style name="Theme.Vizbee.OmniDemo.DeviceListView" parent="Widget.Vizbee.Futura.DeviceListView">
         <item name="vzb_deviceListCornerRadius">3dp</item>
         <item name="vzb_showDeviceDivider">true</item>
         <item name="vzb_deviceListDividerColor">#333333</item>
         <item name="vzb_deviceListHeaderPadding">0dp</item>
-        <item name="vzb_deviceListRowStyle">@style/Theme.Vizbee.DemoFlix.DeviceListRowStyle</item>
+        <item name="vzb_deviceListRowStyle">@style/Theme.Vizbee.OmniDemo.DeviceListRowStyle</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.DeviceListRowStyle" parent="Widget.Vizbee.Futura.DeviceListItemView">
+    <style name="Theme.Vizbee.OmniDemo.DeviceListRowStyle" parent="Widget.Vizbee.Futura.DeviceListItemView">
         <item name="vzb_backgroundEnabled">#1a1a1a</item>
         <item name="vzb_backgroundDisabled">#1a1a1a</item>
         <item name="vzb_backgroundSelected">#1a1a1a</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.DeviceListView.CastIconCard" parent="Widget.Vizbee.Futura.DeviceListView.SmartPlayCard.Overlay">
-        <item name="vzb_deviceListTitleTextAppearance">@style/Theme.Vizbee.DemoFlix.OverlayTitleLabelStyle</item>
+    <style name="Theme.Vizbee.OmniDemo.DeviceListView.CastIconCard" parent="Widget.Vizbee.Futura.DeviceListView.SmartPlayCard.Overlay">
+        <item name="vzb_deviceListTitleTextAppearance">@style/Theme.Vizbee.OmniDemo.OverlayTitleLabelStyle</item>
         <item name="vzb_enableListHeaderDivider">false</item>
         <item name="vzb_deviceListHeaderPadding">12dp</item>
     </style>
 
     <!-- DeviceStatusView -->
-    <style name="Theme.Vizbee.DemoFlix.DeviceStatusView" parent="Widget.Vizbee.Futura.DeviceStatusView">
+    <style name="Theme.Vizbee.OmniDemo.DeviceStatusView" parent="Widget.Vizbee.Futura.DeviceStatusView">
         <item name="vzb_statusProgressStyle">android_native</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.DeviceStatusViewLabelStyle" parent="Widget.Vizbee.Futura.TitledImageViewTitleLabel">
+    <style name="Theme.Vizbee.OmniDemo.DeviceStatusViewLabelStyle" parent="Widget.Vizbee.Futura.TitledImageViewTitleLabel">
         <item name="android:textAllCaps">false</item>
         <item name="vzb_deviceListTitleTextAppearance" tools:ignore="PrivateResource">?attr/vzb_textAppearanceTitle2
         </item>
@@ -310,7 +310,7 @@
     </style>
 
     <!-- DeviceInfoView -->
-    <style name="Theme.Vizbee.DemoFlix.DeviceInfoViewLabelStyle" parent="Widget.Vizbee.Futura.DeviceInfoViewNameLabel">
+    <style name="Theme.Vizbee.OmniDemo.DeviceInfoViewLabelStyle" parent="Widget.Vizbee.Futura.DeviceInfoViewNameLabel">
         <item name="android:textAllCaps">false</item>
         <item name="vzb_deviceListTitleTextAppearance" tools:ignore="PrivateResource">?attr/vzb_textAppearanceTitle2
         </item>
@@ -320,28 +320,28 @@
         <!--        <item name="android:paddingBottom">19dp</item>-->
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.DeviceInfoViewIconStyle" parent="Widget.Vizbee.Futura.DeviceInfoViewIcon">
+    <style name="Theme.Vizbee.OmniDemo.DeviceInfoViewIconStyle" parent="Widget.Vizbee.Futura.DeviceInfoViewIcon">
         <item name="android:layout_marginRight">6dp</item>
     </style>
 
     <!-- Player Card -->
 
     <!-- tplay style player card -->
-    <style name="Theme.Vizbee.DemoFlix.PlayerCardV4Style" parent="Widget.Vizbee.Futura.PlayerCardV4Layout">
-        <item name="vzb_titledImageV4Style">@style/Theme.Vizbee.DemoFlix.TitledImageViewV4</item>
+    <style name="Theme.Vizbee.OmniDemo.PlayerCardV4Style" parent="Widget.Vizbee.Futura.PlayerCardV4Layout">
+        <item name="vzb_titledImageV4Style">@style/Theme.Vizbee.OmniDemo.TitledImageViewV4</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.TitledImageViewV4" parent="Widget.Vizbee.Futura.TitledImageViewV4">
-        <item name="vzb_titleViewStyle">@style/Theme.Vizbee.DemoFlix.TitledImageViewV4TitleLabel</item>
-        <item name="vzb_subtitleViewStyle">@style/Theme.Vizbee.DemoFlix.TitledImageViewV4SubtitleLabel</item>
+    <style name="Theme.Vizbee.OmniDemo.TitledImageViewV4" parent="Widget.Vizbee.Futura.TitledImageViewV4">
+        <item name="vzb_titleViewStyle">@style/Theme.Vizbee.OmniDemo.TitledImageViewV4TitleLabel</item>
+        <item name="vzb_subtitleViewStyle">@style/Theme.Vizbee.OmniDemo.TitledImageViewV4SubtitleLabel</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.TitledImageViewV4TitleLabel" parent="Widget.Vizbee.Futura.TitledImageViewV4TitleLabel">
+    <style name="Theme.Vizbee.OmniDemo.TitledImageViewV4TitleLabel" parent="Widget.Vizbee.Futura.TitledImageViewV4TitleLabel">
         <item name="android:textSize">20sp</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.TitledImageViewV4SubtitleLabel" parent="Widget.Vizbee.Futura.TitledImageViewV4SubtitleLabel">
+    <style name="Theme.Vizbee.OmniDemo.TitledImageViewV4SubtitleLabel" parent="Widget.Vizbee.Futura.TitledImageViewV4SubtitleLabel">
         <item name="android:textSize">16sp</item>
         <item name="android:textAllCaps">false</item>
     </style>
@@ -403,22 +403,22 @@
 
 
 
-    <style name="Theme.Vizbee.DemoFlix.PlayerBufferingStyle" parent="Widget.Vizbee.Futura.ContentStatusView">
+    <style name="Theme.Vizbee.OmniDemo.PlayerBufferingStyle" parent="Widget.Vizbee.Futura.ContentStatusView">
         <item name="android:background">#66FFFFFF</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.AdStatusView" parent="Widget.Vizbee.Futura.AdStatusView">
+    <style name="Theme.Vizbee.OmniDemo.AdStatusView" parent="Widget.Vizbee.Futura.AdStatusView">
         <item name="android:background">#66FFFFFF</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.PlayerControlsView" parent="Widget.Vizbee.Futura.PlayerControlsView">
+    <style name="Theme.Vizbee.OmniDemo.PlayerControlsView" parent="Widget.Vizbee.Futura.PlayerControlsView">
         <item name="vzb_playButtonDrawable">@drawable/tplay_ic_play_button</item>
         <item name="vzb_pauseButtonDrawable">@drawable/tplay_ic_pause_button</item>
         <item name="vzb_stopButtonDrawable">@drawable/tplay_ic_stop_button</item>
         <item name="vzb_rewindButtonDrawable">@drawable/tplay_ic_rewind_30s_button</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.VideoPlayerControlButton" parent="Widget.Vizbee.Futura.Button.VideoPlayerControl">
+    <style name="Theme.Vizbee.OmniDemo.VideoPlayerControlButton" parent="Widget.Vizbee.Futura.Button.VideoPlayerControl">
         <item name="android:layout_height">60dp</item>
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_marginLeft">10dp</item>
@@ -432,7 +432,7 @@
         <!--        <item name="vzb_srcColor">#2b2b2b</item>-->
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.VideoPlayerPlayPauseButton" parent="Widget.Vizbee.Futura.Button.VideoPlayerControl.PlayPause">
+    <style name="Theme.Vizbee.OmniDemo.VideoPlayerPlayPauseButton" parent="Widget.Vizbee.Futura.Button.VideoPlayerControl.PlayPause">
         <item name="android:layout_height">84dp</item>
         <item name="android:layout_width">84dp</item>
         <item name="android:layout_marginLeft">10dp</item>
@@ -447,7 +447,7 @@
         <!--        <item name="vzb_srcColor">#2b2b2b</item>-->
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.VideoControlSeekBar" parent="Widget.Vizbee.Futura.VideoControlSeekBar">
+    <style name="Theme.Vizbee.OmniDemo.VideoControlSeekBar" parent="Widget.Vizbee.Futura.VideoControlSeekBar">
         <item name="vzb_useCircularThumb">true</item>
 
         <item name="vzb_thumbColor">?attr/vzb_secondaryColor</item>
@@ -460,37 +460,37 @@
         <item name="android:layout_height">46dp</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.VideoControlSeekBarLabel" parent="Widget.Vizbee.Futura.VideoControlSeekBarLabel">
+    <style name="Theme.Vizbee.OmniDemo.VideoControlSeekBarLabel" parent="Widget.Vizbee.Futura.VideoControlSeekBarLabel">
         <item name="android:textAppearance">?attr/vzb_textAppearanceBody</item>
         <item name="android:textColor">#B1B1B1</item>
     </style>
 
     <!-- AnimatedVizbeeIcon -->
-    <style name="Theme.Vizbee.DemoFlix.AnimatedVizbeeIcon" parent="Widget.Vizbee.Futura.AnimatedVizbeeIcon">
+    <style name="Theme.Vizbee.OmniDemo.AnimatedVizbeeIcon" parent="Widget.Vizbee.Futura.AnimatedVizbeeIcon">
         <item name="android:layout_marginTop">0dp</item>
     </style>
 
     <!-- AppInstall -->
-    <style name="Theme.Vizbee.DemoFlix.AppInstallTextStyle" parent="VZB_AppInstallTextStyle">
+    <style name="Theme.Vizbee.OmniDemo.AppInstallTextStyle" parent="VZB_AppInstallTextStyle">
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.AppInstallSubTextStyle" parent="VZB_AppInstallSubTextStyle">
+    <style name="Theme.Vizbee.OmniDemo.AppInstallSubTextStyle" parent="VZB_AppInstallSubTextStyle">
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.MinorAction" parent="Widget.Vizbee.Futura.Button.MinorAction">
+    <style name="Theme.Vizbee.OmniDemo.MinorAction" parent="Widget.Vizbee.Futura.Button.MinorAction">
         <item name="android:textSize">14sp</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:orientation">vertical</item>
     </style>
 
     <!-- Pairing -->
-    <style name="Theme.Vizbee.DemoFlix.PairingPinPadButton" parent="Widget.Vizbee.Futura.Button.PinPad">
+    <style name="Theme.Vizbee.OmniDemo.PairingPinPadButton" parent="Widget.Vizbee.Futura.Button.PinPad">
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="Theme.Vizbee.DemoFlix.PairingPinPadSubmitButton" parent="Widget.Vizbee.Futura.Button.PinPad.Submit">
+    <style name="Theme.Vizbee.OmniDemo.PairingPinPadSubmitButton" parent="Widget.Vizbee.Futura.Button.PinPad.Submit">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">?attr/vzb_secondaryColor</item>
     </style>
