@@ -83,7 +83,10 @@ class VideoGalleryFragment : BaseFragment() {
         // [BEGIN] Vizbee Integration
         // ---------------------------
         Handler(Looper.getMainLooper()).postDelayed({
-            VizbeeContext.getInstance().smartHelp(requireActivity())
+            val currentActivity = activity
+            if (currentActivity != null && !currentActivity.isFinishing) {
+                VizbeeContext.getInstance().smartHelp(currentActivity)
+            }
         }, 2000)
 
         // ---------------------------
