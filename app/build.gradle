@@ -60,7 +60,7 @@ dependencies {
     // ---------------------------
 
     // vizbee sender sdk
-    implementation 'tv.vizbee:android-sender-sdk:6.9.2-rc16-search-dpad'
+    implementation 'tv.vizbee:android-sender-sdk:6.9.2-rc21-search-dpad'
     // vizbee homesso sdk
     implementation 'tv.vizbee:android-sender-homesso-sdk:1.0.5'
 
