@@ -10,6 +10,7 @@ object SharedPreferenceHelper {
 
     private const val KEY_AUTH_TOKEN = "AUTH_TOKEN"
     private const val KEY_REG_CODE = "REG_CODE"
+    private const val KEY_INSTALLATION_DEEPLINK = "INSTALLATION_DEEPLINK"
 
     fun init(context: Context) {
         sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
@@ -33,5 +34,15 @@ object SharedPreferenceHelper {
 
     fun getRegCode(): String? {
         return sharedPreferences.getString(KEY_REG_CODE, "")
+    }
+
+    fun saveInstallationDeeplinkUsed(isUsed: Boolean) {
+        val editor = sharedPreferences.edit()
+        editor.putBoolean(KEY_INSTALLATION_DEEPLINK, isUsed)
+        editor.apply()
+    }
+
+    fun isInstallationDeeplinkUsed(): Boolean {
+        return sharedPreferences.getBoolean(KEY_INSTALLATION_DEEPLINK, false)
     }
 }
