@@ -174,6 +174,7 @@
 
     <style name="Theme.Vizbee.TBSTemp.Background" parent="Widget.Vizbee.Futura.BackgroundLayer">
         <!--        <item name="vzb_drawable">@drawable/omnidemo_background</item>-->
+        <item name="vzb_drawable">@drawable/device_status_v2_bg</item>
     </style>
 
     <style name="Theme.Vizbee.OmniDemo.LuminosityLayerOverlayStyle" parent="Widget.Vizbee.Futura.LuminosityLayer.Overlay">
