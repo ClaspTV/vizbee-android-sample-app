@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="16dp"
     android:background="@drawable/playlist_item_bg">
 
     <androidx.cardview.widget.CardView
@@ -69,18 +69,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:ellipsize="end"
+            android:lineSpacingMultiplier="1.15"
             android:maxLines="2"
             android:textColor="#CBCBCB"
-            android:textSize="12sp"
+            android:textSize="13sp"
             app:layout_constraintEnd_toStartOf="@+id/btnWatchNow"
             app:layout_constraintStart_toStartOf="@+id/tvMovieTitle"
             app:layout_constraintTop_toBottomOf="@+id/tvMovieTitle"
-            tools:text="One year after a mysterious accident left her with amnesia..." />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            tools:text="One year after a mysterious accident left her with amnesia jnhbdfjhmjnjjkn..." />
 
         <TextView
             android:id="@+id/btnWatchNow"
@@ -91,9 +87,8 @@
             android:background="@drawable/playlist_action_bg"
             android:text="@string/watch_now"
             android:textAllCaps="false"
-            android:textColor="#0F0F0F"
+            android:textColor="@color/colorPrimary"
             android:textSize="13sp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
