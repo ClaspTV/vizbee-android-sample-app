@@ -55,29 +55,78 @@ object VizbeeWrapper: SessionStateListener {
         pluginManager.configure(rules)
     }
 
-    // TODO: Replace with desired search plugin ID (searchPluginId, or AISearchPlugin.AI_SEARCH_PLUGIN_ID
-    val searchPluginId = "device_search"
-    val coreDevicePluginId = "core_device_card"
+    val searchPluginId = "simple_search"
+    val coreDeviceCardPlugin = "core_device_card"
+    val tvRemotePlugin = "tv_remote_plugin"
+    private val contentBrowsingRouteCompanionLayoutActionsDefault = listOf(
+        LayoutAction(
+            coreDeviceCardPlugin,
+            CardPluginViewType.MINI,
+            CardPluginPosition.TOP
+        ),
+        LayoutAction(
+            tvRemotePlugin,
+            CardPluginViewType.FULL_MINUS_MINI,
+            CardPluginPosition.BOTTOM
+        )
+    )
+    private val contentBrowsingRouteCompanionLayoutActionsDeviceExpanded = listOf(
+        LayoutAction(
+            coreDeviceCardPlugin,
+            CardPluginViewType.FULL_MINUS_MINI,
+            CardPluginPosition.TOP
+        ),
+        LayoutAction(
+            tvRemotePlugin,
+            CardPluginViewType.MINI,
+            CardPluginPosition.BOTTOM
+        )
+    )
+    private val searchRouteCompanionLayoutActionsDefault = listOf(
+        LayoutAction(
+            coreDeviceCardPlugin,
+            CardPluginViewType.MINI,
+            CardPluginPosition.TOP
+        ),
+        LayoutAction(
+            searchPluginId,
+            CardPluginViewType.FULL_MINUS_MINI,
+            CardPluginPosition.BOTTOM
+        )
+    )
+    private val searchRouteCompanionLayoutActionsDeviceExpanded = listOf(
+        LayoutAction(
+            coreDeviceCardPlugin,
+            CardPluginViewType.FULL_MINUS_MINI,
+            CardPluginPosition.TOP
+        ),
+        LayoutAction(
+            searchPluginId,
+            CardPluginViewType.MINI,
+            CardPluginPosition.BOTTOM
+        )
+    )
+
     private fun createPluginRules(): List<LayoutRule> = listOf(
-        // Rule 1: When device core plugin is tapped in full-minus-mini mode, expand it to full
+        // Rule 1: When device core plugin is tapped in full-minus-mini mode, expand it to full (take care of search/tv remote plugin also)
         LayoutRule(
             name = "Device Core Expand",
-            trigger = CardPluginEvent.OnViewTapped(coreDevicePluginId),
+            trigger = CardPluginEvent.OnViewTapped(coreDeviceCardPlugin),
             condition = { _, layout ->
-                layout[coreDevicePluginId] == CardPluginViewType.MINI
+                layout[coreDeviceCardPlugin] == CardPluginViewType.MINI &&
+                        layout[tvRemotePlugin] == CardPluginViewType.FULL_MINUS_MINI
             },
-            actions = listOf(
-                LayoutAction(
-                    coreDevicePluginId,
-                    CardPluginViewType.FULL_MINUS_MINI,
-                    CardPluginPosition.TOP
-                ),
-                LayoutAction(
-                    searchPluginId,
-                    CardPluginViewType.MINI,
-                    CardPluginPosition.BOTTOM
-                )
-            )
+            actions = contentBrowsingRouteCompanionLayoutActionsDeviceExpanded
+        ),
+
+        LayoutRule(
+            name = "Device Core Expand",
+            trigger = CardPluginEvent.OnViewTapped(coreDeviceCardPlugin),
+            condition = { _, layout ->
+                layout[coreDeviceCardPlugin] == CardPluginViewType.MINI &&
+                        layout[searchPluginId] == CardPluginViewType.FULL_MINUS_MINI
+            },
+            actions = searchRouteCompanionLayoutActionsDeviceExpanded
         ),
 
         // Rule 2: When search plugin is tapped in mini mode, expand it to full-minus-mini and show device core in mini
@@ -87,18 +136,17 @@ object VizbeeWrapper: SessionStateListener {
             condition = { _, layout ->
                 layout[searchPluginId] == CardPluginViewType.MINI
             },
-            actions = listOf(
-                LayoutAction(
-                    coreDevicePluginId,
-                    CardPluginViewType.MINI,
-                    CardPluginPosition.TOP
-                ),
-                LayoutAction(
-                    searchPluginId,
-                    CardPluginViewType.FULL_MINUS_MINI,
-                    CardPluginPosition.BOTTOM
-                )
-            )
+            actions = searchRouteCompanionLayoutActionsDefault
+        )
+
+        // Rule 3: When tv remote plugin is tapped in mini mode, expand it to full-minus-mini and show device core in mini
+        ,LayoutRule(
+            name = "TV Remote Expand - Show TV Remote Full",
+            trigger = CardPluginEvent.OnViewTapped(tvRemotePlugin),
+            condition = { _, layout ->
+                layout[tvRemotePlugin] == CardPluginViewType.MINI
+            },
+            actions = contentBrowsingRouteCompanionLayoutActionsDefault
         )
     )
 
