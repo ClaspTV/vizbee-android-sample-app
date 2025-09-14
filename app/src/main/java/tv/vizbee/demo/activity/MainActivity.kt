@@ -3,6 +3,8 @@ package tv.vizbee.demo.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -11,6 +13,9 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.android.installreferrer.api.InstallReferrerClient
+import com.android.installreferrer.api.InstallReferrerStateListener
+import com.android.installreferrer.api.ReferrerDetails
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,17 +41,23 @@ class MainActivity : AppCompatActivity(), IFragmentController {
         val splashInitTime = System.currentTimeMillis()
         val splashScreen = installSplashScreen()
         splashScreen.setKeepOnScreenCondition {
-            return@setKeepOnScreenCondition System.currentTimeMillis() - splashInitTime < 2000
+            return@setKeepOnScreenCondition if (System.currentTimeMillis() - splashInitTime < 2000) {
+                true
+            } else {
+                init()
+                false
+            }
         }
 
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+    }
 
+    private fun init() {
         showVideoGalleryFragment()
         Logger.d(LOG_TAG, "handleLogin onCreate")
         handleLogin(intent)
-        handleIntent(intent)
 
         val actionBar: ActionBar? = supportActionBar
         if (actionBar != null) {
@@ -55,6 +66,51 @@ class MainActivity : AppCompatActivity(), IFragmentController {
             actionBar.setDisplayShowHomeEnabled(true)
             actionBar.setLogo(R.drawable.app_logo) // Set your logo
         }
+
+        if (!SharedPreferenceHelper.isInstallationDeeplinkUsed()) {
+            connectToStoreAndRetrieve()
+        }
+        handleIntent(intent)
+    }
+
+    private fun connectToStoreAndRetrieve() {
+        Log.d(LOG_TAG, "Connecting to store to retrieve referrer information")
+        val referrerClient: InstallReferrerClient = InstallReferrerClient.newBuilder(this).build()
+        referrerClient.startConnection(object : InstallReferrerStateListener {
+
+            override fun onInstallReferrerSetupFinished(responseCode: Int) {
+                when (responseCode) {
+                    InstallReferrerClient.InstallReferrerResponse.OK -> {
+                        // Connection established.
+                        val response: ReferrerDetails = referrerClient.installReferrer
+                        val referrerUrl: String = response.installReferrer
+                        val referrerClickTime: Long = response.referrerClickTimestampSeconds
+                        val appInstallTime: Long = response.installBeginTimestampSeconds
+                        val instantExperienceLaunched: Boolean = response.googlePlayInstantParam
+
+                        // print all the information that can be done using above information
+                        Log.i(LOG_TAG, "Referrer URL: $referrerUrl")
+                        referrerClient.endConnection()
+                        SharedPreferenceHelper.saveInstallationDeeplinkUsed(true)
+
+                        deeplink("?$referrerUrl".toUri())
+                    }
+
+                    InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED -> {
+                        // API not available on the current Play Store app.
+                    }
+
+                    InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE -> {
+                        // Connection couldn't be established.
+                    }
+                }
+            }
+
+            override fun onInstallReferrerServiceDisconnected() {
+                // Try to restart the connection on the next request to
+                // Google Play by calling the startConnection() method.
+            }
+        })
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -82,9 +138,22 @@ class MainActivity : AppCompatActivity(), IFragmentController {
         data?.let { uri ->
             Log.d(LOG_TAG, "The intent contains: uri = $uri")
             if (uri.host?.equals("demo.vizbee.tv") == true && uri.path?.equals("/deeplink") == true) {
-                VizbeeContext.getInstance().handleDeeplink(this, uri)
+                uri.getQueryParameter("referrer")?.let {
+                    // decode string in case it is encoded
+                    val decodedUri = "?${Uri.decode(it)}".toUri()
+                    Log.d(LOG_TAG, "Decoded: uri = $decodedUri")
+                    deeplink(decodedUri)
+                } ?: kotlin.run {
+                    deeplink(uri)
+                }
             }
         }
+    }
+
+    private fun deeplink(uri: Uri) {
+        Handler(Looper.getMainLooper()).postDelayed({
+            VizbeeContext.getInstance().handleDeeplink(this, uri)
+        }, 100)
     }
 
     //---
@@ -168,7 +237,7 @@ class MainActivity : AppCompatActivity(), IFragmentController {
 
             R.id.menu_item_help -> {
                 // Take user to a webview with a url
-                val url = "https://developer.vizbee.tv/omni/demo/intro"
+                val url = "https://vizbee.tv/omni-demo"
                 val intent = Intent(Intent.ACTION_VIEW, url.toUri())
                 startActivity(intent)
             }

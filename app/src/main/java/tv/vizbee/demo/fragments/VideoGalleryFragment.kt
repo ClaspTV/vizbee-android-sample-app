@@ -1,10 +1,13 @@
 package tv.vizbee.demo.fragments
 
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +34,10 @@ class VideoGalleryFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (Build.VERSION.SDK_INT >= 35) {
+            val actionBarHeight = actionBarHeight(context)
+            binding.root.setPadding(0, actionBarHeight - 50, 0, 0)
+        }
 
         binding.playlistRecyclerView.adapter = PlaylistAdapter(
             onItemClick = { playlistItem ->
@@ -39,6 +46,29 @@ class VideoGalleryFragment : BaseFragment() {
         ).apply {
             submitList(VideoStoreFactory.mainVideoStoreList)
         }
+    }
+
+    private fun actionBarHeight(context: Context?): Int {
+        if (null == context) {
+            Log.w(LOG_TAG, "Cannot get action bar height for null context")
+            return 0
+        }
+
+        var actionBarHeight = 0
+
+        val typedValue = TypedValue()
+        if ((null != context.theme) &&
+            context.theme.resolveAttribute(android.R.attr.actionBarSize, typedValue, true) &&
+            (null != context.resources)
+        ) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(
+                typedValue.data,
+                context.resources.displayMetrics
+            )
+        }
+
+        Log.v(LOG_TAG, "Action bar height is: $actionBarHeight")
+        return actionBarHeight
     }
 
     private fun callVizbeeSmartPlay(playlistItem: VideoItem) {
@@ -78,14 +108,16 @@ class VideoGalleryFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
+        Log.d(LOG_TAG, "onResume called")
 
         // ---------------------------
         // [BEGIN] Vizbee Integration
         // ---------------------------
         Handler(Looper.getMainLooper()).postDelayed({
-            val currentActivity = activity
-            if (currentActivity != null && !currentActivity.isFinishing) {
-                VizbeeContext.getInstance().smartHelp(currentActivity)
+
+            activity?.let {
+                Log.d(LOG_TAG, "Invoking Vizbee SmartHelp")
+                VizbeeContext.getInstance().smartHelp(it)
             }
         }, 2000)
 
