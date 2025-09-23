@@ -170,7 +170,7 @@ class MainActivity : AppCompatActivity(), IFragmentController {
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.content_container, VideoGalleryFragment(), tag)
-            .commit()
+            .commitAllowingStateLoss()
     }
 
     override fun showVideoDetailsFragment(videoItem: VideoItem) {
