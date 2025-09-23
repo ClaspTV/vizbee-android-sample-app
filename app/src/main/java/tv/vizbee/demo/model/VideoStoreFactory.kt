@@ -5,51 +5,13 @@ object VideoStoreFactory {
     // get main video store list
     val mainVideoStoreList: List<VideoItem>
         get() = listOf(
-//            // Original demo videos
-//            VideoItem(
-//                "Elephants Dream",
-//                "Free HLS video",
-//                "elephants",
-//                false,
-//                "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/ElephantsDream.m3u8",
-//                "https://s3.amazonaws.com/vizbee/images/demoapp/elephants_dream.jpg",
-//                "HLS"
-//            ),
-//            VideoItem(
-//                "Tears of Steel",
-//                "Thousands of years ago, five African tribes war over a meteorite containing the metal vibranium. One warrior ingests a heart-shaped herb affected by the metal and gains superhuman abilities, becoming the first Black Panther.",
-//                "tears",
-//                false,
-//                "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/TearsOfSteel.m3u8",
-//                "https://www.washingtonpost.com/graphics/2019/entertainment/oscar-nominees-movie-poster-design/img/black-panther-web.jpg",
-//                "HLS"
-//            ),
-//            VideoItem(
-//                "Akamai Live Stream",
-//                "In 1947, John Nash arrives at Princeton University as a co-recipient, with Martin Hansen, of the Carnegie Scholarship for Mathematics",
-//                "akamai-live-stream",
-//                true,
-//                "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8",
-//                "https://images.unsplash.com/photo-1604311795833-25e1d5c128c6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80",
-//                "Live"
-//            ),
-//            VideoItem(
-//                "Sintel",
-//                "Free MP4 video",
-//                "sintel",
-//                false,
-//                "http://peach.themazzone.com/durian/movies/sintel-2048-surround.mp4",
-//                "https://s3.amazonaws.com/vizbee/images/demoapp/sintel.jpg",
-//                "MP4"
-//            ),
-
             // Featured Movies
             VideoItem(
                 "Interstellar",
                 "The adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel and conquer the vast distances involved in an interstellar voyage.",
                 "7ca0ddb0-b8a9-4df7-8154-aac6ca17e5c7",
                 false,
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/TearsOfSteel.m3u8",
+                "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
                 "https://image.tmdb.org/t/p/original/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
                 "Sci-Fi"
             ),
@@ -67,18 +29,18 @@ object VideoStoreFactory {
                 "After being held captive in an Afghan cave, billionaire engineer Tony Stark creates a unique weaponized suit of armor to fight evil.",
                 "b6d10475-226e-4dbf-add4-763faefb655d",
                 false,
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/ElephantsDream.m3u8",
+                "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
                 "https://image.tmdb.org/t/p/original/78lPtwv72eTNqFW9COBYI0dWDJa.jpg",
                 "Superhero"
             ),
 
-// Trending Movies
+            // Trending Movies
             VideoItem(
                 "The Matrix",
                 "Set in the 22nd century, The Matrix tells the story of a computer hacker who joins a group of underground insurgents fighting the vast and powerful computers who now rule the earth.",
                 "95db9a88-bc9a-44be-aeb0-47a838079c03",
                 false,
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/TearsOfSteel.m3u8",
+                "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/ElephantsDream.m3u8",
                 "https://image.tmdb.org/t/p/original/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg",
                 "Sci-Fi/Action"
             ),
@@ -87,7 +49,7 @@ object VideoStoreFactory {
                 "During the 1980s, a failed stand-up comedian is driven insane and turns to a life of crime and chaos in Gotham City while becoming an infamous psychopathic crime figure.",
                 "60ea4768-d695-4adc-adda-a60963294483",
                 false,
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/ElephantsDream.m3u8",
+                "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
                 "https://image.tmdb.org/t/p/original/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
                 "Crime/Drama"
             ),
@@ -105,7 +67,7 @@ object VideoStoreFactory {
                 "In Nazi-occupied France during World War II, a group of Jewish-American soldiers known as \"The Basterds\" are chosen specifically to spread fear throughout the Third Reich by scalping and brutally killing Nazis.",
                 "a8bc95c7-9bc8-4d0a-a688-e3ce410a5e4b",
                 false,
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/ElephantsDream.m3u8",
+                "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
                 "https://image.tmdb.org/t/p/original/7sfbEnaARXDDhKm0CZ7D7uc2sbo.jpg",
                 "War/Drama"
             ),
@@ -119,13 +81,13 @@ object VideoStoreFactory {
                 "Superhero/War"
             ),
 
-// Popular Movies
+            // Popular Movies
             VideoItem(
                 "The Lord of the Rings: The Two Towers",
                 "Frodo and Sam are trekking to Mordor to destroy the One Ring of Power while Gimli, Legolas and Aragorn search for the orc-captured Merry and Pippin.",
                 "1adc8b97-2ebd-4089-bf3f-cbf8b371b08a",
                 false,
-                "http://adultswimhls-i.akamaihd.net/hls/live/238460/adultswim/main/1/master.m3u8",
+                "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
                 "https://image.tmdb.org/t/p/original/5VTN0pR8gcqV3EPUHHfMGnJYN9L.jpg",
                 "Fantasy/Adventure"
             ),
@@ -134,7 +96,7 @@ object VideoStoreFactory {
                 "An apocalyptic story set in the furthest reaches of our planet, in a stark desert landscape where humanity is broken, and most everyone is crazed fighting for the necessities of life.",
                 "7e73a4d2-c85e-4840-bdd5-897c060ca914",
                 false,
-                "http://adultswimhls-i.akamaihd.net/hls/live/238460/adultswim/main/1/master.m3u8",
+                "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/ElephantsDream.m3u8",
                 "https://image.tmdb.org/t/p/original/8tZYtuWezp8JbcsvHYO0O46tFbo.jpg",
                 "Action/Post-Apocalyptic"
             )
