@@ -13,4 +13,17 @@
         app:controller_layout_id="@layout/exo_player_controls"
         app:hide_on_touch="true"
         app:show_timeout="3000" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/label_bg"
+        android:fontFamily="@font/roboto_bold"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
+        android:text="Demo Video"
+        android:textColor="#FAFAFA"
+        android:textSize="14sp" />
 </FrameLayout>
