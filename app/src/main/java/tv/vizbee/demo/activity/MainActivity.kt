@@ -38,24 +38,10 @@ class MainActivity : AppCompatActivity(), IFragmentController {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(LOG_TAG, "onCreate")
-
-        val splashInitTime = System.currentTimeMillis()
-        val splashScreen = installSplashScreen()
-        splashScreen.setKeepOnScreenCondition {
-            return@setKeepOnScreenCondition if (System.currentTimeMillis() - splashInitTime < 2000) {
-                Log.d(LOG_TAG, "Splash In progress")
-                true
-            } else {
-                Log.d(LOG_TAG, "Splash ended")
-                init()
-                false
-            }
-        }
-
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        init()
     }
 
     private fun init() {
