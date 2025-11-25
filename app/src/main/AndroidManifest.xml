@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Vizbee Integration Added networkSecurityConfig -->
     <application
         android:name=".VizbeeDemoApplication"
         android:allowBackup="true"
@@ -13,9 +12,8 @@
         android:theme="@style/Base.Theme.VizbeeDemo.SplashScreen"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
         <activity
-            android:name="tv.vizbee.demo.activity.MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -23,7 +21,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -36,15 +33,14 @@
                     android:scheme="sample" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".activity.SmartHandoffActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.MoviePlayerActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:launchMode="singleTop"
-            android:screenOrientation="sensorLandscape" />
-
-        <!--[BEGIN] Vizbee Integration-->
-
+            android:screenOrientation="sensorLandscape" /> <!-- [BEGIN] Vizbee Integration -->
         <meta-data
             android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
             android:value="tv.vizbee.demo.CastOptionsProvider" />
@@ -54,7 +50,6 @@
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/Theme.OmniDemo.Common">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
@@ -70,9 +65,6 @@
                     android:scheme="@string/vizbee_app_id" />
             </intent-filter>
         </activity>
-
-        <!--[END] Vizbee Integration-->
-
     </application>
 
 </manifest>

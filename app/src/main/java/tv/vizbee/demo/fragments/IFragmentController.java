@@ -6,5 +6,6 @@ public interface IFragmentController {
     void showVideoGalleryFragment();
     void showVideoDetailsFragment(VideoItem videoItem);
     void showUserLoginFragment(Boolean isHomeSSOLogin);
+    void showSmartHandoffFragment();
     void popBackStack();
 }

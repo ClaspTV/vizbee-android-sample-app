@@ -23,6 +23,7 @@ import tv.vizbee.api.VizbeeContext
 import tv.vizbee.demo.R
 import tv.vizbee.demo.databinding.ActivityMainBinding
 import tv.vizbee.demo.fragments.IFragmentController
+import tv.vizbee.demo.fragments.SmartHandoffFragment
 import tv.vizbee.demo.fragments.UserLoginFragment
 import tv.vizbee.demo.fragments.VideoDetailsFragment
 import tv.vizbee.demo.fragments.VideoGalleryFragment
@@ -195,6 +196,11 @@ class MainActivity : AppCompatActivity(), IFragmentController {
         }
     }
 
+    override fun showSmartHandoffFragment() {
+        // Launch SmartHandoffActivity instead of showing fragment
+        startActivity(SmartHandoffActivity.createIntent(this))
+    }
+
     override fun popBackStack() {
         supportFragmentManager.popBackStack()
     }
@@ -230,6 +236,10 @@ class MainActivity : AppCompatActivity(), IFragmentController {
                 val url = "https://vizbee.tv/omni-demo"
                 val intent = Intent(Intent.ACTION_VIEW, url.toUri())
                 startActivity(intent)
+            }
+
+            R.id.menu_item_smart_handoff -> {
+                showSmartHandoffFragment()
             }
         }
         return super.onOptionsItemSelected(item)
