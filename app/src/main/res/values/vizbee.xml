@@ -97,6 +97,9 @@
         <!-- MultiDeviceSmartInstall Card -->
         <item name="vzb_multiDeviceSmartInstallViewStyle">@style/Theme.Vizbee.OmniDemo.MultiDeviceSmartInstallView</item>
 
+        <!-- Smart Handoff Card -->
+        <item name="vzb_SmartHandoffViewStyle">@style/Theme.Vizbee.OmniDemo.SmartHandoffView</item>
+
         <!-- CastIcon Card -->
         <item name="vzb_smartPlayDeviceSelectionCardDeviceListViewOverlayStyle">
             @style/Theme.Vizbee.OmniDemo.DeviceListView.CastIconCard
@@ -274,6 +277,33 @@
 
     <style name="Theme.Vizbee.OmniDemo.MultiDeviceSmartInstallView.HeaderStackView" parent="Widget.Vizbee.Futura.Light.SpacedLinearLayout.MultiDeviceSmartInstallView.HeaderStackView">
         <item name="vzb_overlaySubtitleLabelStyle">@style/Theme.Vizbee.OmniDemo.OverlaySubtitleLabelStyle</item>
+    </style>
+
+    <!-- SmartHandoffView -->
+    <style name="Theme.Vizbee.OmniDemo.SmartHandoffView" parent="Widget.Vizbee.Futura.SpacedLinearLayout.SmartHandoffView">
+        <item name="vzb_deviceListViewStyle">@style/Theme.Vizbee.OmniDemo.SmartHandoffViewDeviceListView</item>
+    </style>
+
+    <style name="Theme.Vizbee.OmniDemo.SmartHandoffViewDeviceListView" parent="Widget.Vizbee.Futura.DeviceListView">
+        <item name="vzb_deviceListRowStyle">@style/Theme.Vizbee.OmniDemo.SmartHandoffViewDeviceListItemView</item>
+        <item name="vzb_showDeviceDivider">true</item>
+        <item name="vzb_deviceListDividerColor">#4d3181</item>
+    </style>
+
+    <style name="Theme.Vizbee.OmniDemo.SmartHandoffViewDeviceListItemView" parent="Widget.Vizbee.Futura.DeviceListItemView">
+        <item name="vzb_deviceInfoViewStyle">
+            @style/Theme.Vizbee.OmniDemo.SmartHandoffDeviceListItemViewDeviceInfoViewStyle
+        </item>
+        <item name="vzb_deviceListCornerRadius">6dp</item>
+        <item name="vzb_backgroundEnabled">#2c1c4a</item>
+        <item name="vzb_backgroundDisabled">#2c1c4a</item>
+        <item name="vzb_backgroundSelected">#2c1c4a</item>
+    </style>
+
+    <style name="Theme.Vizbee.OmniDemo.SmartHandoffDeviceListItemViewDeviceInfoViewStyle" parent="Widget.Vizbee.Futura.DeviceInfoView">
+        <item name="vzb_genericDeviceIconLeftMargin">10dp</item>
+        <item name="vzb_layoutStyle">deviceNameAndIcon</item>
+        <item name="android:layout_marginBottom">0dp</item>
     </style>
 
     <!-- DeviceListView -->
