@@ -13,8 +13,7 @@ import tv.vizbee.demo.fragments.IFragmentController
 import tv.vizbee.demo.fragments.SmartHandoffFragment
 import tv.vizbee.demo.fragments.UserLoginFragment
 import tv.vizbee.demo.fragments.VideoDetailsFragment
-import tv.vizbee.demo.fragments.VideoGalleryFragment
-import tv.vizbee.demo.model.VideoItem
+import tv.vizbee.demo.model.video.VideoItem
 
 class SmartHandoffActivity : AppCompatActivity(), IFragmentController {
 
@@ -38,7 +37,7 @@ class SmartHandoffActivity : AppCompatActivity(), IFragmentController {
         actionBar?.apply {
             setDisplayHomeAsUpEnabled(true) // Show back button
             setDisplayShowHomeEnabled(true)
-            title = "SmartHandoff"
+            title = "Smart Handoff"
         }
     }
 
@@ -49,6 +48,7 @@ class SmartHandoffActivity : AppCompatActivity(), IFragmentController {
                 onBackPressedDispatcher.onBackPressed()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -95,7 +95,7 @@ class SmartHandoffActivity : AppCompatActivity(), IFragmentController {
         }
     }
 
-    override fun showSmartHandoffFragment() {
+    fun showSmartHandoffFragment() {
         val tag = SmartHandoffFragment::class.java.simpleName
 
         if (supportFragmentManager.findFragmentByTag(tag) != null) {
@@ -106,6 +106,10 @@ class SmartHandoffActivity : AppCompatActivity(), IFragmentController {
         supportFragmentManager.beginTransaction()
             .replace(R.id.smart_handoff_content_container, SmartHandoffFragment(), tag)
             .commitAllowingStateLoss()
+    }
+
+    override fun navigateToSettings() {
+        // Do nothing
     }
 
     override fun popBackStack() {

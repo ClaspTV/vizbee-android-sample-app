@@ -20,8 +20,8 @@ import tv.vizbee.demo.Constants
 import tv.vizbee.demo.activity.MoviePlayerActivity
 import tv.vizbee.demo.adapter.PlaylistAdapter
 import tv.vizbee.demo.databinding.FragmentVideoListBinding
-import tv.vizbee.demo.model.VideoItem
-import tv.vizbee.demo.model.VideoStoreFactory
+import tv.vizbee.demo.model.video.VideoItem
+import tv.vizbee.demo.model.video.VideoStoreFactory
 
 class VideoGalleryFragment : BaseFragment() {
     private lateinit var binding: FragmentVideoListBinding
@@ -46,29 +46,6 @@ class VideoGalleryFragment : BaseFragment() {
         ).apply {
             submitList(VideoStoreFactory.mainVideoStoreList)
         }
-    }
-
-    private fun actionBarHeight(context: Context?): Int {
-        if (null == context) {
-            Log.w(LOG_TAG, "Cannot get action bar height for null context")
-            return 0
-        }
-
-        var actionBarHeight = 0
-
-        val typedValue = TypedValue()
-        if ((null != context.theme) &&
-            context.theme.resolveAttribute(android.R.attr.actionBarSize, typedValue, true) &&
-            (null != context.resources)
-        ) {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(
-                typedValue.data,
-                context.resources.displayMetrics
-            )
-        }
-
-        Log.v(LOG_TAG, "Action bar height is: $actionBarHeight")
-        return actionBarHeight
     }
 
     private fun callVizbeeSmartPlay(playlistItem: VideoItem) {

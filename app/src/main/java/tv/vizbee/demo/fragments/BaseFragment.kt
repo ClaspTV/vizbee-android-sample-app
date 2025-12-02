@@ -2,6 +2,8 @@ package tv.vizbee.demo.fragments
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
+import android.util.TypedValue
 import androidx.fragment.app.Fragment
 
 open class BaseFragment : Fragment() {
@@ -25,4 +27,26 @@ open class BaseFragment : Fragment() {
         }
     }
 
+    fun actionBarHeight(context: Context?): Int {
+        if (null == context) {
+            Log.w(LOG_TAG, "Cannot get action bar height for null context")
+            return 0
+        }
+
+        var actionBarHeight = 0
+
+        val typedValue = TypedValue()
+        if ((null != context.theme) &&
+            context.theme.resolveAttribute(android.R.attr.actionBarSize, typedValue, true) &&
+            (null != context.resources)
+        ) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(
+                typedValue.data,
+                context.resources.displayMetrics
+            )
+        }
+
+        Log.v(LOG_TAG, "Action bar height is: $actionBarHeight")
+        return actionBarHeight
+    }
 }

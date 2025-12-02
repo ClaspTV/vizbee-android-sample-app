@@ -1,20 +1,21 @@
 package tv.vizbee.demo.fragments
 
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import tv.vizbee.api.SmartHelpOptions
 import tv.vizbee.api.VizbeeContext
-import tv.vizbee.demo.adapter.PlaylistAdapter
+import tv.vizbee.demo.R
+import tv.vizbee.demo.adapter.SmartHandoffRecyclerAdapter
 import tv.vizbee.demo.databinding.FragmentSmartHandoffBinding
-import tv.vizbee.demo.model.VideoItem
-import tv.vizbee.demo.model.VideoStoreFactory
+import tv.vizbee.demo.model.handoffvideo.HandoffVideoItem
+import tv.vizbee.demo.model.handoffvideo.HandoffVideoStoreFactory
+import tv.vizbee.demo.model.video.VideoStoreFactory
+import java.util.logging.Logger
 
 class SmartHandoffFragment : BaseFragment() {
     private lateinit var binding: FragmentSmartHandoffBinding
@@ -37,41 +38,17 @@ class SmartHandoffFragment : BaseFragment() {
         }
 
         // Get only the first 3 items from the video store
-        val smartHandoffItems = VideoStoreFactory.mainVideoStoreList.take(3)
+        val smartHandoffItems = HandoffVideoStoreFactory.getHandoffVideoItems()
 
-        binding.smartHandoffRecyclerView.adapter = PlaylistAdapter(
-            onItemClick = { playlistItem ->
-                callVizbeeSmartHelp(playlistItem)
-            }
-        ).apply {
-            submitList(smartHandoffItems)
+        binding.smartHandoffRecyclerView.adapter = SmartHandoffRecyclerAdapter(onItemClick = {
+            callVizbeeSmartHelp()
+        }).apply {
+            addAll(smartHandoffItems)
         }
     }
 
-    private fun actionBarHeight(context: Context?): Int {
-        if (null == context) {
-            Log.w(LOG_TAG, "Cannot get action bar height for null context")
-            return 0
-        }
-
-        var actionBarHeight = 0
-
-        val typedValue = TypedValue()
-        if ((null != context.theme) &&
-            context.theme.resolveAttribute(android.R.attr.actionBarSize, typedValue, true) &&
-            (null != context.resources)
-        ) {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(
-                typedValue.data,
-                context.resources.displayMetrics
-            )
-        }
-
-        Log.v(LOG_TAG, "Action bar height is: $actionBarHeight")
-        return actionBarHeight
-    }
-
-    private fun callVizbeeSmartHelp(playlistItem: VideoItem) {
+    private fun callVizbeeSmartHelp() {
+        Log.d(Companion.LOG_TAG, "callVizbeeSmartHelp called")
         activity?.let {
             val smartHelpOptions = SmartHelpOptions()
             smartHelpOptions.enabledSubflows = SmartHelpOptions.SUBFLOW_SMART_HANDOFF

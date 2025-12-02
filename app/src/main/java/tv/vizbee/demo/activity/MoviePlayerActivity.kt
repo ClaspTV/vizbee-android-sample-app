@@ -21,7 +21,7 @@ import tv.vizbee.api.session.VizbeeSessionManager
 import tv.vizbee.demo.Constants
 import tv.vizbee.demo.R
 import tv.vizbee.demo.databinding.FragmentVideoPlayerBinding
-import tv.vizbee.demo.model.VideoItem
+import tv.vizbee.demo.model.video.VideoItem
 
 class MoviePlayerActivity : Activity() {
 

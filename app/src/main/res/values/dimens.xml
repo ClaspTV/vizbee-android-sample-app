@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Smart Handoff Card Dimensions -->
+    <dimen name="handoff_card_height">208dp</dimen>
+    <dimen name="handoff_card_margin">16dp</dimen>
+    <dimen name="handoff_card_corner_radius">8dp</dimen>
+    <dimen name="handoff_card_elevation">8dp</dimen>
+
+    <!-- Content Padding -->
+    <dimen name="handoff_content_padding">16dp</dimen>
+
+    <!-- Text Sizes -->
+    <dimen name="handoff_title_text_size">16sp</dimen>
+    <dimen name="handoff_subtitle_text_size">13sp</dimen>
+    <dimen name="handoff_button_text_size">15sp</dimen>
+
+    <!-- Margins -->
+    <dimen name="handoff_subtitle_margin_top">2dp</dimen>
+
+    <!-- Button Padding -->
+    <dimen name="handoff_button_padding_horizontal">12dp</dimen>
+    <dimen name="handoff_button_padding_vertical">8dp</dimen>
+</resources>

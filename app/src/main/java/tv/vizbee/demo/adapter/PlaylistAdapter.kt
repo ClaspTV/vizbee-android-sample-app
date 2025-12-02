@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import tv.vizbee.demo.databinding.ItemPlaylistBinding
-import tv.vizbee.demo.model.VideoItem
+import tv.vizbee.demo.model.video.VideoItem
 import tv.vizbee.demo.util.GlideUtil
 
 class PlaylistAdapter(

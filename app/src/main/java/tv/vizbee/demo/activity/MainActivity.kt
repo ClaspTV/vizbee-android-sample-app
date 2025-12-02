@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.android.installreferrer.api.InstallReferrerClient
 import com.android.installreferrer.api.InstallReferrerStateListener
 import com.android.installreferrer.api.ReferrerDetails
@@ -23,12 +22,11 @@ import tv.vizbee.api.VizbeeContext
 import tv.vizbee.demo.R
 import tv.vizbee.demo.databinding.ActivityMainBinding
 import tv.vizbee.demo.fragments.IFragmentController
-import tv.vizbee.demo.fragments.SmartHandoffFragment
 import tv.vizbee.demo.fragments.UserLoginFragment
 import tv.vizbee.demo.fragments.VideoDetailsFragment
 import tv.vizbee.demo.fragments.VideoGalleryFragment
 import tv.vizbee.demo.helper.SharedPreferenceHelper
-import tv.vizbee.demo.model.VideoItem
+import tv.vizbee.demo.model.video.VideoItem
 import tv.vizbee.demo.network.LoginApiInterface
 import tv.vizbee.demo.network.NetworkInstance
 import tv.vizbee.demo.vizbee.VizbeeHomeSSOAdapter
@@ -196,9 +194,9 @@ class MainActivity : AppCompatActivity(), IFragmentController {
         }
     }
 
-    override fun showSmartHandoffFragment() {
+    override fun navigateToSettings() {
         // Launch SmartHandoffActivity instead of showing fragment
-        startActivity(SmartHandoffActivity.createIntent(this))
+        startActivity(SettingsActivity.createIntent(this))
     }
 
     override fun popBackStack() {
@@ -238,8 +236,8 @@ class MainActivity : AppCompatActivity(), IFragmentController {
                 startActivity(intent)
             }
 
-            R.id.menu_item_smart_handoff -> {
-                showSmartHandoffFragment()
+            R.id.menu_item_settings -> {
+                navigateToSettings()
             }
         }
         return super.onOptionsItemSelected(item)

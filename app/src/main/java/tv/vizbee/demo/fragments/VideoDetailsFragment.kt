@@ -18,7 +18,7 @@ import tv.vizbee.demo.Constants
 import tv.vizbee.demo.R
 import tv.vizbee.demo.activity.MoviePlayerActivity
 import tv.vizbee.demo.databinding.FragmentVideoDetailsBinding
-import tv.vizbee.demo.model.VideoItem
+import tv.vizbee.demo.model.video.VideoItem
 
 class VideoDetailsFragment : BaseFragment(), View.OnClickListener {
     private lateinit var binding: FragmentVideoDetailsBinding

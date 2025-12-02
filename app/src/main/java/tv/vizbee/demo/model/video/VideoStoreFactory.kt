@@ -1,4 +1,4 @@
-package tv.vizbee.demo.model
+package tv.vizbee.demo.model.video
 
 object VideoStoreFactory {
 

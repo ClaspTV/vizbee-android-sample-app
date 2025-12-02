@@ -4,16 +4,14 @@ import android.content.Context
 import android.content.Intent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
-import org.json.JSONException
 import org.json.JSONObject
 import tv.vizbee.api.ISmartPlayAdapter
 import tv.vizbee.api.ScreenType
 import tv.vizbee.api.VideoMetadata
 import tv.vizbee.api.VideoStreamInfo
-import tv.vizbee.api.VideoTrackInfo
 import tv.vizbee.demo.Constants
 import tv.vizbee.demo.activity.MoviePlayerActivity
-import tv.vizbee.demo.model.VideoItem
+import tv.vizbee.demo.model.video.VideoItem
 import tv.vizbee.utils.ICommandCallback
 import tv.vizbee.utils.Logger
 import tv.vizbee.utils.VizbeeError

@@ -26,7 +26,8 @@
     <!--[END] Vizbee Integration-->
 
     <item
-        android:id="@+id/menu_item_smart_handoff"
+        android:id="@+id/menu_item_settings"
+        android:icon="@drawable/settings"
         android:title="Smart Handoff"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
 </menu>

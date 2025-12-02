@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/SmartHandoff.Card"
+    app:cardBackgroundColor="@color/button_selected_color">
+
+    <!-- Background Image Container -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Background Image -->
+        <ImageView
+            android:id="@+id/item_background_image"
+            style="@style/SmartHandoff.BackgroundImage"
+            android:src="@drawable/nfl"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/item_logo_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/nfl_logo" />
+
+        <!-- Content Container with Gradient Background -->
+        <LinearLayout
+            android:id="@+id/content_container"
+            style="@style/SmartHandoff.ContentContainer">
+
+            <!-- Text Container -->
+            <LinearLayout
+                android:id="@+id/text_container"
+                style="@style/SmartHandoff.TextContainer">
+
+                <!-- Title -->
+                <TextView
+                    android:id="@+id/item_title"
+                    style="@style/SmartHandoff.Title"
+                    tools:text="NFL Game" />
+
+                <!-- Subtitle -->
+                <TextView
+                    android:id="@+id/item_subtitle"
+                    style="@style/SmartHandoff.Subtitle"
+                    android:visibility="visible"
+                    tools:text="Watch the game now" />
+
+            </LinearLayout>
+
+            <!-- Watch Now Button -->
+            <TextView
+                android:id="@+id/btn_watch_now"
+                style="@style/SmartHandoff.WatchNowButton" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</androidx.cardview.widget.CardView>

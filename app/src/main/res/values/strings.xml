@@ -13,4 +13,7 @@
     <string name="invalid_credentials">Invalid Credentials</string>
     <string name="sign_in">Sign In</string>
     <string name="sign_out">Sign Out</string>
+
+    <!-- Smart Handoff Strings -->
+    <string name="handoff_background_image_desc">Video thumbnail background</string>
 </resources>

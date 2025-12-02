@@ -22,4 +22,10 @@
 
     <!--  SplashScreen  -->
     <color name="color_splash_bg">#F00F0F0F</color>
+
+    <!-- Smart Handoff Colors -->
+    <color name="handoff_text_primary">#F7F7F7</color>
+    <color name="handoff_text_secondary">#CCCCCC</color>
+    <color name="handoff_text_shadow">#000000</color>
+    <color name="handoff_button_text">#181C24</color>
 </resources>

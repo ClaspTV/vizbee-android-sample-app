@@ -9,7 +9,7 @@ import android.widget.ImageView
 import com.squareup.picasso.Picasso
 import tv.vizbee.demo.fragments.IFragmentController
 import tv.vizbee.demo.databinding.VideoListItemBinding
-import tv.vizbee.demo.model.VideoItem
+import tv.vizbee.demo.model.video.VideoItem
 
 class VideosAdapterWithSimpleRows(context: Context, resource: Int, videoItems: List<VideoItem>) :
     BaseVideosAdapter(context, resource, videoItems) {
