@@ -23,9 +23,9 @@
                 android:id="@+id/features_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
                 android:text="Features"
                 android:textColor="#FAFAFA"
-                android:layout_marginStart="2dp"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
