@@ -8,13 +8,6 @@
     android:background="@color/colorPrimary"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textColor="@android:color/white"
-        android:layout_height="wrap_content"
-        android:text="nhvjhjj"/>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/smartHandoffRecyclerView"
         android:layout_width="match_parent"

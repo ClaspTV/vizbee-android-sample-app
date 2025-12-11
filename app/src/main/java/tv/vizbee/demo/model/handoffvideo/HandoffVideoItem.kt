@@ -14,6 +14,7 @@ data class HandoffVideoItem(
     val guid: String,
     val title: String,
     val subtitle: String,
+    val configName: String,
     @DrawableRes val thumbnailResId: Int,
     @DrawableRes val logoResId: Int
 )

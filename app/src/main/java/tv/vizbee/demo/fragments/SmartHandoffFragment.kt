@@ -7,15 +7,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import tv.vizbee.api.SmartHandoffCardVisibility
+import tv.vizbee.api.SmartHandoffContext
 import tv.vizbee.api.SmartHelpOptions
 import tv.vizbee.api.VizbeeContext
-import tv.vizbee.demo.R
 import tv.vizbee.demo.adapter.SmartHandoffRecyclerAdapter
 import tv.vizbee.demo.databinding.FragmentSmartHandoffBinding
 import tv.vizbee.demo.model.handoffvideo.HandoffVideoItem
 import tv.vizbee.demo.model.handoffvideo.HandoffVideoStoreFactory
-import tv.vizbee.demo.model.video.VideoStoreFactory
-import java.util.logging.Logger
 
 class SmartHandoffFragment : BaseFragment() {
     private lateinit var binding: FragmentSmartHandoffBinding
@@ -41,17 +40,19 @@ class SmartHandoffFragment : BaseFragment() {
         val smartHandoffItems = HandoffVideoStoreFactory.getHandoffVideoItems()
 
         binding.smartHandoffRecyclerView.adapter = SmartHandoffRecyclerAdapter(onItemClick = {
-            callVizbeeSmartHelp()
+            callVizbeeSmartHelp(it)
         }).apply {
             addAll(smartHandoffItems)
         }
     }
 
-    private fun callVizbeeSmartHelp() {
+    private fun callVizbeeSmartHelp(item: HandoffVideoItem) {
         Log.d(Companion.LOG_TAG, "callVizbeeSmartHelp called")
         activity?.let {
             val smartHelpOptions = SmartHelpOptions()
             smartHelpOptions.enabledSubflows = SmartHelpOptions.SUBFLOW_SMART_HANDOFF
+            smartHelpOptions.smartHandoffContext = SmartHandoffContext(item.configName)
+            smartHelpOptions.smartHandoffCardVisibility = SmartHandoffCardVisibility.SmartHandoffCardVisibilityForceShow
             Handler().postDelayed({
                 VizbeeContext.getInstance().smartHelp(smartHelpOptions, requireContext())
             }, 1000)

@@ -12,6 +12,7 @@ class HandoffVideoStoreFactory {
                     "1",
                     "NFL Game",
                     "The official source for NFL Game",
+                    "nfl",
                     R.drawable.nfl,
                     R.drawable.nfl_logo
                 ),
@@ -19,6 +20,7 @@ class HandoffVideoStoreFactory {
                     "2",
                     "Fox Sports Game",
                     "The official source for Game",
+                    "fox_sports",
                     R.drawable.fox_sports,
                     R.drawable.fox_sports_logo
                 ),
@@ -26,6 +28,7 @@ class HandoffVideoStoreFactory {
                     "3",
                     "CBS Game",
                     "The official source Game",
+                    "cbs_sports",
                     R.drawable.cbs_sports,
                     R.drawable.cbs_sports_logo
                 )
