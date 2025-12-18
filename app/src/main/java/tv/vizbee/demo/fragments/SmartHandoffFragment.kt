@@ -49,22 +49,22 @@ class SmartHandoffFragment : BaseFragment() {
         // Get only the first 3 items from the video store
         val smartHandoffItems = HandoffVideoStoreFactory.getHandoffVideoItems()
 
-        binding.smartHandoffRecyclerView.adapter = SmartHandoffRecyclerAdapter(onItemClick = {
-            Logger.d(LOG_TAG, "Smart Handoff item clicked: ${it.title}")
-            callVizbeeSmartHelp(it)
+        binding.smartHandoffRecyclerView.adapter = SmartHandoffRecyclerAdapter(onItemClick = { item, i ->
+            Logger.d(LOG_TAG, "Smart Handoff item clicked: ${item.title}")
+            callVizbeeSmartHelp(item, i)
         }).apply {
             addAll(smartHandoffItems)
         }
     }
 
-    private fun callVizbeeSmartHelp(item: HandoffVideoItem) {
+    private fun callVizbeeSmartHelp(item: HandoffVideoItem, position: Int) {
         Log.d(Companion.LOG_TAG, "callVizbeeSmartHelp called")
         activity?.let {
             val smartHelpOptions = SmartHelpOptions()
             smartHelpOptions.enabledSubflows = SmartHelpOptions.SUBFLOW_SMART_HANDOFF
             smartHelpOptions.smartHandoffContext = SmartHandoffContext(item.configName)
             smartHelpOptions.smartHandoffCardVisibility = SmartHandoffCardVisibility.SmartHandoffCardVisibilityForceShow
-            val request = getVizbeeRequest(VideoStoreFactory.mainVideoStoreList[0])
+            val request = getVizbeeRequest(VideoStoreFactory.mainVideoStoreList[position])
             Handler().postDelayed({
                 VizbeeContext.getInstance().smartHelp(smartHelpOptions, request, requireContext())
             }, 1000)

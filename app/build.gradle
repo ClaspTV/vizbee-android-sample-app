@@ -11,8 +11,8 @@ android {
         applicationId "tv.vizbee.omnidemo"
         minSdk 24
         targetSdk 35
-        versionCode 7
-        versionName "1.0.3"
+        versionCode 8
+        versionName "1.0.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -60,7 +60,7 @@ dependencies {
     // ---------------------------
 
     // vizbee sender sdk
-    implementation 'tv.vizbee:android-sender-sdk:6.9.3-smarthandoff-rc16'
+    implementation 'tv.vizbee:android-sender-sdk:6.9.3-smarthandoff-rc18'
     // vizbee homesso sdk
     implementation 'tv.vizbee:android-sender-homesso-sdk:1.0.5'
 

@@ -9,7 +9,7 @@ import tv.vizbee.demo.databinding.ItemSmartHandoffRecyclerViewBinding
 import tv.vizbee.demo.model.handoffvideo.HandoffVideoItem
 
 class SmartHandoffRecyclerAdapter(
-    private val onItemClick: ((HandoffVideoItem) -> Unit)? = null
+    private val onItemClick: ((HandoffVideoItem, Int) -> Unit)? = null
 ) : BaseRecyclerAdapter<HandoffVideoItem, SmartHandoffRecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -40,12 +40,12 @@ class SmartHandoffRecyclerAdapter(
 
             // Handle card click - triggers same callback
             itemView.setOnClickListener {
-                onItemClick?.invoke(item)
+                onItemClick?.invoke(item, bindingAdapterPosition)
             }
 
             // Handle Watch Now button click - triggers same callback
             binding.btnWatchNow.setOnClickListener {
-                onItemClick?.invoke(item)
+                onItemClick?.invoke(item, bindingAdapterPosition)
             }
         }
     }
