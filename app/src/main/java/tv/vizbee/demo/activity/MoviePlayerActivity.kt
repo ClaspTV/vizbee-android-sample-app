@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
@@ -22,6 +23,7 @@ import tv.vizbee.demo.Constants
 import tv.vizbee.demo.R
 import tv.vizbee.demo.databinding.FragmentVideoPlayerBinding
 import tv.vizbee.demo.model.video.VideoItem
+import tv.vizbee.utils.Logger
 
 class MoviePlayerActivity : Activity() {
 
@@ -31,6 +33,8 @@ class MoviePlayerActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Logger.d(TAG, "onCreate")
 
         binding = FragmentVideoPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -43,6 +47,11 @@ class MoviePlayerActivity : Activity() {
 
         actionBar?.hide()
         sessionManager = VizbeeContext.getInstance().sessionManager
+
+        val backButton = binding.exoPlayerView.findViewById<ImageView>(R.id.player_back_button)
+        backButton.setOnClickListener {
+            finish()
+        }
 
         // ---------------------------
         // [BEGIN] Vizbee Integration
@@ -77,22 +86,26 @@ class MoviePlayerActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
+        Logger.d(TAG, "onResume")
 
         binding.exoPlayerView.player?.playWhenReady = true
     }
 
     override fun onStart() {
         super.onStart()
+        Logger.d(TAG, "onStart")
         processIntentToPlayVideo()
     }
 
     override fun onPause() {
         super.onPause()
+        Logger.d(TAG, "onPause")
         binding.exoPlayerView.player?.playWhenReady = false
     }
 
     override fun onStop() {
         super.onStop()
+        Logger.d(TAG, "onStop")
 
         // Override intent extras start position and auto play flag
         intent?.putExtra(Constants.EXTRA_START_POSITION, binding.exoPlayerView.player?.currentPosition)
@@ -102,6 +115,7 @@ class MoviePlayerActivity : Activity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        Logger.d(TAG, "onDestroy")
         unregisterReceiver()
     }
 
