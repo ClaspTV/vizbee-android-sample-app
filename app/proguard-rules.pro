@@ -21,3 +21,7 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class tv.vizbee.** { *; }
+
+# Missing classes referenced by SDK but not present at runtime
+-dontwarn com.google.android.gms.cast.tv.**
+-dontwarn org.slf4j.**
