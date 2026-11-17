@@ -12,11 +12,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
-import tv.vizbee.api.RemoteButton
-import tv.vizbee.api.VizbeeContext
-import tv.vizbee.api.session.SessionState
-import tv.vizbee.api.session.SessionStateListener
-import tv.vizbee.api.session.VizbeeSessionManager
+// import tv.vizbee.api.RemoteButton
+// import tv.vizbee.api.VizbeeContext
+// import tv.vizbee.api.session.SessionState
+// import tv.vizbee.api.session.SessionStateListener
+// import tv.vizbee.api.session.VizbeeSessionManager
 import tv.vizbee.demo.Constants
 import tv.vizbee.demo.R
 import tv.vizbee.demo.databinding.FragmentVideoPlayerBinding
@@ -26,31 +26,17 @@ class MoviePlayerActivity : Activity() {
 
     private lateinit var binding: FragmentVideoPlayerBinding
     private var mVideoItem: VideoItem? = null
-    private var sessionManager: VizbeeSessionManager? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentVideoPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         actionBar?.hide()
-        sessionManager = VizbeeContext.getInstance().sessionManager
 
         // ---------------------------
         // [BEGIN] Vizbee Integration
         // ---------------------------
 
-        // Handle remote button click
-        val castButton = binding.exoPlayerView.findViewById<RemoteButton>(R.id.player_remote_button)
-        castButton.setDrawableTintColor("#FFFFFF")
-        castButton?.let { remoteButton ->
-            remoteButton.setOnClickListener {
-                if (sessionManager?.isConnected == true) {
-                    remoteButton.click()
-                } else {
-                    remoteButton.click(mVideoItem, binding.exoPlayerView.player?.currentPosition ?: 0)
-                }
-            }
-        }
+        // Vizbee SDK removed for size measurement
         registerReceiver()
 
         // ---------------------------

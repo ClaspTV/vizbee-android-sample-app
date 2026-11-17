@@ -16,8 +16,9 @@ import tv.vizbee.demo.model.LoginRequest
 import tv.vizbee.demo.model.LoginResponse
 import tv.vizbee.demo.network.LoginApiInterface
 import tv.vizbee.demo.network.NetworkInstance
-import tv.vizbee.demo.vizbee.VizbeeHomeSSOAdapter
-import tv.vizbee.utils.Logger
+import android.util.Log
+// import tv.vizbee.demo.vizbee.VizbeeHomeSSOAdapter
+// import tv.vizbee.utils.Logger
 
 class UserLoginFragment : BaseFragment(), View.OnClickListener {
 
@@ -34,7 +35,7 @@ class UserLoginFragment : BaseFragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View {
 
-        Logger.d(LOG_TAG, "onCreateView called")
+        Log.d(LOG_TAG, "onCreateView called")
         binding = FragmentUserLoginBinding.inflate(inflater, container, false)
         binding.loginSubmit.setOnClickListener(this)
 
@@ -75,9 +76,9 @@ class UserLoginFragment : BaseFragment(), View.OnClickListener {
                             // ---------------------------
                             // [BEGIN] Vizbee Integration
                             // ---------------------------
-                            if (isHomeSSOLogin) {
-                                VizbeeHomeSSOAdapter().updateRegCodeStatus(body.authToken)
-                            }
+                            // if (isHomeSSOLogin) {
+                            //     VizbeeHomeSSOAdapter().updateRegCodeStatus(body.authToken)
+                            // }
                             // ---------------------------
                             // [END] Vizbee Integration
                             // ---------------------------
@@ -89,13 +90,13 @@ class UserLoginFragment : BaseFragment(), View.OnClickListener {
                     }
 
                     override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                        Logger.e(LOG_TAG, "Signin Failure", t)
+                        Log.e(LOG_TAG, "Signin Failure", t)
                         Toast.makeText(context, "Signin Failure", Toast.LENGTH_LONG).show()
                         mFragmentController.popBackStack()
                     }
                 })
         } else {
-            Logger.e(LOG_TAG, getString(R.string.invalid_credentials))
+            Log.e(LOG_TAG, getString(R.string.invalid_credentials))
         }
     }
 

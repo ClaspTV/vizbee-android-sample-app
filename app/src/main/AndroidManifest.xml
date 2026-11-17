@@ -34,33 +34,6 @@
             android:screenOrientation="sensorLandscape" />
 
         <!--[BEGIN] Vizbee Integration-->
-
-        <meta-data
-            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
-            android:value="tv.vizbee.demo.CastOptionsProvider" />
-
-        <activity
-            android:name="tv.vizbee.api.RemoteActivity"
-            android:exported="true"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme.Vizbee.Custom">
-
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity" />
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data
-                    android:host="video"
-                    android:scheme="@string/vizbee_app_id" />
-            </intent-filter>
-        </activity>
-
         <!--[END] Vizbee Integration-->
 
     </application>

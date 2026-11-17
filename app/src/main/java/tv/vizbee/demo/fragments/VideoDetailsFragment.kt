@@ -9,11 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
-import tv.vizbee.api.RequestCallback
-import tv.vizbee.api.VizbeeContext
-import tv.vizbee.api.VizbeeRequest
-import tv.vizbee.api.VizbeeStatus
-import tv.vizbee.api.session.VizbeeScreen
+// import tv.vizbee.api.RequestCallback
+// import tv.vizbee.api.VizbeeContext
+// import tv.vizbee.api.VizbeeRequest
+// import tv.vizbee.api.VizbeeStatus
+// import tv.vizbee.api.session.VizbeeScreen
 import tv.vizbee.demo.Constants
 import tv.vizbee.demo.R
 import tv.vizbee.demo.activity.MoviePlayerActivity
@@ -54,38 +54,7 @@ class VideoDetailsFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun onWatchNowClicked() {
-        callVizbeeSmartPlay()
-    }
-
-    // ---------------------------
-    // [BEGIN] Vizbee Integration
-    // ---------------------------
-
-    private fun callVizbeeSmartPlay() {
-
-        activity?.let {
-            getVizbeeRequest(videoItem).let { it1 ->
-                VizbeeContext.getInstance().smartPlay(
-                    it,
-                    it1
-                )
-            }
-        }
-    }
-
-    private fun getVizbeeRequest(videoItem: VideoItem): VizbeeRequest {
-        val request = VizbeeRequest(videoItem, videoItem.guid, 0)
-        request.setCallback(object : RequestCallback {
-            override fun doPlayOnPhone(status: VizbeeStatus) {
-                Log.i(LOG_TAG, "Play on phone with status = $status")
-                startVideoPlayback()
-            }
-
-            override fun didPlayOnTV(screen: VizbeeScreen) {
-                Log.i(LOG_TAG, "Played on screen = $screen")
-            }
-        })
-        return request
+        startVideoPlayback()
     }
 
     private fun startVideoPlayback() {

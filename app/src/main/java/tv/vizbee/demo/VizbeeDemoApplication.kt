@@ -2,7 +2,7 @@ package tv.vizbee.demo
 
 import android.app.Application
 import tv.vizbee.demo.helper.SharedPreferenceHelper
-import tv.vizbee.demo.vizbee.VizbeeWrapper
+// import tv.vizbee.demo.vizbee.VizbeeWrapper
 
 class VizbeeDemoApplication : Application() {
 
@@ -13,7 +13,7 @@ class VizbeeDemoApplication : Application() {
         // [BEGIN] Vizbee Integration
         // ---------------------------
 
-        VizbeeWrapper.init(application = this)
+        // VizbeeWrapper.init(application = this)
 
         // ---------------------------
         // [END] Vizbee Integration

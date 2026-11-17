@@ -18,8 +18,9 @@ import tv.vizbee.demo.helper.SharedPreferenceHelper
 import tv.vizbee.demo.model.VideoItem
 import tv.vizbee.demo.network.LoginApiInterface
 import tv.vizbee.demo.network.NetworkInstance
-import tv.vizbee.demo.vizbee.VizbeeHomeSSOAdapter
-import tv.vizbee.utils.Logger
+import android.util.Log
+// import tv.vizbee.demo.vizbee.VizbeeHomeSSOAdapter
+// import tv.vizbee.utils.Logger
 
 class MainActivity : AppCompatActivity(),
     IFragmentController {
@@ -27,23 +28,23 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         showVideoGalleryFragment()
-        Logger.d(LOG_TAG, "handleLogin onCreate")
+        Log.d(LOG_TAG, "handleLogin onCreate")
         handleLogin(intent)
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         intent?.let {
-            Logger.d(LOG_TAG, "handleLogin onNewIntent")
+            Log.d(LOG_TAG, "handleLogin onNewIntent")
             handleLogin(it)
         }
     }
 
     private fun handleLogin(intent: Intent) {
         intent.extras?.let {
-            var launchLogin = it.getBoolean(VizbeeHomeSSOAdapter.INTENT_LAUNCH_LOGIN_SCREEN)
+            var launchLogin = it.getBoolean("INTENT_LAUNCH_LOGIN_SCREEN")
             if (launchLogin) {
-                Logger.d(LOG_TAG, "LoginFragment Launch Called")
+                Log.d(LOG_TAG, "LoginFragment Launch Called")
                 showUserLoginFragment(true)
             }
         }
@@ -148,7 +149,7 @@ class MainActivity : AppCompatActivity(),
                     }
 
                     override fun onFailure(call: Call<Any>, t: Throwable) {
-                        Logger.e(LOG_TAG, "Signout Failure", t)
+                        Log.e(LOG_TAG, "Signout Failure", t)
                         Toast.makeText(baseContext, "Signout success", Toast.LENGTH_LONG).show()
                     }
                 })

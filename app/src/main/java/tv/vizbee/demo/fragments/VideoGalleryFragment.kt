@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import tv.vizbee.api.VizbeeContext
+// import tv.vizbee.api.VizbeeContext
 import tv.vizbee.demo.R
 import tv.vizbee.demo.adapter.BaseVideosAdapter
 import tv.vizbee.demo.adapter.VideosAdapterWithSimpleRows
@@ -44,7 +44,7 @@ class VideoGalleryFragment : BaseFragment() {
         // [BEGIN] Vizbee Integration
         // ---------------------------
 
-        VizbeeContext.getInstance().smartHelp(requireActivity())
+        // VizbeeContext.getInstance().smartHelp(requireActivity())
 
         // ---------------------------
         // [END] Vizbee Integration
