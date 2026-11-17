@@ -31,6 +31,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        benchmark {
+            debuggable = true
+            signingConfig signingConfigs.release
+            matchingFallbacks = ['release']
+            profileable true
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -59,7 +65,7 @@ dependencies {
     // ---------------------------
 
     // vizbee sender sdk
-    implementation 'tv.vizbee:android-sender-sdk:6.6.6'
+    implementation 'tv.vizbee:android-sender-sdk:6.9.16'
     // vizbee homesso sdk
     implementation 'tv.vizbee:android-sender-homesso-sdk:1.0.2'
 
