@@ -31,6 +31,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        benchmark {
+            debuggable = true
+            signingConfig signingConfigs.release
+            matchingFallbacks = ['release']
+            profileable true
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -68,7 +74,7 @@ dependencies {
     // [BEGIN] Vizbee Integration
     // ---------------------------
 
-    implementation 'tv.vizbee:android-sender-sdk:6.7.6'
+    implementation 'tv.vizbee:android-sender-sdk:6.9.16'
 
     // ---------------------------
     // [END] Vizbee Integration
