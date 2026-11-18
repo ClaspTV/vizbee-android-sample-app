@@ -275,10 +275,11 @@ capture_and_analyze() {
     ) AS cpu_pct
     FROM sched_slice AS ss
     JOIN thread AS t USING(utid)
-    WHERE t.upid = (
-      SELECT t2.upid FROM thread AS t2
-      WHERE t2.name = '${PKG}' AND t2.is_main_thread = 1
-      LIMIT 1
+    WHERE t.upid = COALESCE(
+      (SELECT t2.upid FROM thread AS t2
+       WHERE t2.name = '${PKG}' AND t2.is_main_thread = 1 LIMIT 1),
+      (SELECT p.upid FROM process AS p
+       WHERE p.name = '${PKG}' LIMIT 1)
     );"
 
     local result
@@ -304,10 +305,11 @@ extract_thread_breakdown() {
         / (trace_end() - trace_start()), 4) AS cpu_pct
     FROM sched_slice AS ss
     JOIN thread AS t USING(utid)
-    WHERE t.upid = (
-      SELECT t2.upid FROM thread AS t2
-      WHERE t2.name = '${PKG}' AND t2.is_main_thread = 1
-      LIMIT 1
+    WHERE t.upid = COALESCE(
+      (SELECT t2.upid FROM thread AS t2
+       WHERE t2.name = '${PKG}' AND t2.is_main_thread = 1 LIMIT 1),
+      (SELECT p.upid FROM process AS p
+       WHERE p.name = '${PKG}' LIMIT 1)
     )
     GROUP BY t.name
     ORDER BY total_ms DESC
