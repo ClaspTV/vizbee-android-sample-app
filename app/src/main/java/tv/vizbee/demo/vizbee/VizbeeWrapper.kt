@@ -3,6 +3,7 @@ package tv.vizbee.demo.vizbee
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import androidx.tracing.Trace
 import com.google.android.gms.cast.framework.CastContext
 import tv.vizbee.api.VizbeeContext
 import tv.vizbee.api.session.*
@@ -35,8 +36,13 @@ object VizbeeWrapper: SessionStateListener {
         // Enable Vizbee SDK logging
         VizbeeContext.getInstance().enableVerboseLogging()
 
-        // Initialise Vizbee SDK
-        VizbeeContext.getInstance().init(application, appId, appAdapter)
+        Trace.beginSection("VizbeeSDK.init")
+        try {
+            // Initialise Vizbee SDK
+            VizbeeContext.getInstance().init(application, appId, appAdapter)
+        } finally {
+            Trace.endSection()
+        }
 
         // Initialise HomeSSO
         VizbeeHomeSSOManager.initialize(application.applicationContext, VizbeeHomeSSOAdapter())

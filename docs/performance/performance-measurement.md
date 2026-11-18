@@ -1,19 +1,32 @@
 # Performance Measurement Steps
 
-Measure each metric with the Vizbee SDK on the `main` branch. Then create a
+Measure each metric with the Vizbee SDK on the main branch. Then create a
 separate branch with the SDK removed and repeat to get the delta.
 
-Use the `benchmark` build type for profiling — it is profileable and release-signed.
-
-```bash
-./gradlew assembleBenchmark
-```
+**Prerequisites**: Connect an Android device via USB with Developer Options and
+USB Debugging enabled. Verify with `adb devices`.
 
 ---
 
 ## Startup
 
 ### Cold-start time
+
+Measures the total time from process creation to first frame drawn.
+
+**Automated** — builds, installs, and runs 5 cold starts:
+
+```bash
+docs/performance/scripts/measure_cold_start.sh
+```
+
+Pass a custom iteration count:
+
+```bash
+docs/performance/scripts/measure_cold_start.sh 10
+```
+
+**Manual** — if you already have the app installed:
 
 ```bash
 adb shell am force-stop tv.vizbee.demo
@@ -22,9 +35,25 @@ adb shell am start-activity -W -S tv.vizbee.demo/.activity.MainActivity
 
 Record the `TotalTime` from the output.
 
-### SDK init breakdown (Perfetto)
+### SDK init time (Perfetto trace)
 
-The SDK includes built-in trace sections that appear automatically in Perfetto.
+Captures a Perfetto trace during a cold start. The app wraps the full Vizbee
+SDK initialization in a `VizbeeSDK.init` trace section which appears in the
+trace automatically.
+
+**Automated**:
+
+```bash
+docs/performance/scripts/capture_startup_trace.sh
+```
+
+Save to a custom path:
+
+```bash
+docs/performance/scripts/capture_startup_trace.sh my_trace.perfetto-trace
+```
+
+**Manual**:
 
 ```bash
 adb shell am force-stop tv.vizbee.demo
@@ -40,14 +69,8 @@ sleep 14
 adb pull /data/misc/perfetto-traces/startup.perfetto-trace .
 ```
 
-Open at [ui.perfetto.dev](https://ui.perfetto.dev) and search for `VizbeeSDK.init`.
-
-| Trace section | What it covers |
-|---|---|
-| `VizbeeSDK.init` | Full SDK initialization |
-| `VizbeeSDK.init.config` | ConfigManager setup |
-| `VizbeeSDK.init.discovery` | DiscoveryManager startup |
-| `VizbeeSDK.init.environment` | Environment and network setup |
+Open the trace at [ui.perfetto.dev](https://ui.perfetto.dev) and search
+for `VizbeeSDK.init` to see the full SDK initialization duration.
 
 ---
 
