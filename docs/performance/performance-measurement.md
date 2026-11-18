@@ -76,7 +76,23 @@ for `VizbeeSDK.init` to see the full SDK initialization duration.
 
 ## Memory
 
-Put the app in the target state, then:
+Measures TOTAL PSS, Java Heap, and Native Heap via `dumpsys meminfo`.
+
+**Automated** — builds, installs, and runs measurements for a given scenario:
+
+```bash
+docs/performance/scripts/measure_memory.sh idle        # 30 iterations, fully automatic
+docs/performance/scripts/measure_memory.sh discovery    # 10 iterations, pauses for cast icon tap
+docs/performance/scripts/measure_memory.sh connected    # 10 iterations, pauses for device connection
+```
+
+Pass custom iteration count and stabilization wait (seconds):
+
+```bash
+docs/performance/scripts/measure_memory.sh idle 15 45
+```
+
+**Manual** — put the app in the target state, then:
 
 ```bash
 adb shell dumpsys meminfo tv.vizbee.demo
@@ -86,9 +102,9 @@ Record **TOTAL PSS**, **Java Heap**, and **Native Heap**.
 
 | State | How to reach |
 |---|---|
-| Idle | App on home screen |
-| Discovery | Cast icon visible |
-| Casting | Connected to a device, playing video |
+| Idle | App on home screen, 60s after launch |
+| Discovery | Cast icon visible, active discovery |
+| Connected | Connected to a device, video playing on TV |
 
 ---
 
