@@ -3,12 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activity.MainActivity">
 
-    <!--[BEGIN] Vizbee Integration-->
-
     <item
         android:id="@+id/account"
         android:title="@string/sign_in"
         app:showAsAction="always" />
 
-    <!--[END] Vizbee Integration-->
+    <!--[BEGIN] Google Cast Integration-->
+
+    <item
+        android:id="@+id/media_route_menu_item"
+        android:title="@string/vizbee_remote_menu_item_title"
+        app:actionProviderClass="androidx.mediarouter.app.MediaRouteActionProvider"
+        app:showAsAction="always" />
+
+    <!--[END] Google Cast Integration-->
 </menu>

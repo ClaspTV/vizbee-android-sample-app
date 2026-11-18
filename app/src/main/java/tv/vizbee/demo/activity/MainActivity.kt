@@ -19,8 +19,7 @@ import tv.vizbee.demo.model.VideoItem
 import tv.vizbee.demo.network.LoginApiInterface
 import tv.vizbee.demo.network.NetworkInstance
 import android.util.Log
-// import tv.vizbee.demo.vizbee.VizbeeHomeSSOAdapter
-// import tv.vizbee.utils.Logger
+import com.google.android.gms.cast.framework.CastButtonFactory
 
 class MainActivity : AppCompatActivity(),
     IFragmentController {
@@ -104,8 +103,8 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
+        CastButtonFactory.setUpMediaRouteButton(applicationContext, menu, R.id.media_route_menu_item)
         return true
     }
 
