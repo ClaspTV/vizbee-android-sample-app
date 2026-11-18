@@ -150,6 +150,9 @@ data_sources {
       ftrace_events: "sched/sched_waking"
       ftrace_events: "sched/sched_process_exit"
       ftrace_events: "sched/sched_process_free"
+      ftrace_events: "sched/sched_process_fork"
+      ftrace_events: "task/task_newtask"
+      ftrace_events: "task/task_rename"
       ftrace_events: "power/cpu_frequency"
       ftrace_events: "power/cpu_idle"
       ftrace_events: "power/suspend_resume"
@@ -163,6 +166,7 @@ data_sources {
     name: "linux.process_stats"
     process_stats_config {
       scan_all_processes_on_start: true
+      proc_stats_poll_ms: 10000
     }
   }
 }
@@ -260,9 +264,10 @@ capture_and_analyze() {
     # Pull trace
     adb pull "$DEVICE_TRACE" "$trace_file" > /dev/null 2>&1
 
-    # Extract CPU usage % via trace_processor
-    # Uses trace_start()/trace_end() for wall-clock duration and handles
-    # incomplete slices (dur = -1) per Perfetto SQL best practices.
+    # Extract CPU usage % via trace_processor.
+    # Finds the app by its main thread name (always equals the package name on
+    # Android) which is more reliable than process.name — the latter can be NULL
+    # if linux.process_stats data is dropped from the ring buffer.
     local sql
     sql="SELECT ROUND(
       SUM(IIF(ss.dur = -1, trace_end() - ss.ts, ss.dur)) * 100.0
@@ -270,13 +275,16 @@ capture_and_analyze() {
     ) AS cpu_pct
     FROM sched_slice AS ss
     JOIN thread AS t USING(utid)
-    JOIN process AS p USING(upid)
-    WHERE p.name = '${PKG}';"
+    WHERE t.upid = (
+      SELECT t2.upid FROM thread AS t2
+      WHERE t2.name = '${PKG}' AND t2.is_main_thread = 1
+      LIMIT 1
+    );"
 
     local result
     result=$("$TRACE_PROCESSOR" query "$trace_file" "$sql" 2>/dev/null | tail -1 | tr -d '[:space:]"')
 
-    if [[ -z "$result" || "$result" == "NULL" ]]; then
+    if [[ -z "$result" || "$result" == "NULL" || "$result" == "[NULL]" ]]; then
         echo ""
         return 1
     fi
@@ -296,8 +304,11 @@ extract_thread_breakdown() {
         / (trace_end() - trace_start()), 4) AS cpu_pct
     FROM sched_slice AS ss
     JOIN thread AS t USING(utid)
-    JOIN process AS p USING(upid)
-    WHERE p.name = '${PKG}'
+    WHERE t.upid = (
+      SELECT t2.upid FROM thread AS t2
+      WHERE t2.name = '${PKG}' AND t2.is_main_thread = 1
+      LIMIT 1
+    )
     GROUP BY t.name
     ORDER BY total_ms DESC
     LIMIT 15;"
