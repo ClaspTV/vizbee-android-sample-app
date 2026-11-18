@@ -14,6 +14,8 @@ set -euo pipefail
 OUTPUT="${1:-startup_trace.perfetto-trace}"
 PKG="tv.vizbee.demo"
 ACTIVITY=".activity.MainActivity"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 DEVICE_TRACE="/data/misc/perfetto-traces/startup.perfetto-trace"
 TRACE_DURATION=15
 
@@ -27,6 +29,17 @@ fi
 DEVICE=$(adb shell getprop ro.product.model 2>/dev/null | tr -d '\r')
 ANDROID_VER=$(adb shell getprop ro.build.version.release 2>/dev/null | tr -d '\r')
 echo "Device: $DEVICE (Android $ANDROID_VER)"
+echo ""
+
+# --- Build & Install ---
+
+echo "Building benchmark APK..."
+cd "$PROJECT_DIR"
+./gradlew app:assembleBenchmark -q
+echo "Installing..."
+adb uninstall "$PKG" > /dev/null 2>&1 || true
+adb install app/build/outputs/apk/benchmark/app-benchmark.apk > /dev/null 2>&1
+echo "Installed."
 echo ""
 
 # --- Capture ---

@@ -24,34 +24,36 @@ object VizbeeWrapper: SessionStateListener {
 
     fun init(application: Application) {
 
-        // Init Vizbee after castContext setup for lock/notification controls
-        CastContext.getSharedInstance(application.applicationContext)
-        context  = WeakReference(application.applicationContext)
-
-        /*
-         * SDK init
-         */
-        val appId = application.getString(R.string.vizbee_app_id)
-        val appAdapter = VizbeeAppAdapter()
-        // Enable Vizbee SDK logging
-        VizbeeContext.getInstance().enableVerboseLogging()
-
         Trace.beginSection("VizbeeSDK.init")
         try {
+
+            // Init Vizbee after castContext setup for lock/notification controls
+            CastContext.getSharedInstance(application.applicationContext)
+            context  = WeakReference(application.applicationContext)
+
+            /*
+             * SDK init
+             */
+            val appId = application.getString(R.string.vizbee_app_id)
+            val appAdapter = VizbeeAppAdapter()
+            // Enable Vizbee SDK logging
+            VizbeeContext.getInstance().enableVerboseLogging()
+
             // Initialise Vizbee SDK
             VizbeeContext.getInstance().init(application, appId, appAdapter)
+
+
+            // Initialise HomeSSO
+            VizbeeHomeSSOManager.initialize(application.applicationContext, VizbeeHomeSSOAdapter())
+
+            /*
+             * Setup session manager
+             */
+            vizbeeSessionManager = VizbeeContext.getInstance().sessionManager
+            vizbeeSessionManager?.addSessionStateListener(this)
         } finally {
             Trace.endSection()
         }
-
-        // Initialise HomeSSO
-        VizbeeHomeSSOManager.initialize(application.applicationContext, VizbeeHomeSSOAdapter())
-
-        /*
-         * Setup session manager
-         */
-        vizbeeSessionManager = VizbeeContext.getInstance().sessionManager
-        vizbeeSessionManager?.addSessionStateListener(this)
     }
 
     // ----------------------------
