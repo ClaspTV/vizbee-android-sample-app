@@ -33,8 +33,13 @@
             android:launchMode="singleTop"
             android:screenOrientation="sensorLandscape" />
 
-        <!--[BEGIN] Vizbee Integration-->
-        <!--[END] Vizbee Integration-->
+        <!--[BEGIN] Google Cast Integration-->
+
+        <meta-data
+            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+            android:value="tv.vizbee.demo.CastOptionsProvider" />
+
+        <!--[END] Google Cast Integration-->
 
     </application>
 

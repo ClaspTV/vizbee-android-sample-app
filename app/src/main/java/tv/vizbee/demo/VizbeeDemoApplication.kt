@@ -1,8 +1,9 @@
 package tv.vizbee.demo
 
 import android.app.Application
+import androidx.tracing.Trace
+import com.google.android.gms.cast.framework.CastContext
 import tv.vizbee.demo.helper.SharedPreferenceHelper
-// import tv.vizbee.demo.vizbee.VizbeeWrapper
 
 class VizbeeDemoApplication : Application() {
 
@@ -10,13 +11,18 @@ class VizbeeDemoApplication : Application() {
         super.onCreate()
 
         // ---------------------------
-        // [BEGIN] Vizbee Integration
+        // [BEGIN] Google Cast Integration
         // ---------------------------
 
-        // VizbeeWrapper.init(application = this)
+        Trace.beginSection("GoogleCast.init")
+        try {
+            CastContext.getSharedInstance(this)
+        } finally {
+            Trace.endSection()
+        }
 
         // ---------------------------
-        // [END] Vizbee Integration
+        // [END] Google Cast Integration
         // ---------------------------
 
         // init SharedPreferenceHelper
