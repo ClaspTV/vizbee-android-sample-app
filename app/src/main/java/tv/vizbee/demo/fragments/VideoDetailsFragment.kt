@@ -1,6 +1,7 @@
 package tv.vizbee.demo.fragments
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
@@ -8,12 +9,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.gms.cast.MediaInfo
+import com.google.android.gms.cast.MediaLoadRequestData
+import com.google.android.gms.cast.MediaMetadata
+import com.google.android.gms.cast.framework.CastContext
+import com.google.android.gms.common.images.WebImage
 import com.squareup.picasso.Picasso
-// import tv.vizbee.api.RequestCallback
-// import tv.vizbee.api.VizbeeContext
-// import tv.vizbee.api.VizbeeRequest
-// import tv.vizbee.api.VizbeeStatus
-// import tv.vizbee.api.session.VizbeeScreen
 import tv.vizbee.demo.Constants
 import tv.vizbee.demo.R
 import tv.vizbee.demo.activity.MoviePlayerActivity
@@ -54,10 +55,45 @@ class VideoDetailsFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun onWatchNowClicked() {
-        startVideoPlayback()
+        CastContext.getSharedInstance(requireContext(), Runnable::run)
+            .addOnSuccessListener { castContext ->
+                val castSession = castContext.sessionManager.currentCastSession
+                if (castSession?.isConnected == true) {
+                    castToReceiver(castSession.remoteMediaClient)
+                } else {
+                    startLocalPlayback()
+                }
+            }
+            .addOnFailureListener {
+                startLocalPlayback()
+            }
     }
 
-    private fun startVideoPlayback() {
+    private fun castToReceiver(remoteMediaClient: com.google.android.gms.cast.framework.media.RemoteMediaClient?) {
+        if (remoteMediaClient == null) return
+
+        val metadata = MediaMetadata(
+            if (videoItem.isLive) MediaMetadata.MEDIA_TYPE_GENERIC else MediaMetadata.MEDIA_TYPE_MOVIE
+        ).apply {
+            putString(MediaMetadata.KEY_TITLE, videoItem.title)
+            if (videoItem.imageURL.isNotEmpty()) {
+                addImage(WebImage(Uri.parse(videoItem.imageURL)))
+            }
+        }
+
+        val mediaInfo = MediaInfo.Builder(videoItem.videoURL)
+            .setStreamType(
+                if (videoItem.isLive) MediaInfo.STREAM_TYPE_LIVE else MediaInfo.STREAM_TYPE_BUFFERED
+            )
+            .setContentType("application/x-mpegURL")
+            .setMetadata(metadata)
+            .build()
+
+        remoteMediaClient.load(MediaLoadRequestData.Builder().setMediaInfo(mediaInfo).build())
+        Log.i(LOG_TAG, "* Casting to receiver: ${videoItem.title}")
+    }
+
+    private fun startLocalPlayback() {
         Log.i(LOG_TAG, "* Starting local playback " + videoItem.title)
         activity?.startActivity(
             Intent(activity, MoviePlayerActivity::class.java)
@@ -67,10 +103,6 @@ class VideoDetailsFragment : BaseFragment(), View.OnClickListener {
                 .putExtra(Constants.EXTRA_AUTO_PLAY, true)
         )
     }
-
-    // ---------------------------
-    // [END] Vizbee Integration
-    // ---------------------------
 
     companion object {
         fun newInstance(video: VideoItem): VideoDetailsFragment {

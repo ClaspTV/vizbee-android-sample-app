@@ -72,7 +72,7 @@ read -rp "Network measurement duration, seconds [180]: " MEASURE_DURATION
 MEASURE_DURATION="${MEASURE_DURATION:-180}"
 read -rp "Wait time after cast icon click (discovery), seconds [10]: " DISC_ACTION_WAIT
 DISC_ACTION_WAIT="${DISC_ACTION_WAIT:-10}"
-read -rp "Wait time after device connection (connected), seconds [15]: " CONN_ACTION_WAIT
+read -rp "Wait time after casting starts (connected), seconds [15]: " CONN_ACTION_WAIT
 CONN_ACTION_WAIT="${CONN_ACTION_WAIT:-15}"
 echo ""
 
@@ -84,7 +84,7 @@ echo "  Conn iterations:     $CONN_ITERS"
 echo "  Settle time:         ${SETTLE_TIME}s"
 echo "  Measure duration:    ${MEASURE_DURATION}s"
 echo "  Discovery wait:      ${DISC_ACTION_WAIT}s"
-echo "  Connected wait:      ${CONN_ACTION_WAIT}s"
+echo "  Cast settle:        ${CONN_ACTION_WAIT}s"
 echo "---------------------"
 echo ""
 read -rp "Press ENTER to start (builds & installs the app)..."
@@ -289,8 +289,9 @@ run_scenario() {
         RX_KBMIN_VALUES+=("$rx_kbmin")
         TX_KBMIN_VALUES+=("$tx_kbmin")
 
-        adb shell am force-stop "$PKG" 2>/dev/null || true
+        # Test cleans up cast session internally before exiting
         wait "$INST_PID" 2>/dev/null || true
+        adb shell am force-stop "$PKG" 2>/dev/null || true
     done
 
     local count=${#TOTAL_KBMIN_VALUES[@]}

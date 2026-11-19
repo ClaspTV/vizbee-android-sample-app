@@ -66,7 +66,7 @@ read -rp "Initial settling time after launch, seconds [60]: " SETTLE_TIME
 SETTLE_TIME="${SETTLE_TIME:-60}"
 read -rp "Wait time after cast icon click (discovery), seconds [10]: " DISC_ACTION_WAIT
 DISC_ACTION_WAIT="${DISC_ACTION_WAIT:-10}"
-read -rp "Wait time after device connection (connected), seconds [15]: " CONN_ACTION_WAIT
+read -rp "Wait time after casting starts (connected), seconds [15]: " CONN_ACTION_WAIT
 CONN_ACTION_WAIT="${CONN_ACTION_WAIT:-15}"
 echo ""
 
@@ -77,7 +77,7 @@ echo "  Disc iterations:   $DISC_ITERS"
 echo "  Conn iterations:   $CONN_ITERS"
 echo "  Settle time:       ${SETTLE_TIME}s"
 echo "  Discovery wait:    ${DISC_ACTION_WAIT}s"
-echo "  Connected wait:    ${CONN_ACTION_WAIT}s"
+echo "  Cast settle:      ${CONN_ACTION_WAIT}s"
 echo "---------------------"
 echo ""
 read -rp "Press ENTER to start (builds & installs the app)..."
@@ -162,6 +162,7 @@ compute_stats() {
 run_ui_automation() {
     local scenario=$1
     local action_wait_ms=$2
+    local measure_duration_ms=$3
 
     local settle_ms=$((SETTLE_TIME * 1000))
     local device_name_arg=""
@@ -173,13 +174,14 @@ run_ui_automation() {
         -e scenario $scenario \
         -e actionWait $action_wait_ms \
         -e settleTime $settle_ms \
+        -e measureDuration $measure_duration_ms \
         $device_name_arg \
         -e class ${TEST_CLASS}#putInState \
         ${PKG}.test/${TEST_RUNNER}" > /tmp/memtest_instrument.log 2>&1 &
-    local INST_PID=$!
+    UI_AUTOMATION_PID=$!
 
     local waited=0
-    local max_wait=$(( (SETTLE_TIME + action_wait_ms / 1000 + 30) ))
+    local max_wait=$(( (SETTLE_TIME + action_wait_ms / 1000 + 90) ))
     while ((waited < max_wait)); do
         if grep -q "status=ready" /tmp/memtest_instrument.log 2>/dev/null; then
             return 0
@@ -188,7 +190,7 @@ run_ui_automation() {
             echo ""
             echo "  ERROR: Instrumentation test failed:"
             cat /tmp/memtest_instrument.log
-            kill "$INST_PID" 2>/dev/null || true
+            kill "$UI_AUTOMATION_PID" 2>/dev/null || true
             return 1
         fi
         sleep 1
@@ -196,7 +198,7 @@ run_ui_automation() {
     done
 
     echo "  ERROR: Timed out waiting for instrumentation test (${max_wait}s)"
-    kill "$INST_PID" 2>/dev/null || true
+    kill "$UI_AUTOMATION_PID" 2>/dev/null || true
     return 1
 }
 
@@ -235,8 +237,9 @@ run_scenario() {
             countdown "$settle" "Stabilizing"
         else
             local action_wait_ms=$((action_wait * 1000))
+            local measure_duration_ms=10000
             echo "  Running UI automation ($scenario, settle=${settle}s, action wait=${action_wait}s)..."
-            if ! run_ui_automation "$scenario" "$action_wait_ms"; then
+            if ! run_ui_automation "$scenario" "$action_wait_ms" "$measure_duration_ms"; then
                 echo "  SKIPPING iteration $i due to automation failure."
                 echo ""
                 continue
@@ -263,6 +266,11 @@ run_scenario() {
         PSS_VALUES+=("$pss")
         JAVA_VALUES+=("$java")
         NATIVE_VALUES+=("$native")
+
+        # Wait for test to finish (includes cast cleanup for connected)
+        if [[ "$scenario" != "idle" ]]; then
+            wait "$UI_AUTOMATION_PID" 2>/dev/null || true
+        fi
     done
 
     adb shell am force-stop "$PKG" 2>/dev/null || true
