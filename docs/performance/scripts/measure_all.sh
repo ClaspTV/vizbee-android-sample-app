@@ -82,23 +82,36 @@ if [[ "$RUN_MEMORY" == false && "$RUN_CPU" == false && "$RUN_BATTERY" == false ]
     exit 0
 fi
 
+IDLE_ONLY=false
+ask_yn "Idle-only mode (no discovery/connected scenarios)?" "n" && IDLE_ONLY=true
+echo ""
+
 # =============================================
 # 2. Collect shared parameters
 # =============================================
 
 echo "--- Shared parameters ---"
 echo ""
-read -rp "Chromecast device name [CC with Google TV TV 2]: " DEVICE_NAME
-DEVICE_NAME="${DEVICE_NAME:-CC with Google TV TV 2}"
+
+DEVICE_NAME="N/A"
+DISC_ACTION_WAIT=0
+CONN_ACTION_WAIT=0
+
+if [[ "$IDLE_ONLY" == false ]]; then
+    read -rp "Chromecast device name [CC with Google TV TV 2]: " DEVICE_NAME
+    DEVICE_NAME="${DEVICE_NAME:-CC with Google TV TV 2}"
+fi
 
 read -rp "Initial settling time after launch, seconds [60]: " SETTLE_TIME
 SETTLE_TIME="${SETTLE_TIME:-60}"
 
-read -rp "Wait time after cast icon click (discovery), seconds [10]: " DISC_ACTION_WAIT
-DISC_ACTION_WAIT="${DISC_ACTION_WAIT:-10}"
+if [[ "$IDLE_ONLY" == false ]]; then
+    read -rp "Wait time after cast icon click (discovery), seconds [10]: " DISC_ACTION_WAIT
+    DISC_ACTION_WAIT="${DISC_ACTION_WAIT:-10}"
 
-read -rp "Wait time after casting starts (connected), seconds [15]: " CONN_ACTION_WAIT
-CONN_ACTION_WAIT="${CONN_ACTION_WAIT:-15}"
+    read -rp "Wait time after casting starts (connected), seconds [15]: " CONN_ACTION_WAIT
+    CONN_ACTION_WAIT="${CONN_ACTION_WAIT:-15}"
+fi
 echo ""
 
 # =============================================
@@ -111,14 +124,24 @@ if [[ "$RUN_MEMORY" == true ]]; then
     MEM_DISC_ITERS=10
     MEM_CONN_ITERS=10
 
-    echo "--- Memory configuration (defaults: idle=30, disc=10, conn=10) ---"
-    if ! ask_yn "  Use defaults?" "y"; then
-        read -rp "  Iterations for IDLE scenario [30]: " MEM_IDLE_ITERS
-        MEM_IDLE_ITERS="${MEM_IDLE_ITERS:-30}"
-        read -rp "  Iterations for DISCOVERY scenario [10]: " MEM_DISC_ITERS
-        MEM_DISC_ITERS="${MEM_DISC_ITERS:-10}"
-        read -rp "  Iterations for CONNECTED scenario [10]: " MEM_CONN_ITERS
-        MEM_CONN_ITERS="${MEM_CONN_ITERS:-10}"
+    if [[ "$IDLE_ONLY" == true ]]; then
+        MEM_DISC_ITERS=0
+        MEM_CONN_ITERS=0
+        echo "--- Memory configuration (defaults: idle=30, idle-only mode) ---"
+        if ! ask_yn "  Use defaults?" "y"; then
+            read -rp "  Iterations for IDLE scenario [30]: " MEM_IDLE_ITERS
+            MEM_IDLE_ITERS="${MEM_IDLE_ITERS:-30}"
+        fi
+    else
+        echo "--- Memory configuration (defaults: idle=30, disc=10, conn=10) ---"
+        if ! ask_yn "  Use defaults?" "y"; then
+            read -rp "  Iterations for IDLE scenario [30]: " MEM_IDLE_ITERS
+            MEM_IDLE_ITERS="${MEM_IDLE_ITERS:-30}"
+            read -rp "  Iterations for DISCOVERY scenario [10]: " MEM_DISC_ITERS
+            MEM_DISC_ITERS="${MEM_DISC_ITERS:-10}"
+            read -rp "  Iterations for CONNECTED scenario [10]: " MEM_CONN_ITERS
+            MEM_CONN_ITERS="${MEM_CONN_ITERS:-10}"
+        fi
     fi
     echo ""
 fi
@@ -130,16 +153,28 @@ if [[ "$RUN_CPU" == true ]]; then
     CPU_CONN_ITERS=5
     CPU_TRACE_DURATION=60
 
-    echo "--- CPU configuration (defaults: idle=5, disc=5, conn=5, trace=60s) ---"
-    if ! ask_yn "  Use defaults?" "y"; then
-        read -rp "  Iterations for IDLE scenario [5]: " CPU_IDLE_ITERS
-        CPU_IDLE_ITERS="${CPU_IDLE_ITERS:-5}"
-        read -rp "  Iterations for DISCOVERY scenario [5]: " CPU_DISC_ITERS
-        CPU_DISC_ITERS="${CPU_DISC_ITERS:-5}"
-        read -rp "  Iterations for CONNECTED scenario [5]: " CPU_CONN_ITERS
-        CPU_CONN_ITERS="${CPU_CONN_ITERS:-5}"
-        read -rp "  Perfetto trace duration, seconds [60]: " CPU_TRACE_DURATION
-        CPU_TRACE_DURATION="${CPU_TRACE_DURATION:-60}"
+    if [[ "$IDLE_ONLY" == true ]]; then
+        CPU_DISC_ITERS=0
+        CPU_CONN_ITERS=0
+        echo "--- CPU configuration (defaults: idle=5, trace=60s, idle-only mode) ---"
+        if ! ask_yn "  Use defaults?" "y"; then
+            read -rp "  Iterations for IDLE scenario [5]: " CPU_IDLE_ITERS
+            CPU_IDLE_ITERS="${CPU_IDLE_ITERS:-5}"
+            read -rp "  Perfetto trace duration, seconds [60]: " CPU_TRACE_DURATION
+            CPU_TRACE_DURATION="${CPU_TRACE_DURATION:-60}"
+        fi
+    else
+        echo "--- CPU configuration (defaults: idle=5, disc=5, conn=5, trace=60s) ---"
+        if ! ask_yn "  Use defaults?" "y"; then
+            read -rp "  Iterations for IDLE scenario [5]: " CPU_IDLE_ITERS
+            CPU_IDLE_ITERS="${CPU_IDLE_ITERS:-5}"
+            read -rp "  Iterations for DISCOVERY scenario [5]: " CPU_DISC_ITERS
+            CPU_DISC_ITERS="${CPU_DISC_ITERS:-5}"
+            read -rp "  Iterations for CONNECTED scenario [5]: " CPU_CONN_ITERS
+            CPU_CONN_ITERS="${CPU_CONN_ITERS:-5}"
+            read -rp "  Perfetto trace duration, seconds [60]: " CPU_TRACE_DURATION
+            CPU_TRACE_DURATION="${CPU_TRACE_DURATION:-60}"
+        fi
     fi
     echo ""
 fi
@@ -151,16 +186,28 @@ if [[ "$RUN_BATTERY" == true ]]; then
     BAT_CONN_ITERS=3
     BAT_MEASURE_DURATION=600
 
-    echo "--- Battery configuration (defaults: idle=3, disc=3, conn=3, duration=600s / 10 min) ---"
-    if ! ask_yn "  Use defaults?" "y"; then
-        read -rp "  Iterations for IDLE scenario [3]: " BAT_IDLE_ITERS
-        BAT_IDLE_ITERS="${BAT_IDLE_ITERS:-3}"
-        read -rp "  Iterations for DISCOVERY scenario [3]: " BAT_DISC_ITERS
-        BAT_DISC_ITERS="${BAT_DISC_ITERS:-3}"
-        read -rp "  Iterations for CONNECTED scenario [3]: " BAT_CONN_ITERS
-        BAT_CONN_ITERS="${BAT_CONN_ITERS:-3}"
-        read -rp "  Measurement duration, seconds [600]: " BAT_MEASURE_DURATION
-        BAT_MEASURE_DURATION="${BAT_MEASURE_DURATION:-600}"
+    if [[ "$IDLE_ONLY" == true ]]; then
+        BAT_DISC_ITERS=0
+        BAT_CONN_ITERS=0
+        echo "--- Battery configuration (defaults: idle=3, duration=600s / 10 min, idle-only mode) ---"
+        if ! ask_yn "  Use defaults?" "y"; then
+            read -rp "  Iterations for IDLE scenario [3]: " BAT_IDLE_ITERS
+            BAT_IDLE_ITERS="${BAT_IDLE_ITERS:-3}"
+            read -rp "  Measurement duration, seconds [600]: " BAT_MEASURE_DURATION
+            BAT_MEASURE_DURATION="${BAT_MEASURE_DURATION:-600}"
+        fi
+    else
+        echo "--- Battery configuration (defaults: idle=3, disc=3, conn=3, duration=600s / 10 min) ---"
+        if ! ask_yn "  Use defaults?" "y"; then
+            read -rp "  Iterations for IDLE scenario [3]: " BAT_IDLE_ITERS
+            BAT_IDLE_ITERS="${BAT_IDLE_ITERS:-3}"
+            read -rp "  Iterations for DISCOVERY scenario [3]: " BAT_DISC_ITERS
+            BAT_DISC_ITERS="${BAT_DISC_ITERS:-3}"
+            read -rp "  Iterations for CONNECTED scenario [3]: " BAT_CONN_ITERS
+            BAT_CONN_ITERS="${BAT_CONN_ITERS:-3}"
+            read -rp "  Measurement duration, seconds [600]: " BAT_MEASURE_DURATION
+            BAT_MEASURE_DURATION="${BAT_MEASURE_DURATION:-600}"
+        fi
     fi
     echo ""
 fi
