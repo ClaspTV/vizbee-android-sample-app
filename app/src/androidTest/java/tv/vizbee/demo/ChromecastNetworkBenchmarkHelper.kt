@@ -221,5 +221,8 @@ class ChromecastNetworkBenchmarkHelper {
             ?: device.findObject(By.textContains("Stop casting"))
             ?: device.findObject(By.textContains("Stop Casting"))
         stopButton?.click()
+
+        // Wait for the stop command to reach the receiver before the test exits
+        Thread.sleep(3_000)
     }
 }
