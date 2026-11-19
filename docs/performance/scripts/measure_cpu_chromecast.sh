@@ -3,10 +3,13 @@
 # Measures CPU usage (%) of the app with Google Cast SDK across idle,
 # discovery, and connected scenarios using Perfetto traces + trace_processor.
 #
-# Uses ChromecastMemoryBenchmarkHelper UIAutomator test to automate
-# discovery and connected states via the MediaRouteChooserDialog.
+# Can run standalone (prompts user) or be called from measure_all_chromecast.sh
+# with all parameters pre-set via CLI args.
 #
-# Usage: ./measure_cpu_chromecast.sh
+# Usage:
+#   Standalone:  ./measure_cpu_chromecast.sh
+#   From unified: ./measure_cpu_chromecast.sh --skip-build \
+#                   --device-name "TV Name" --idle-iters 5 ...
 #
 # Prerequisites:
 #   - Android device connected via USB with USB debugging enabled
@@ -17,6 +20,41 @@ set -euo pipefail
 
 # --- Wrapper to prevent adb from consuming script stdin ---
 adb() { command adb "$@" < /dev/null; }
+
+# --- CLI arg parsing ---
+
+SKIP_BUILD=false
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --skip-build)        SKIP_BUILD=true; shift ;;
+        --device-name)       DEVICE_NAME="$2"; shift 2 ;;
+        --idle-iters)        IDLE_ITERS="$2"; shift 2 ;;
+        --disc-iters)        DISC_ITERS="$2"; shift 2 ;;
+        --conn-iters)        CONN_ITERS="$2"; shift 2 ;;
+        --settle-time)       SETTLE_TIME="$2"; shift 2 ;;
+        --trace-duration)    TRACE_DURATION="$2"; shift 2 ;;
+        --disc-action-wait)  DISC_ACTION_WAIT="$2"; shift 2 ;;
+        --conn-action-wait)  CONN_ACTION_WAIT="$2"; shift 2 ;;
+        *) echo "Unknown option: $1"; exit 1 ;;
+    esac
+done
+
+# --- Prompt for any parameter not already set via CLI ---
+
+prompt_param() {
+    local var_name=$1
+    local prompt_text=$2
+    local default_value=$3
+
+    if [[ -n "${!var_name:-}" ]]; then
+        return
+    fi
+
+    local input
+    read -rp "$prompt_text [$default_value]: " input
+    eval "$var_name=\"${input:-$default_value}\""
+}
 
 # --- Java 17 auto-detection ---
 
@@ -72,9 +110,7 @@ TEST_CLASS="tv.vizbee.demo.ChromecastMemoryBenchmarkHelper"
 TEST_RUNNER="androidx.test.runner.AndroidJUnitRunner"
 DEVICE_TRACE="/data/misc/perfetto-traces/cpu_bench.perfetto-trace"
 DEVICE_CONFIG="/data/misc/perfetto-configs/cpu_bench.pbtxt"
-TMPDIR_LOCAL=$(mktemp -d "${TMPDIR:-/tmp}/cpu_bench.XXXXXX")
-
-# --- Trace config (matches exemplar sched_cpu.pftxt + process_stats) ---
+TMPDIR_LOCAL=$(mktemp -d "${TMPDIR:-/tmp}/cpu_bench_cc.XXXXXX")
 
 TRACE_CONFIG_FILE="${TMPDIR_LOCAL}/cpu_trace_config.pbtxt"
 
@@ -92,28 +128,29 @@ echo "  Chromecast CPU Benchmark — $DEVICE (Android $ANDROID_VER)"
 echo "================================================"
 echo ""
 
-# --- Configuration prompts ---
+# --- Collect configuration (prompt only for values not set via CLI) ---
 
-read -rp "Chromecast device name (as shown in Google Cast dialog): " DEVICE_NAME
+prompt_param DEVICE_NAME      "Chromecast device name (as shown in Google Cast dialog)" "CC with Google TV TV 2"
 echo ""
 
-read -rp "Iterations for IDLE scenario [5]: " IDLE_ITERS
-IDLE_ITERS="${IDLE_ITERS:-5}"
-read -rp "Iterations for DISCOVERY scenario [5]: " DISC_ITERS
-DISC_ITERS="${DISC_ITERS:-5}"
-read -rp "Iterations for CONNECTED scenario [5]: " CONN_ITERS
-CONN_ITERS="${CONN_ITERS:-5}"
+prompt_param IDLE_ITERS       "Iterations for IDLE scenario"      5
+prompt_param DISC_ITERS       "Iterations for DISCOVERY scenario"  5
+prompt_param CONN_ITERS       "Iterations for CONNECTED scenario"  5
 echo ""
 
-read -rp "Initial settling time after launch, seconds [60]: " SETTLE_TIME
-SETTLE_TIME="${SETTLE_TIME:-60}"
-read -rp "Perfetto trace duration, seconds [60]: " TRACE_DURATION
-TRACE_DURATION="${TRACE_DURATION:-60}"
-read -rp "Wait time after cast icon click (discovery), seconds [10]: " DISC_ACTION_WAIT
-DISC_ACTION_WAIT="${DISC_ACTION_WAIT:-10}"
-read -rp "Wait time after casting starts (connected), seconds [15]: " CONN_ACTION_WAIT
-CONN_ACTION_WAIT="${CONN_ACTION_WAIT:-15}"
+prompt_param SETTLE_TIME      "Initial settling time after launch, seconds"            60
+prompt_param TRACE_DURATION   "Perfetto trace duration, seconds"                       60
+prompt_param DISC_ACTION_WAIT "Wait time after cast icon click (discovery), seconds"   10
+prompt_param CONN_ACTION_WAIT "Wait time after casting starts (connected), seconds"    15
 echo ""
+
+# --- Estimate total time ---
+
+est_idle=$((IDLE_ITERS * (SETTLE_TIME + TRACE_DURATION + 4)))
+est_disc=$((DISC_ITERS * (SETTLE_TIME + DISC_ACTION_WAIT + TRACE_DURATION + 14)))
+est_conn=$((CONN_ITERS * (SETTLE_TIME + CONN_ACTION_WAIT + TRACE_DURATION + 14)))
+est_total=$((est_idle + est_disc + est_conn))
+est_min=$((est_total / 60))
 
 echo "--- Configuration ---"
 echo "  Device name:       $DEVICE_NAME"
@@ -123,16 +160,33 @@ echo "  Conn iterations:   $CONN_ITERS"
 echo "  Settle time:       ${SETTLE_TIME}s"
 echo "  Trace duration:    ${TRACE_DURATION}s"
 echo "  Discovery wait:    ${DISC_ACTION_WAIT}s"
-echo "  Cast settle:      ${CONN_ACTION_WAIT}s"
+echo "  Cast settle:       ${CONN_ACTION_WAIT}s"
+echo "  Estimated time:    ~${est_min} min"
 echo "---------------------"
 echo ""
-read -rp "Press ENTER to start (builds & installs the app)..."
-echo ""
+
+# --- Build & Install ---
+
+if [[ "$SKIP_BUILD" == true ]]; then
+    echo "Skipping build & install (--skip-build)."
+    echo ""
+else
+    read -rp "Press ENTER to start (builds & installs the app)..."
+    echo ""
+    echo "Building benchmark APK + test APK..."
+    cd "$PROJECT_DIR"
+    ./gradlew app:clean app:assembleBenchmark app:assembleDebugAndroidTest -q
+    echo "Installing app APK..."
+    adb uninstall "$PKG" > /dev/null 2>&1 || true
+    adb uninstall "${PKG}.test" > /dev/null 2>&1 || true
+    adb install app/build/outputs/apk/benchmark/app-benchmark.apk
+    echo "Installing test APK..."
+    adb install app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+    echo "Installed."
+    echo ""
+fi
 
 # --- Write Perfetto trace config ---
-# Uses explicit ftrace events (not shorthand atrace categories) and includes
-# linux.process_stats so that process.name / thread.name are resolved.
-# task/task_newtask and sched_process_fork enable thread-to-process mapping.
 
 generate_trace_config() {
     cat > "$TRACE_CONFIG_FILE" <<PBTXT
@@ -176,20 +230,6 @@ PBTXT
 
 generate_trace_config
 
-# --- Build & Install ---
-
-echo "Building benchmark APK + test APK..."
-cd "$PROJECT_DIR"
-./gradlew app:clean app:assembleBenchmark app:assembleDebugAndroidTest -q
-echo "Installing app APK..."
-adb uninstall "$PKG" > /dev/null 2>&1 || true
-adb uninstall "${PKG}.test" > /dev/null 2>&1 || true
-adb install app/build/outputs/apk/benchmark/app-benchmark.apk
-echo "Installing test APK..."
-adb install app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
-echo "Installed."
-echo ""
-
 # --- Helpers ---
 
 countdown() {
@@ -202,8 +242,6 @@ countdown() {
     printf "\r  %s: done.              \n" "$label"
 }
 
-# Runs the instrumentation test to put the app in discovery/connected state.
-# The test stays alive (sleeping) so the state is maintained while we trace.
 run_ui_automation() {
     local scenario=$1
     local action_wait_ms=$2
@@ -247,12 +285,9 @@ run_ui_automation() {
     return 1
 }
 
-# Capture a Perfetto trace and extract CPU usage % for the app.
-# Returns the CPU % via stdout (last line).
 capture_and_analyze() {
     local trace_file="$1"
 
-    # Push config and start trace on device
     adb push "$TRACE_CONFIG_FILE" "$DEVICE_CONFIG" > /dev/null 2>&1
     adb shell perfetto \
         -c "$DEVICE_CONFIG" --txt \
@@ -261,15 +296,10 @@ capture_and_analyze() {
 
     countdown "$TRACE_DURATION" "Recording trace" >&2
 
-    # Small buffer for trace finalization
     sleep 2
 
-    # Pull trace
     adb pull "$DEVICE_TRACE" "$trace_file" > /dev/null 2>&1
 
-    # Extract CPU usage % via trace_processor.
-    # Tries main thread name first (reliable even when process.name is NULL),
-    # falls back to process.name (needed when the main thread wasn't scheduled).
     local sql
     sql="SELECT ROUND(
       SUM(IIF(ss.dur = -1, trace_end() - ss.ts, ss.dur)) * 100.0
@@ -295,7 +325,6 @@ capture_and_analyze() {
     echo "$result"
 }
 
-# Extract per-thread CPU breakdown from a trace file
 extract_thread_breakdown() {
     local trace_file="$1"
 
@@ -326,16 +355,13 @@ compute_cpu_stats() {
     local values=("$@")
     local count=${#values[@]}
 
-    # Sort numerically
     local sorted=($(printf '%s\n' "${values[@]}" | sort -g))
 
-    # Average
     local sum
     sum=$(printf '%s\n' "${values[@]}" | awk '{s+=$1} END {print s}')
     local avg
     avg=$(echo "scale=4; $sum / $count" | bc)
 
-    # P50
     local mid=$((count / 2))
     local p50
     if ((count % 2 == 0)); then
@@ -344,7 +370,6 @@ compute_cpu_stats() {
         p50=${sorted[$mid]}
     fi
 
-    # P90
     local p90_idx
     p90_idx=$(echo "$count * 9 / 10" | bc)
     if ((p90_idx >= count)); then p90_idx=$((count - 1)); fi
@@ -363,7 +388,7 @@ run_scenario() {
     local scenario=$1
     local iterations=$2
     local settle=$3
-    local action_wait=$4   # seconds, only for discovery/connected
+    local action_wait=$4
 
     if ((iterations == 0)); then
         echo ""
@@ -383,14 +408,12 @@ run_scenario() {
     for i in $(seq 1 "$iterations"); do
         echo "--- Iteration $i/$iterations ---"
 
-        # Force-stop any previous run
         adb shell am force-stop "$PKG" 2>/dev/null || true
         sleep 1
 
         local trace_file="${TMPDIR_LOCAL}/${scenario}_${i}.perfetto-trace"
 
         if [[ "$scenario" == "idle" ]]; then
-            # Simple cold launch + wait
             adb shell am start-activity -W -S "$PKG/$ACTIVITY" > /dev/null 2>&1
             countdown "$settle" "Stabilizing"
 
@@ -398,7 +421,6 @@ run_scenario() {
             local cpu_pct
             cpu_pct=$(capture_and_analyze "$trace_file")
         else
-            # Instrumentation handles launch, settle, and UI actions
             local action_wait_ms=$((action_wait * 1000))
             local measure_duration_ms=$(( (TRACE_DURATION + 10) * 1000 ))
             echo "  Running UI automation ($scenario, settle=${settle}s, action wait=${action_wait}s)..."
@@ -424,7 +446,6 @@ run_scenario() {
         CPU_VALUES+=("$cpu_pct")
         LAST_TRACE="$trace_file"
 
-        # Wait for test to finish (includes cast cleanup for connected)
         if [[ "$scenario" != "idle" ]]; then
             wait "$UI_AUTOMATION_PID" 2>/dev/null || true
         fi
@@ -441,7 +462,6 @@ run_scenario() {
     echo "=== Results: $scenario ($count successful iterations) ==="
     compute_cpu_stats "CPU usage" "${CPU_VALUES[@]}"
 
-    # Show per-thread breakdown from last successful trace
     if [[ -n "$LAST_TRACE" && -f "$LAST_TRACE" ]]; then
         echo ""
         echo "  Per-thread breakdown (last iteration):"

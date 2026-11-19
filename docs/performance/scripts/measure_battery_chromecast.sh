@@ -6,7 +6,13 @@
 # Chromecast branch variant — uses ChromecastMemoryBenchmarkHelper for UI
 # automation (Google Cast dialog instead of Vizbee bottom sheet).
 #
-# Usage: ./measure_battery_chromecast.sh
+# Can run standalone (prompts user) or be called from measure_all_chromecast.sh
+# with all parameters pre-set via CLI args.
+#
+# Usage:
+#   Standalone:  ./measure_battery_chromecast.sh
+#   From unified: ./measure_battery_chromecast.sh --skip-build \
+#                   --device-name "TV Name" --idle-iters 3 ...
 #
 # Prerequisites:
 #   - Android device connected via USB with USB debugging enabled
@@ -16,6 +22,41 @@ set -euo pipefail
 
 # --- Wrapper to prevent adb from consuming script stdin ---
 adb() { command adb "$@" < /dev/null; }
+
+# --- CLI arg parsing ---
+
+SKIP_BUILD=false
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --skip-build)        SKIP_BUILD=true; shift ;;
+        --device-name)       DEVICE_NAME="$2"; shift 2 ;;
+        --idle-iters)        IDLE_ITERS="$2"; shift 2 ;;
+        --disc-iters)        DISC_ITERS="$2"; shift 2 ;;
+        --conn-iters)        CONN_ITERS="$2"; shift 2 ;;
+        --settle-time)       SETTLE_TIME="$2"; shift 2 ;;
+        --measure-duration)  MEASURE_DURATION="$2"; shift 2 ;;
+        --disc-action-wait)  DISC_ACTION_WAIT="$2"; shift 2 ;;
+        --conn-action-wait)  CONN_ACTION_WAIT="$2"; shift 2 ;;
+        *) echo "Unknown option: $1"; exit 1 ;;
+    esac
+done
+
+# --- Prompt for any parameter not already set via CLI ---
+
+prompt_param() {
+    local var_name=$1
+    local prompt_text=$2
+    local default_value=$3
+
+    if [[ -n "${!var_name:-}" ]]; then
+        return
+    fi
+
+    local input
+    read -rp "$prompt_text [$default_value]: " input
+    eval "$var_name=\"${input:-$default_value}\""
+}
 
 # --- Java 17 auto-detection ---
 
@@ -57,28 +98,29 @@ echo "  Battery Benchmark (Chromecast) — $DEVICE (Android $ANDROID_VER)"
 echo "================================================"
 echo ""
 
-# --- Configuration prompts ---
+# --- Collect configuration (prompt only for values not set via CLI) ---
 
-read -rp "Chromecast device name (as shown in Google Cast dialog): " DEVICE_NAME
+prompt_param DEVICE_NAME      "Chromecast device name (as shown in Google Cast dialog)" "CC with Google TV TV 2"
 echo ""
 
-read -rp "Iterations for IDLE scenario [3]: " IDLE_ITERS
-IDLE_ITERS="${IDLE_ITERS:-3}"
-read -rp "Iterations for DISCOVERY scenario [3]: " DISC_ITERS
-DISC_ITERS="${DISC_ITERS:-3}"
-read -rp "Iterations for CONNECTED scenario [3]: " CONN_ITERS
-CONN_ITERS="${CONN_ITERS:-3}"
+prompt_param IDLE_ITERS       "Iterations for IDLE scenario"      3
+prompt_param DISC_ITERS       "Iterations for DISCOVERY scenario"  3
+prompt_param CONN_ITERS       "Iterations for CONNECTED scenario"  3
 echo ""
 
-read -rp "Initial settling time after launch, seconds [60]: " SETTLE_TIME
-SETTLE_TIME="${SETTLE_TIME:-60}"
-read -rp "Measurement duration, seconds [600]: " MEASURE_DURATION
-MEASURE_DURATION="${MEASURE_DURATION:-600}"
-read -rp "Wait time after cast icon click (discovery), seconds [10]: " DISC_ACTION_WAIT
-DISC_ACTION_WAIT="${DISC_ACTION_WAIT:-10}"
-read -rp "Wait time after casting starts (connected), seconds [15]: " CONN_ACTION_WAIT
-CONN_ACTION_WAIT="${CONN_ACTION_WAIT:-15}"
+prompt_param SETTLE_TIME      "Initial settling time after launch, seconds"            60
+prompt_param MEASURE_DURATION "Measurement duration, seconds"                          600
+prompt_param DISC_ACTION_WAIT "Wait time after cast icon click (discovery), seconds"   10
+prompt_param CONN_ACTION_WAIT "Wait time after casting starts (connected), seconds"    15
 echo ""
+
+# --- Estimate total time ---
+
+est_idle=$((IDLE_ITERS * (SETTLE_TIME + MEASURE_DURATION + 4)))
+est_disc=$((DISC_ITERS * (SETTLE_TIME + DISC_ACTION_WAIT + MEASURE_DURATION + 14)))
+est_conn=$((CONN_ITERS * (SETTLE_TIME + CONN_ACTION_WAIT + MEASURE_DURATION + 14)))
+est_total=$((est_idle + est_disc + est_conn))
+est_min=$((est_total / 60))
 
 echo "--- Configuration ---"
 echo "  Device name:         $DEVICE_NAME"
@@ -88,26 +130,32 @@ echo "  Conn iterations:     $CONN_ITERS"
 echo "  Settle time:         ${SETTLE_TIME}s"
 echo "  Measure duration:    ${MEASURE_DURATION}s ($(echo "scale=1; $MEASURE_DURATION / 60" | bc) min)"
 echo "  Discovery wait:      ${DISC_ACTION_WAIT}s"
-echo "  Cast settle:        ${CONN_ACTION_WAIT}s"
+echo "  Cast settle:         ${CONN_ACTION_WAIT}s"
+echo "  Estimated time:      ~${est_min} min"
 echo "  Results dir:         $TMPDIR_LOCAL"
 echo "---------------------"
-echo ""
-read -rp "Press ENTER to start (builds & installs the app)..."
 echo ""
 
 # --- Build & Install ---
 
-echo "Building benchmark APK + test APK..."
-cd "$PROJECT_DIR"
-./gradlew app:clean app:assembleBenchmark app:assembleDebugAndroidTest -q
-echo "Installing app APK..."
-adb uninstall "$PKG" > /dev/null 2>&1 || true
-adb uninstall "${PKG}.test" > /dev/null 2>&1 || true
-adb install app/build/outputs/apk/benchmark/app-benchmark.apk
-echo "Installing test APK..."
-adb install app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
-echo "Installed."
-echo ""
+if [[ "$SKIP_BUILD" == true ]]; then
+    echo "Skipping build & install (--skip-build)."
+    echo ""
+else
+    read -rp "Press ENTER to start (builds & installs the app)..."
+    echo ""
+    echo "Building benchmark APK + test APK..."
+    cd "$PROJECT_DIR"
+    ./gradlew app:clean app:assembleBenchmark app:assembleDebugAndroidTest -q
+    echo "Installing app APK..."
+    adb uninstall "$PKG" > /dev/null 2>&1 || true
+    adb uninstall "${PKG}.test" > /dev/null 2>&1 || true
+    adb install app/build/outputs/apk/benchmark/app-benchmark.apk
+    echo "Installing test APK..."
+    adb install app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+    echo "Installed."
+    echo ""
+fi
 
 # --- Resolve UID after install (UID changes on reinstall) ---
 
@@ -119,7 +167,6 @@ if [[ -z "$APP_UID" ]]; then
     exit 1
 fi
 
-# Convert numeric UID (e.g. 10234) to batterystats format (u0a234)
 APP_ID=$((APP_UID - 10000))
 UID_STR="u0a${APP_ID}"
 echo "App UID: $APP_UID ($UID_STR)"
@@ -138,8 +185,6 @@ countdown() {
     printf "\r  %s: done.              \n" "$label"
 }
 
-# Runs the instrumentation test to put the app in discovery/connected state.
-# The test stays alive (sleeping) so the state is maintained.
 run_ui_automation() {
     local scenario=$1
     local action_wait_ms=$2
@@ -183,10 +228,6 @@ run_ui_automation() {
     return 1
 }
 
-# Parse per-app drain from dumpsys batterystats output.
-# Format: "  UID u0a806: 0.811 fg: 0.252 ... bg: ..."
-#          "      screen=0.551 cpu=0.240 wifi=0.0201 ..."
-# Outputs: "total_mah|component_breakdown" or empty on failure.
 parse_app_drain() {
     local stats_file=$1
     local uid=$2
@@ -203,17 +244,14 @@ parse_app_drain() {
         if ((in_section == 0)); then
             continue
         fi
-        # Section ends at a non-indented line (next top-level section)
         if [[ "$line" =~ ^[^[:space:]] ]]; then
             break
         fi
-        # Match our app's UID line (uppercase "UID")
         if [[ "$line" =~ UID\ ${uid}:\ ([0-9.]+) ]]; then
             mah="${BASH_REMATCH[1]}"
             found_uid=1
             continue
         fi
-        # The line immediately after the UID line has component breakdown
         if ((found_uid)); then
             breakdown=$(echo "$line" | sed 's/^[[:space:]]*//' | sed 's/ *(.*//')
             break
@@ -229,13 +267,11 @@ parse_app_drain() {
     return 1
 }
 
-# Parse whole-device computed drain from batterystats
 parse_computed_drain() {
     local stats_file=$1
     grep "Computed drain:" "$stats_file" | head -1 | sed 's/.*Computed drain: //' | awk -F'[, ]' '{print $1}'
 }
 
-# Extract wake lock summary for the app
 extract_wake_locks() {
     local stats_file=$1
     local uid=$2
@@ -243,12 +279,10 @@ extract_wake_locks() {
     local in_uid=0
     local found_wl=0
     while IFS= read -r line; do
-        # Look for the uid section header (uppercase UID)
         if [[ "$line" =~ "UID ${uid}:" ]] || [[ "$line" =~ "Uid ${uid}:" ]]; then
             in_uid=1
             continue
         fi
-        # Another UID section starts — stop
         if ((in_uid)) && [[ "$line" =~ ^[[:space:]]+(UID|Uid)\ (u[0-9]|[0-9]) ]]; then
             break
         fi
@@ -305,7 +339,7 @@ run_scenario() {
     local scenario=$1
     local iterations=$2
     local settle=$3
-    local action_wait=$4   # seconds, only for discovery/connected
+    local action_wait=$4
 
     if ((iterations == 0)); then
         echo ""
@@ -328,27 +362,22 @@ run_scenario() {
     for i in $(seq 1 "$iterations"); do
         echo "--- Iteration $i/$iterations ---"
 
-        # Force-stop any previous run
         adb shell am force-stop "$PKG" 2>/dev/null || true
         sleep 1
 
-        # Reset battery stats and simulate unplugged state
         echo "  Resetting batterystats and simulating unplugged state..."
         adb shell dumpsys batterystats --reset > /dev/null 2>&1
         adb shell dumpsys battery unplug > /dev/null 2>&1
 
         if [[ "$scenario" == "idle" ]]; then
-            # Simple cold launch + settle
             adb shell am start-activity -W -S "$PKG/$ACTIVITY" > /dev/null 2>&1
             countdown "$settle" "Stabilizing"
         else
-            # Instrumentation handles launch, settle, and UI actions
             local action_wait_ms=$((action_wait * 1000))
             local measure_duration_ms=$(( (MEASURE_DURATION + 10) * 1000 ))
             echo "  Running UI automation ($scenario, settle=${settle}s, action wait=${action_wait}s)..."
             if ! run_ui_automation "$scenario" "$action_wait_ms" "$measure_duration_ms"; then
                 echo "  SKIPPING iteration $i due to automation failure."
-                # Restore battery state before skipping
                 adb shell dumpsys battery reset > /dev/null 2>&1
                 echo ""
                 continue
@@ -356,18 +385,14 @@ run_scenario() {
             echo "  State reached."
         fi
 
-        # Measurement window
         echo "  Measuring battery drain for ${MEASURE_DURATION}s..."
         countdown "$MEASURE_DURATION" "Measuring"
 
-        # Restore battery state
         adb shell dumpsys battery reset > /dev/null 2>&1
 
-        # Collect batterystats
         local stats_file="${TMPDIR_LOCAL}/${scenario}_${i}_batterystats.txt"
         adb shell dumpsys batterystats > "$stats_file" 2>&1
 
-        # Parse per-app drain
         local result
         result=$(parse_app_drain "$stats_file" "$UID_STR") || true
 
@@ -381,21 +406,17 @@ run_scenario() {
             breakdown=$(echo "$result" | cut -d'|' -f2)
         fi
 
-        # Convert to mAh/hr
         local mah_hr
         mah_hr=$(echo "scale=4; $app_mah * 3600 / $MEASURE_DURATION" | bc)
 
-        # Extract non-screen drain (SDK-attributable: cpu + wifi + wakelock + sensors etc.)
         local non_screen_mah="0"
         if [[ -n "$breakdown" && "$breakdown" != "(below measurement threshold)" ]]; then
-            # Sum all component= values except screen=
             non_screen_mah=$(echo "$breakdown" | tr ' ' '\n' | grep '=' | grep -v 'screen=' | grep -v ':' | sed 's/.*=//' | awk '{s+=$1} END {printf "%.4f", s}')
             if [[ -z "$non_screen_mah" ]]; then non_screen_mah="0"; fi
         fi
         local non_screen_mah_hr
         non_screen_mah_hr=$(echo "scale=4; $non_screen_mah * 3600 / $MEASURE_DURATION" | bc)
 
-        # Whole-device drain for reference
         local computed_drain
         computed_drain=$(parse_computed_drain "$stats_file")
 
@@ -404,7 +425,6 @@ run_scenario() {
         echo "  Breakdown:        ${breakdown:-n/a}"
         echo "  Device drain:     ${computed_drain:-n/a} mAh (total)"
 
-        # Wake lock info
         echo "  Wake locks:"
         extract_wake_locks "$stats_file" "$UID_STR"
         echo ""
@@ -414,7 +434,6 @@ run_scenario() {
         NS_MAH_VALUES+=("$non_screen_mah")
         NS_MAHHR_VALUES+=("$non_screen_mah_hr")
 
-        # Wait for test to finish (includes cast cleanup for connected)
         if [[ "$scenario" != "idle" ]]; then
             wait "$UI_AUTOMATION_PID" 2>/dev/null || true
         fi
