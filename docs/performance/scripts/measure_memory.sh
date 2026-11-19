@@ -3,14 +3,53 @@
 # Measures memory footprint (TOTAL PSS, Java Heap, Native Heap) of the app
 # across idle, discovery, and connected scenarios.
 #
-# The script prompts for all configuration up front, then runs all three
-# scenarios back-to-back. Discovery and connected states are automated via
-# a UIAutomator instrumentation test that clicks the cast icon and selects
-# the target device.
+# Can run standalone (prompts user) or be called from measure_all.sh with
+# all parameters pre-set via CLI args.
 #
-# Usage: ./measure_memory.sh
+# Usage:
+#   Standalone:  ./measure_memory.sh
+#   From unified: ./measure_memory.sh --skip-build --device-name "TV Name" \
+#                   --idle-iters 30 --disc-iters 10 --conn-iters 10 \
+#                   --settle-time 60 --disc-action-wait 10 --conn-action-wait 15
 
 set -euo pipefail
+
+# --- Wrapper to prevent adb from consuming script stdin ---
+adb() { command adb "$@" < /dev/null; }
+
+# --- CLI arg parsing ---
+
+SKIP_BUILD=false
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --skip-build)        SKIP_BUILD=true; shift ;;
+        --device-name)       DEVICE_NAME="$2"; shift 2 ;;
+        --idle-iters)        IDLE_ITERS="$2"; shift 2 ;;
+        --disc-iters)        DISC_ITERS="$2"; shift 2 ;;
+        --conn-iters)        CONN_ITERS="$2"; shift 2 ;;
+        --settle-time)       SETTLE_TIME="$2"; shift 2 ;;
+        --disc-action-wait)  DISC_ACTION_WAIT="$2"; shift 2 ;;
+        --conn-action-wait)  CONN_ACTION_WAIT="$2"; shift 2 ;;
+        *) echo "Unknown option: $1"; exit 1 ;;
+    esac
+done
+
+# --- Prompt for any parameter not already set via CLI ---
+
+prompt_param() {
+    local var_name=$1
+    local prompt_text=$2
+    local default_value=$3
+
+    if [[ -n "${!var_name:-}" ]]; then
+        return
+    fi
+
+    local input
+    read -rp "$prompt_text [$default_value]: " input
+    eval "$var_name=\"${input:-$default_value}\""
+}
 
 # --- Java 17 auto-detection ---
 
@@ -50,26 +89,28 @@ echo "  Memory Benchmark — $DEVICE (Android $ANDROID_VER)"
 echo "================================================"
 echo ""
 
-# --- Configuration prompts ---
+# --- Collect configuration (prompt only for values not set via CLI) ---
 
-read -rp "Chromecast device name (as shown in Vizbee device list): " DEVICE_NAME
+prompt_param DEVICE_NAME "Chromecast device name (as shown in Vizbee device list)" "CC with Google TV TV 2"
 echo ""
 
-read -rp "Iterations for IDLE scenario [30]: " IDLE_ITERS
-IDLE_ITERS="${IDLE_ITERS:-30}"
-read -rp "Iterations for DISCOVERY scenario [10]: " DISC_ITERS
-DISC_ITERS="${DISC_ITERS:-10}"
-read -rp "Iterations for CONNECTED scenario [10]: " CONN_ITERS
-CONN_ITERS="${CONN_ITERS:-10}"
+prompt_param IDLE_ITERS  "Iterations for IDLE scenario"      30
+prompt_param DISC_ITERS  "Iterations for DISCOVERY scenario"  10
+prompt_param CONN_ITERS  "Iterations for CONNECTED scenario"  10
 echo ""
 
-read -rp "Initial settling time after launch, seconds [60]: " SETTLE_TIME
-SETTLE_TIME="${SETTLE_TIME:-60}"
-read -rp "Wait time after cast icon click (discovery), seconds [10]: " DISC_ACTION_WAIT
-DISC_ACTION_WAIT="${DISC_ACTION_WAIT:-10}"
-read -rp "Wait time after casting starts (connected), seconds [15]: " CONN_ACTION_WAIT
-CONN_ACTION_WAIT="${CONN_ACTION_WAIT:-15}"
+prompt_param SETTLE_TIME      "Initial settling time after launch, seconds"            60
+prompt_param DISC_ACTION_WAIT "Wait time after cast icon click (discovery), seconds"   10
+prompt_param CONN_ACTION_WAIT "Wait time after casting starts (connected), seconds"    15
 echo ""
+
+# --- Estimate total time ---
+
+est_idle=$((IDLE_ITERS * (SETTLE_TIME + 2)))
+est_disc=$((DISC_ITERS * (SETTLE_TIME + DISC_ACTION_WAIT + 12)))
+est_conn=$((CONN_ITERS * (SETTLE_TIME + CONN_ACTION_WAIT + 12)))
+est_total=$((est_idle + est_disc + est_conn))
+est_min=$((est_total / 60))
 
 echo "--- Configuration ---"
 echo "  Device name:       $DEVICE_NAME"
@@ -78,25 +119,31 @@ echo "  Disc iterations:   $DISC_ITERS"
 echo "  Conn iterations:   $CONN_ITERS"
 echo "  Settle time:       ${SETTLE_TIME}s"
 echo "  Discovery wait:    ${DISC_ACTION_WAIT}s"
-echo "  Cast settle:      ${CONN_ACTION_WAIT}s"
+echo "  Cast settle:       ${CONN_ACTION_WAIT}s"
+echo "  Estimated time:    ~${est_min} min"
 echo "---------------------"
-echo ""
-read -rp "Press ENTER to start (builds & installs the app)..."
 echo ""
 
 # --- Build & Install ---
 
-echo "Building benchmark APK + test APK..."
-cd "$PROJECT_DIR"
-./gradlew app:clean app:assembleBenchmark app:assembleDebugAndroidTest -q
-echo "Installing app APK..."
-adb uninstall "$PKG" > /dev/null 2>&1 || true
-adb uninstall "${PKG}.test" > /dev/null 2>&1 || true
-adb install app/build/outputs/apk/benchmark/app-benchmark.apk
-echo "Installing test APK..."
-adb install app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
-echo "Installed."
-echo ""
+if [[ "$SKIP_BUILD" == true ]]; then
+    echo "Skipping build & install (--skip-build)."
+    echo ""
+else
+    read -rp "Press ENTER to start (builds & installs the app)..."
+    echo ""
+    echo "Building benchmark APK + test APK..."
+    cd "$PROJECT_DIR"
+    ./gradlew app:clean app:assembleBenchmark app:assembleDebugAndroidTest -q
+    echo "Installing app APK..."
+    adb uninstall "$PKG" > /dev/null 2>&1 || true
+    adb uninstall "${PKG}.test" > /dev/null 2>&1 || true
+    adb install app/build/outputs/apk/benchmark/app-benchmark.apk
+    echo "Installing test APK..."
+    adb install app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+    echo "Installed."
+    echo ""
+fi
 
 # --- Helpers ---
 
@@ -161,8 +208,6 @@ compute_stats() {
 }
 
 # Runs the instrumentation test to put the app in discovery/connected state.
-# The test stays alive (sleeping measureDuration) so the state is maintained.
-# For connected, the test cleans up the cast session before exiting.
 run_ui_automation() {
     local scenario=$1
     local action_wait_ms=$2
@@ -184,7 +229,6 @@ run_ui_automation() {
         ${PKG}.test/${TEST_RUNNER}" > /tmp/memtest_instrument.log 2>&1 &
     UI_AUTOMATION_PID=$!
 
-    # Wait for the test to signal "ready" or fail
     local waited=0
     local max_wait=$(( (SETTLE_TIME + action_wait_ms / 1000 + 90) ))
     while ((waited < max_wait)); do
