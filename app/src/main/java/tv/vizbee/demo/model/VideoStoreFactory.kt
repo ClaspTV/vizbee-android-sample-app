@@ -10,7 +10,7 @@ object VideoStoreFactory {
                 "Free HLS video",
                 "elephants",
                 false,
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/ElephantsDream.m3u8",
+                "https://d2zihajmogu5jn.cloudfront.net/elephantsdream/hls/ed_hd.m3u8",
                 "https://s3.amazonaws.com/vizbee/images/demoapp/elephants_dream.jpg",
                 "HLS"
             ),
