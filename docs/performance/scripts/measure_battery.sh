@@ -76,7 +76,7 @@ read -rp "Measurement duration, seconds [600]: " MEASURE_DURATION
 MEASURE_DURATION="${MEASURE_DURATION:-600}"
 read -rp "Wait time after cast icon click (discovery), seconds [10]: " DISC_ACTION_WAIT
 DISC_ACTION_WAIT="${DISC_ACTION_WAIT:-10}"
-read -rp "Wait time after device connection (connected), seconds [15]: " CONN_ACTION_WAIT
+read -rp "Wait time after casting starts (connected), seconds [15]: " CONN_ACTION_WAIT
 CONN_ACTION_WAIT="${CONN_ACTION_WAIT:-15}"
 echo ""
 
@@ -88,7 +88,7 @@ echo "  Conn iterations:     $CONN_ITERS"
 echo "  Settle time:         ${SETTLE_TIME}s"
 echo "  Measure duration:    ${MEASURE_DURATION}s ($(echo "scale=1; $MEASURE_DURATION / 60" | bc) min)"
 echo "  Discovery wait:      ${DISC_ACTION_WAIT}s"
-echo "  Connected wait:      ${CONN_ACTION_WAIT}s"
+echo "  Cast settle:        ${CONN_ACTION_WAIT}s"
 echo "  Results dir:         $TMPDIR_LOCAL"
 echo "---------------------"
 echo ""
@@ -139,10 +139,12 @@ countdown() {
 }
 
 # Runs the instrumentation test to put the app in discovery/connected state.
-# The test stays alive (sleeping) so the state is maintained.
+# The test stays alive (sleeping measureDuration) so the state is maintained.
+# For connected, the test cleans up the cast session before exiting.
 run_ui_automation() {
     local scenario=$1
     local action_wait_ms=$2
+    local measure_duration_ms=$3
 
     local settle_ms=$((SETTLE_TIME * 1000))
     local device_name_arg=""
@@ -154,13 +156,14 @@ run_ui_automation() {
         -e scenario $scenario \
         -e actionWait $action_wait_ms \
         -e settleTime $settle_ms \
+        -e measureDuration $measure_duration_ms \
         $device_name_arg \
         -e class ${TEST_CLASS}#putInState \
         ${PKG}.test/${TEST_RUNNER}" > /tmp/batterytest_instrument.log 2>&1 &
-    local INST_PID=$!
+    UI_AUTOMATION_PID=$!
 
     local waited=0
-    local max_wait=$(( (SETTLE_TIME + action_wait_ms / 1000 + 30) ))
+    local max_wait=$(( (SETTLE_TIME + action_wait_ms / 1000 + 90) ))
     while ((waited < max_wait)); do
         if grep -q "status=ready" /tmp/batterytest_instrument.log 2>/dev/null; then
             return 0
@@ -169,7 +172,7 @@ run_ui_automation() {
             echo ""
             echo "  ERROR: Instrumentation test failed:"
             cat /tmp/batterytest_instrument.log
-            kill "$INST_PID" 2>/dev/null || true
+            kill "$UI_AUTOMATION_PID" 2>/dev/null || true
             return 1
         fi
         sleep 1
@@ -177,7 +180,7 @@ run_ui_automation() {
     done
 
     echo "  ERROR: Timed out waiting for instrumentation test (${max_wait}s)"
-    kill "$INST_PID" 2>/dev/null || true
+    kill "$UI_AUTOMATION_PID" 2>/dev/null || true
     return 1
 }
 
@@ -342,8 +345,10 @@ run_scenario() {
         else
             # Instrumentation handles launch, settle, and UI actions
             local action_wait_ms=$((action_wait * 1000))
+            # Hold state for measurement duration + 10s buffer
+            local measure_duration_ms=$(( (MEASURE_DURATION + 10) * 1000 ))
             echo "  Running UI automation ($scenario, settle=${settle}s, action wait=${action_wait}s)..."
-            if ! run_ui_automation "$scenario" "$action_wait_ms"; then
+            if ! run_ui_automation "$scenario" "$action_wait_ms" "$measure_duration_ms"; then
                 echo "  SKIPPING iteration $i due to automation failure."
                 # Restore battery state before skipping
                 adb shell dumpsys battery reset > /dev/null 2>&1
@@ -411,7 +416,10 @@ run_scenario() {
         NS_MAH_VALUES+=("$non_screen_mah")
         NS_MAHHR_VALUES+=("$non_screen_mah_hr")
 
-        # Force-stop after measurement
+        # Wait for test to finish (includes cast cleanup for connected)
+        if [[ "$scenario" != "idle" ]]; then
+            wait "$UI_AUTOMATION_PID" 2>/dev/null || true
+        fi
         adb shell am force-stop "$PKG" 2>/dev/null || true
     done
 

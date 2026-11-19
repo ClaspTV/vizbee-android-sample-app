@@ -111,7 +111,7 @@ read -rp "Perfetto trace duration, seconds [60]: " TRACE_DURATION
 TRACE_DURATION="${TRACE_DURATION:-60}"
 read -rp "Wait time after cast icon click (discovery), seconds [10]: " DISC_ACTION_WAIT
 DISC_ACTION_WAIT="${DISC_ACTION_WAIT:-10}"
-read -rp "Wait time after device connection (connected), seconds [15]: " CONN_ACTION_WAIT
+read -rp "Wait time after casting starts (connected), seconds [15]: " CONN_ACTION_WAIT
 CONN_ACTION_WAIT="${CONN_ACTION_WAIT:-15}"
 echo ""
 
@@ -123,7 +123,7 @@ echo "  Conn iterations:   $CONN_ITERS"
 echo "  Settle time:       ${SETTLE_TIME}s"
 echo "  Trace duration:    ${TRACE_DURATION}s"
 echo "  Discovery wait:    ${DISC_ACTION_WAIT}s"
-echo "  Connected wait:    ${CONN_ACTION_WAIT}s"
+echo "  Cast settle:      ${CONN_ACTION_WAIT}s"
 echo "---------------------"
 echo ""
 read -rp "Press ENTER to start (builds & installs the app)..."
@@ -150,6 +150,9 @@ data_sources {
       ftrace_events: "sched/sched_waking"
       ftrace_events: "sched/sched_process_exit"
       ftrace_events: "sched/sched_process_free"
+      ftrace_events: "sched/sched_process_fork"
+      ftrace_events: "task/task_newtask"
+      ftrace_events: "task/task_rename"
       ftrace_events: "power/cpu_frequency"
       ftrace_events: "power/cpu_idle"
       ftrace_events: "power/suspend_resume"
@@ -163,6 +166,7 @@ data_sources {
     name: "linux.process_stats"
     process_stats_config {
       scan_all_processes_on_start: true
+      proc_stats_poll_ms: 10000
     }
   }
 }
@@ -202,6 +206,7 @@ countdown() {
 run_ui_automation() {
     local scenario=$1
     local action_wait_ms=$2
+    local measure_duration_ms=$3
 
     local settle_ms=$((SETTLE_TIME * 1000))
     local device_name_arg=""
@@ -213,13 +218,14 @@ run_ui_automation() {
         -e scenario $scenario \
         -e actionWait $action_wait_ms \
         -e settleTime $settle_ms \
+        -e measureDuration $measure_duration_ms \
         $device_name_arg \
         -e class ${TEST_CLASS}#putInState \
         ${PKG}.test/${TEST_RUNNER}" > /tmp/cputest_instrument.log 2>&1 &
-    local INST_PID=$!
+    UI_AUTOMATION_PID=$!
 
     local waited=0
-    local max_wait=$(( (SETTLE_TIME + action_wait_ms / 1000 + 30) ))
+    local max_wait=$(( (SETTLE_TIME + action_wait_ms / 1000 + 90) ))
     while ((waited < max_wait)); do
         if grep -q "status=ready" /tmp/cputest_instrument.log 2>/dev/null; then
             return 0
@@ -228,7 +234,7 @@ run_ui_automation() {
             echo ""
             echo "  ERROR: Instrumentation test failed:"
             cat /tmp/cputest_instrument.log
-            kill "$INST_PID" 2>/dev/null || true
+            kill "$UI_AUTOMATION_PID" 2>/dev/null || true
             return 1
         fi
         sleep 1
@@ -236,7 +242,7 @@ run_ui_automation() {
     done
 
     echo "  ERROR: Timed out waiting for instrumentation test (${max_wait}s)"
-    kill "$INST_PID" 2>/dev/null || true
+    kill "$UI_AUTOMATION_PID" 2>/dev/null || true
     return 1
 }
 
@@ -260,9 +266,10 @@ capture_and_analyze() {
     # Pull trace
     adb pull "$DEVICE_TRACE" "$trace_file" > /dev/null 2>&1
 
-    # Extract CPU usage % via trace_processor
-    # Uses trace_start()/trace_end() for wall-clock duration and handles
-    # incomplete slices (dur = -1) per Perfetto SQL best practices.
+    # Extract CPU usage % via trace_processor.
+    # Finds the app by its main thread name (always equals the package name on
+    # Android) which is more reliable than process.name — the latter can be NULL
+    # if linux.process_stats data is dropped from the ring buffer.
     local sql
     sql="SELECT ROUND(
       SUM(IIF(ss.dur = -1, trace_end() - ss.ts, ss.dur)) * 100.0
@@ -270,13 +277,16 @@ capture_and_analyze() {
     ) AS cpu_pct
     FROM sched_slice AS ss
     JOIN thread AS t USING(utid)
-    JOIN process AS p USING(upid)
-    WHERE p.name = '${PKG}';"
+    WHERE t.upid = (
+      SELECT t2.upid FROM thread AS t2
+      WHERE t2.name = '${PKG}' AND t2.is_main_thread = 1
+      LIMIT 1
+    );"
 
     local result
     result=$("$TRACE_PROCESSOR" query "$trace_file" "$sql" 2>/dev/null | tail -1 | tr -d '[:space:]"')
 
-    if [[ -z "$result" || "$result" == "NULL" ]]; then
+    if [[ -z "$result" || "$result" == "NULL" || "$result" == "[NULL]" ]]; then
         echo ""
         return 1
     fi
@@ -296,8 +306,11 @@ extract_thread_breakdown() {
         / (trace_end() - trace_start()), 4) AS cpu_pct
     FROM sched_slice AS ss
     JOIN thread AS t USING(utid)
-    JOIN process AS p USING(upid)
-    WHERE p.name = '${PKG}'
+    WHERE t.upid = (
+      SELECT t2.upid FROM thread AS t2
+      WHERE t2.name = '${PKG}' AND t2.is_main_thread = 1
+      LIMIT 1
+    )
     GROUP BY t.name
     ORDER BY total_ms DESC
     LIMIT 15;"
@@ -385,8 +398,10 @@ run_scenario() {
         else
             # Instrumentation handles launch, settle, and UI actions
             local action_wait_ms=$((action_wait * 1000))
+            # Hold state for trace duration + 10s buffer
+            local measure_duration_ms=$(( (TRACE_DURATION + 10) * 1000 ))
             echo "  Running UI automation ($scenario, settle=${settle}s, action wait=${action_wait}s)..."
-            if ! run_ui_automation "$scenario" "$action_wait_ms"; then
+            if ! run_ui_automation "$scenario" "$action_wait_ms" "$measure_duration_ms"; then
                 echo "  SKIPPING iteration $i due to automation failure."
                 echo ""
                 continue
@@ -408,7 +423,10 @@ run_scenario() {
         CPU_VALUES+=("$cpu_pct")
         LAST_TRACE="$trace_file"
 
-        # Force-stop after measurement
+        # Wait for test to finish (includes cast cleanup for connected)
+        if [[ "$scenario" != "idle" ]]; then
+            wait "$UI_AUTOMATION_PID" 2>/dev/null || true
+        fi
         adb shell am force-stop "$PKG" 2>/dev/null || true
     done
 
