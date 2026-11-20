@@ -94,9 +94,9 @@ echo ""
 prompt_param DEVICE_NAME "Chromecast device name (as shown in Vizbee device list)" "CC with Google TV TV 2"
 echo ""
 
-prompt_param IDLE_ITERS  "Iterations for IDLE scenario"      30
-prompt_param DISC_ITERS  "Iterations for DISCOVERY scenario"  10
-prompt_param CONN_ITERS  "Iterations for CONNECTED scenario"  10
+prompt_param IDLE_ITERS  "Iterations for IDLE scenario"      5
+prompt_param DISC_ITERS  "Iterations for DISCOVERY scenario"  5
+prompt_param CONN_ITERS  "Iterations for CONNECTED scenario"  5
 echo ""
 
 prompt_param SETTLE_TIME      "Initial settling time after launch, seconds"            60
