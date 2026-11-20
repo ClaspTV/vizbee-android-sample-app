@@ -72,7 +72,7 @@ RUN_MEMORY=false
 RUN_CPU=false
 RUN_BATTERY=false
 
-ask_yn "Run MEMORY benchmark? (~59 min with defaults)" "y" && RUN_MEMORY=true
+ask_yn "Run MEMORY benchmark? (~16 min with defaults)" "y" && RUN_MEMORY=true
 ask_yn "Run CPU benchmark? (~35 min with defaults)" "y"     && RUN_CPU=true
 ask_yn "Run BATTERY benchmark? (~102 min with defaults)" "y" && RUN_BATTERY=true
 echo ""
@@ -120,27 +120,27 @@ echo ""
 
 # --- Memory ---
 if [[ "$RUN_MEMORY" == true ]]; then
-    MEM_IDLE_ITERS=30
-    MEM_DISC_ITERS=10
-    MEM_CONN_ITERS=10
+    MEM_IDLE_ITERS=5
+    MEM_DISC_ITERS=5
+    MEM_CONN_ITERS=5
 
     if [[ "$IDLE_ONLY" == true ]]; then
         MEM_DISC_ITERS=0
         MEM_CONN_ITERS=0
-        echo "--- Memory configuration (defaults: idle=30, idle-only mode) ---"
+        echo "--- Memory configuration (defaults: idle=5, idle-only mode) ---"
         if ! ask_yn "  Use defaults?" "y"; then
-            read -rp "  Iterations for IDLE scenario [30]: " MEM_IDLE_ITERS
-            MEM_IDLE_ITERS="${MEM_IDLE_ITERS:-30}"
+            read -rp "  Iterations for IDLE scenario [5]: " MEM_IDLE_ITERS
+            MEM_IDLE_ITERS="${MEM_IDLE_ITERS:-5}"
         fi
     else
-        echo "--- Memory configuration (defaults: idle=30, disc=10, conn=10) ---"
+        echo "--- Memory configuration (defaults: idle=5, disc=5, conn=5) ---"
         if ! ask_yn "  Use defaults?" "y"; then
-            read -rp "  Iterations for IDLE scenario [30]: " MEM_IDLE_ITERS
-            MEM_IDLE_ITERS="${MEM_IDLE_ITERS:-30}"
-            read -rp "  Iterations for DISCOVERY scenario [10]: " MEM_DISC_ITERS
-            MEM_DISC_ITERS="${MEM_DISC_ITERS:-10}"
-            read -rp "  Iterations for CONNECTED scenario [10]: " MEM_CONN_ITERS
-            MEM_CONN_ITERS="${MEM_CONN_ITERS:-10}"
+            read -rp "  Iterations for IDLE scenario [5]: " MEM_IDLE_ITERS
+            MEM_IDLE_ITERS="${MEM_IDLE_ITERS:-5}"
+            read -rp "  Iterations for DISCOVERY scenario [5]: " MEM_DISC_ITERS
+            MEM_DISC_ITERS="${MEM_DISC_ITERS:-5}"
+            read -rp "  Iterations for CONNECTED scenario [5]: " MEM_CONN_ITERS
+            MEM_CONN_ITERS="${MEM_CONN_ITERS:-5}"
         fi
     fi
     echo ""
