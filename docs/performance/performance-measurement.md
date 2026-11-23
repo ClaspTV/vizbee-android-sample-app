@@ -110,16 +110,10 @@ Record **TOTAL PSS**, **Java Heap**, and **Native Heap**.
 
 ## CPU
 
-Capture a 60-second Perfetto trace at each state:
-
-```bash
-adb shell perfetto \
-  -o /data/misc/perfetto-traces/cpu.perfetto-trace \
-  -t 60s sched freq idle -a tv.vizbee.demo &
-```
-
-In Perfetto, look at the app's threads. SDK-owned threads:
-`ServiceHandler`, `GCScannerThread`, SSDP pool threads.
+Run `docs/performance/scripts/measure_cpu.sh` (or `measure_all.sh`). It reads the app's CPU time from
+`/proc/<pid>/stat` at the start and end of a 60-second window in each state, so it works on every Android version.
+CPU % is the app's CPU time divided by the window (100% is one core fully busy). It also prints the CPU time of each
+thread. SDK-owned threads: `ServiceHandler`, `GCScannerThread`, SSDP pool threads.
 
 ---
 

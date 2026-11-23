@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 #
 # Measures CPU usage (%) of the app with Google Cast SDK across idle,
-# discovery, and connected scenarios using Perfetto traces + trace_processor.
+# discovery, and connected scenarios from the kernel's per-process CPU counters (/proc),
+# on any Android version.
 #
 # Can run standalone (prompts user) or be called from measure_all_chromecast.sh
 # with all parameters pre-set via CLI args.
@@ -13,7 +14,6 @@
 #
 # Prerequisites:
 #   - Android device connected via USB with USB debugging enabled
-#   - trace_processor on PATH, or the android-profiler skill bundled binary
 #   - Java 17 for Gradle build
 
 set -euo pipefail
@@ -76,43 +76,12 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 
-# --- trace_processor detection ---
-
-TRACE_PROCESSOR="${TRACE_PROCESSOR:-}"
-SKILL_TP="${PROJECT_DIR}/.claude/skills/android-profiler/references/perfetto/bin/trace_processor"
-if [[ -z "$TRACE_PROCESSOR" ]]; then
-    if command -v trace_processor_shell &>/dev/null; then
-        TRACE_PROCESSOR="trace_processor_shell"
-    elif command -v trace_processor &>/dev/null; then
-        TRACE_PROCESSOR="trace_processor"
-    elif [[ -x "$SKILL_TP" ]]; then
-        chmod +x "$SKILL_TP"
-        TRACE_PROCESSOR="$SKILL_TP"
-    elif [[ -x "./trace_processor" ]]; then
-        TRACE_PROCESSOR="./trace_processor"
-    else
-        echo "ERROR: trace_processor not found."
-        echo ""
-        echo "Install it:"
-        echo "  curl -LO https://get.perfetto.dev/trace_processor"
-        echo "  chmod +x trace_processor"
-        echo "  sudo mv trace_processor /usr/local/bin/trace_processor"
-        echo ""
-        echo "Or set TRACE_PROCESSOR=/path/to/trace_processor"
-        exit 1
-    fi
-fi
-echo "Using trace processor: $TRACE_PROCESSOR"
-
 PKG="tv.vizbee.demo"
 ACTIVITY=".activity.MainActivity"
 TEST_CLASS="tv.vizbee.demo.ChromecastMemoryBenchmarkHelper"
 TEST_RUNNER="androidx.test.runner.AndroidJUnitRunner"
-DEVICE_TRACE="/data/misc/perfetto-traces/cpu_bench.perfetto-trace"
-DEVICE_CONFIG="/data/misc/perfetto-configs/cpu_bench.pbtxt"
 TMPDIR_LOCAL=$(mktemp -d "${TMPDIR:-/tmp}/cpu_bench_cc.XXXXXX")
 
-TRACE_CONFIG_FILE="${TMPDIR_LOCAL}/cpu_trace_config.pbtxt"
 
 # --- Preflight ---
 
@@ -139,7 +108,7 @@ prompt_param CONN_ITERS       "Iterations for CONNECTED scenario"  5
 echo ""
 
 prompt_param SETTLE_TIME      "Initial settling time after launch, seconds"            60
-prompt_param TRACE_DURATION   "Perfetto trace duration, seconds"                       60
+prompt_param TRACE_DURATION   "CPU measurement window, seconds"                       60
 prompt_param DISC_ACTION_WAIT "Wait time after cast icon click (discovery), seconds"   10
 prompt_param CONN_ACTION_WAIT "Wait time after casting starts (connected), seconds"    15
 echo ""
@@ -158,7 +127,7 @@ echo "  Idle iterations:   $IDLE_ITERS"
 echo "  Disc iterations:   $DISC_ITERS"
 echo "  Conn iterations:   $CONN_ITERS"
 echo "  Settle time:       ${SETTLE_TIME}s"
-echo "  Trace duration:    ${TRACE_DURATION}s"
+echo "  CPU window:        ${TRACE_DURATION}s"
 echo "  Discovery wait:    ${DISC_ACTION_WAIT}s"
 echo "  Cast settle:       ${CONN_ACTION_WAIT}s"
 echo "  Estimated time:    ~${est_min} min"
@@ -185,50 +154,6 @@ else
     echo "Installed."
     echo ""
 fi
-
-# --- Write Perfetto trace config ---
-
-generate_trace_config() {
-    cat > "$TRACE_CONFIG_FILE" <<PBTXT
-buffers {
-  size_kb: 32768
-  fill_policy: RING_BUFFER
-}
-duration_ms: $((TRACE_DURATION * 1000))
-
-data_sources {
-  config {
-    name: "linux.ftrace"
-    ftrace_config {
-      ftrace_events: "sched/sched_switch"
-      ftrace_events: "sched/sched_wakeup"
-      ftrace_events: "sched/sched_waking"
-      ftrace_events: "sched/sched_process_exit"
-      ftrace_events: "sched/sched_process_free"
-      ftrace_events: "sched/sched_process_fork"
-      ftrace_events: "task/task_newtask"
-      ftrace_events: "task/task_rename"
-      ftrace_events: "power/cpu_frequency"
-      ftrace_events: "power/cpu_idle"
-      ftrace_events: "power/suspend_resume"
-      atrace_apps: "$PKG"
-    }
-  }
-}
-
-data_sources {
-  config {
-    name: "linux.process_stats"
-    process_stats_config {
-      scan_all_processes_on_start: true
-      proc_stats_poll_ms: 10000
-    }
-  }
-}
-PBTXT
-}
-
-generate_trace_config
 
 # --- Helpers ---
 
@@ -285,68 +210,48 @@ run_ui_automation() {
     return 1
 }
 
-capture_and_analyze() {
-    local trace_file="$1"
-
-    adb push "$TRACE_CONFIG_FILE" "$DEVICE_CONFIG" > /dev/null 2>&1
-    adb shell perfetto \
-        -c "$DEVICE_CONFIG" --txt \
-        -o "$DEVICE_TRACE" \
-        --background > /dev/null 2>&1
-
-    countdown "$TRACE_DURATION" "Recording trace" >&2
-
-    sleep 2
-
-    adb pull "$DEVICE_TRACE" "$trace_file" > /dev/null 2>&1
-
-    local sql
-    sql="SELECT ROUND(
-      SUM(IIF(ss.dur = -1, trace_end() - ss.ts, ss.dur)) * 100.0
-      / (trace_end() - trace_start()), 4
-    ) AS cpu_pct
-    FROM sched_slice AS ss
-    JOIN thread AS t USING(utid)
-    WHERE t.upid = COALESCE(
-      (SELECT t2.upid FROM thread AS t2
-       WHERE t2.name = '${PKG}' AND t2.is_main_thread = 1 LIMIT 1),
-      (SELECT p.upid FROM process AS p
-       WHERE p.name = '${PKG}' LIMIT 1)
-    );"
-
-    local result
-    result=$("$TRACE_PROCESSOR" query "$trace_file" "$sql" 2>/dev/null | tail -1 | tr -d '[:space:]"')
-
-    if [[ -z "$result" || "$result" == "NULL" || "$result" == "[NULL]" ]]; then
-        echo ""
-        return 1
-    fi
-
-    echo "$result"
+# Prints the app's CPU counters: its pid, the uptime in seconds, the process's CPU ticks (all threads, including
+# threads that ended), then one line per live thread: tid, CPU ticks, name. Fields are read after the ")" that
+# ends the name, because thread names can contain spaces. A tick is 1/100 s on Android.
+proc_snapshot() {
+    adb shell "p=\$(pidof $PKG); [ -n \"\$p\" ] || exit 1; echo \"pid \$p\"; echo \"uptime \$(cut -d' ' -f1 /proc/uptime)\"; echo \"process \$(sed 's/^.*) //' /proc/\$p/stat | cut -d' ' -f12,13)\"; for t in /proc/\$p/task/*; do s=\$(sed 's/^.*) //' \$t/stat 2>/dev/null | cut -d' ' -f12,13) && [ -n \"\$s\" ] && echo \"thread \${t##*/} \$s \$(cat \$t/comm 2>/dev/null)\"; done" | tr -d '\r'
 }
 
+# Measures the app's CPU usage (%) over TRACE_DURATION seconds from the kernel's counters in /proc. 100% is one
+# core fully busy. Prints nothing if the app was not running or restarted during the window.
+capture_and_analyze() {
+    local sample_file="$1"
+
+    proc_snapshot > "$sample_file.before" || true
+    countdown "$TRACE_DURATION" "Measuring CPU" >&2
+    proc_snapshot > "$sample_file.after" || true
+
+    awk '
+        FNR == 1 { f++ }
+        $1 == "pid" { pid[f] = $2 }
+        $1 == "uptime" { up[f] = $2 }
+        $1 == "process" { ticks[f] = $2 + $3 }
+        END {
+            if (pid[1] == "" || pid[1] != pid[2] || up[2] <= up[1]) exit
+            printf "%.4f\n", (ticks[2] - ticks[1]) / (up[2] - up[1])
+        }' "$sample_file.before" "$sample_file.after"
+}
+
+# Per-thread CPU over the window, threads with the same name added together, busiest first
 extract_thread_breakdown() {
-    local trace_file="$1"
+    local sample_file="$1"
 
-    local sql
-    sql="SELECT
-      t.name AS thread_name,
-      ROUND(SUM(IIF(ss.dur = -1, trace_end() - ss.ts, ss.dur)) / 1e6, 1) AS total_ms,
-      ROUND(SUM(IIF(ss.dur = -1, trace_end() - ss.ts, ss.dur)) * 100.0
-        / (trace_end() - trace_start()), 4) AS cpu_pct
-    FROM sched_slice AS ss
-    JOIN thread AS t USING(utid)
-    WHERE t.upid = COALESCE(
-      (SELECT t2.upid FROM thread AS t2
-       WHERE t2.name = '${PKG}' AND t2.is_main_thread = 1 LIMIT 1),
-      (SELECT p.upid FROM process AS p
-       WHERE p.name = '${PKG}' LIMIT 1)
-    )
-    GROUP BY t.name
-    ORDER BY total_ms DESC
-    LIMIT 15;"
-
-    "$TRACE_PROCESSOR" query "$trace_file" "$sql" 2>/dev/null
+    printf "%10s %8s  %s\n" "total_ms" "cpu_pct" "thread_name"
+    awk '
+        FNR == 1 { f++ }
+        $1 == "uptime" { up[f] = $2 }
+        $1 == "thread" {
+            name = $5; for (i = 6; i <= NF; i++) name = name " " $i
+            if (f == 1) before[$2] = $3 + $4; else ms[name] += ($3 + $4 - before[$2]) * 10
+        }
+        END {
+            for (n in ms) if (ms[n] > 0) printf "%10.0f %8.4f  %s\n", ms[n], ms[n] / 10 / (up[2] - up[1]), n
+        }' "$sample_file.before" "$sample_file.after" | sort -rn | head -15
 }
 
 compute_cpu_stats() {
@@ -411,13 +316,13 @@ run_scenario() {
         adb shell am force-stop "$PKG" 2>/dev/null || true
         sleep 1
 
-        local trace_file="${TMPDIR_LOCAL}/${scenario}_${i}.perfetto-trace"
+        local trace_file="${TMPDIR_LOCAL}/${scenario}_${i}.cpu"
 
         if [[ "$scenario" == "idle" ]]; then
             adb shell am start-activity -W -S "$PKG/$ACTIVITY" > /dev/null 2>&1
             countdown "$settle" "Stabilizing"
 
-            echo "  Capturing Perfetto trace (${TRACE_DURATION}s)..."
+            echo "  Measuring CPU (${TRACE_DURATION}s)..."
             local cpu_pct
             cpu_pct=$(capture_and_analyze "$trace_file")
         else
@@ -429,7 +334,7 @@ run_scenario() {
                 echo ""
                 continue
             fi
-            echo "  State reached. Capturing Perfetto trace (${TRACE_DURATION}s)..."
+            echo "  State reached. Measuring CPU (${TRACE_DURATION}s)..."
             local cpu_pct
             cpu_pct=$(capture_and_analyze "$trace_file")
         fi
@@ -462,7 +367,7 @@ run_scenario() {
     echo "=== Results: $scenario ($count successful iterations) ==="
     compute_cpu_stats "CPU usage" "${CPU_VALUES[@]}"
 
-    if [[ -n "$LAST_TRACE" && -f "$LAST_TRACE" ]]; then
+    if [[ -n "$LAST_TRACE" && -f "$LAST_TRACE.after" ]]; then
         echo ""
         echo "  Per-thread breakdown (last iteration):"
         extract_thread_breakdown "$LAST_TRACE" | while IFS= read -r line; do
@@ -482,5 +387,5 @@ echo "================================================"
 echo "  All scenarios complete."
 echo "  Device: $DEVICE (Android $ANDROID_VER)"
 echo "  Branch: $(git -C "$PROJECT_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'unknown')"
-echo "  Traces saved in: $TMPDIR_LOCAL"
+echo "  CPU samples saved in: $TMPDIR_LOCAL"
 echo "================================================"
