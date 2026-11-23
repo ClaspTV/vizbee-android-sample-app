@@ -83,7 +83,7 @@ if [[ "$RUN_MEMORY" == false && "$RUN_CPU" == false && "$RUN_BATTERY" == false ]
 fi
 
 IDLE_ONLY=false
-ask_yn "Idle-only mode (no discovery/connected scenarios)?" "n" && IDLE_ONLY=true
+ask_yn "Idle-only mode (no discovery/connected scenarios)?" "y" && IDLE_ONLY=true
 echo ""
 
 # =============================================
@@ -184,29 +184,29 @@ if [[ "$RUN_BATTERY" == true ]]; then
     BAT_IDLE_ITERS=3
     BAT_DISC_ITERS=3
     BAT_CONN_ITERS=3
-    BAT_MEASURE_DURATION=600
+    BAT_MEASURE_DURATION=120
 
     if [[ "$IDLE_ONLY" == true ]]; then
         BAT_DISC_ITERS=0
         BAT_CONN_ITERS=0
-        echo "--- Battery configuration (defaults: idle=3, duration=600s / 10 min, idle-only mode) ---"
+        echo "--- Battery configuration (defaults: idle=3, duration=120s / 2 min, idle-only mode) ---"
         if ! ask_yn "  Use defaults?" "y"; then
             read -rp "  Iterations for IDLE scenario [3]: " BAT_IDLE_ITERS
             BAT_IDLE_ITERS="${BAT_IDLE_ITERS:-3}"
-            read -rp "  Measurement duration, seconds [600]: " BAT_MEASURE_DURATION
-            BAT_MEASURE_DURATION="${BAT_MEASURE_DURATION:-600}"
+            read -rp "  Measurement duration, seconds [120]: " BAT_MEASURE_DURATION
+            BAT_MEASURE_DURATION="${BAT_MEASURE_DURATION:-120}"
         fi
     else
-        echo "--- Battery configuration (defaults: idle=3, disc=3, conn=3, duration=600s / 10 min) ---"
+        echo "--- Battery configuration (defaults: idle=3, disc=0, conn=3, duration=120s / 2 min) ---"
         if ! ask_yn "  Use defaults?" "y"; then
             read -rp "  Iterations for IDLE scenario [3]: " BAT_IDLE_ITERS
             BAT_IDLE_ITERS="${BAT_IDLE_ITERS:-3}"
-            read -rp "  Iterations for DISCOVERY scenario [3]: " BAT_DISC_ITERS
-            BAT_DISC_ITERS="${BAT_DISC_ITERS:-3}"
+            read -rp "  Iterations for DISCOVERY scenario [0]: " BAT_DISC_ITERS
+            BAT_DISC_ITERS="${BAT_DISC_ITERS:-0}"
             read -rp "  Iterations for CONNECTED scenario [3]: " BAT_CONN_ITERS
             BAT_CONN_ITERS="${BAT_CONN_ITERS:-3}"
-            read -rp "  Measurement duration, seconds [600]: " BAT_MEASURE_DURATION
-            BAT_MEASURE_DURATION="${BAT_MEASURE_DURATION:-600}"
+            read -rp "  Measurement duration, seconds [120]: " BAT_MEASURE_DURATION
+            BAT_MEASURE_DURATION="${BAT_MEASURE_DURATION:-120}"
         fi
     fi
     echo ""
