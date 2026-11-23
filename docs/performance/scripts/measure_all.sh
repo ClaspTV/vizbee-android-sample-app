@@ -2,7 +2,12 @@
 #
 # Unified performance benchmark script.
 # Collects all configuration up front, builds once, then runs selected
-# metric scripts (memory, CPU, battery) back-to-back without user intervention.
+# metric scripts back-to-back without user intervention.
+#
+# Default configuration matches the iOS benchmark format:
+#   - App Startup (idle): Memory, CPU, Energy
+#   - Casting: Memory after 1st/10th session, CPU, Energy
+#   - No discovery scenario
 #
 # Usage: ./measure_all.sh
 
@@ -71,13 +76,15 @@ echo ""
 RUN_MEMORY=false
 RUN_CPU=false
 RUN_BATTERY=false
+RUN_CAST_SESSIONS=false
 
-ask_yn "Run MEMORY benchmark? (~16 min with defaults)" "y" && RUN_MEMORY=true
-ask_yn "Run CPU benchmark? (~35 min with defaults)" "y"     && RUN_CPU=true
-ask_yn "Run BATTERY benchmark? (~102 min with defaults)" "y" && RUN_BATTERY=true
+ask_yn "Run MEMORY benchmark?" "y"        && RUN_MEMORY=true
+ask_yn "Run CPU benchmark?" "y"           && RUN_CPU=true
+ask_yn "Run BATTERY benchmark?" "y"       && RUN_BATTERY=true
+ask_yn "Run CAST SESSIONS memory benchmark?" "y" && RUN_CAST_SESSIONS=true
 echo ""
 
-if [[ "$RUN_MEMORY" == false && "$RUN_CPU" == false && "$RUN_BATTERY" == false ]]; then
+if [[ "$RUN_MEMORY" == false && "$RUN_CPU" == false && "$RUN_BATTERY" == false && "$RUN_CAST_SESSIONS" == false ]]; then
     echo "No metrics selected. Exiting."
     exit 0
 fi
@@ -94,9 +101,6 @@ DEVICE_NAME="${DEVICE_NAME:-CC with Google TV TV 2}"
 read -rp "Initial settling time after launch, seconds [60]: " SETTLE_TIME
 SETTLE_TIME="${SETTLE_TIME:-60}"
 
-read -rp "Wait time after cast icon click (discovery), seconds [10]: " DISC_ACTION_WAIT
-DISC_ACTION_WAIT="${DISC_ACTION_WAIT:-10}"
-
 read -rp "Wait time after casting starts (connected), seconds [15]: " CONN_ACTION_WAIT
 CONN_ACTION_WAIT="${CONN_ACTION_WAIT:-15}"
 echo ""
@@ -105,37 +109,37 @@ echo ""
 # 3. Collect per-metric parameters
 # =============================================
 
-# --- Memory ---
+# --- Memory (idle + connected, no discovery by default) ---
 if [[ "$RUN_MEMORY" == true ]]; then
     MEM_IDLE_ITERS=5
-    MEM_DISC_ITERS=5
+    MEM_DISC_ITERS=0
     MEM_CONN_ITERS=5
 
-    echo "--- Memory configuration (defaults: idle=5, disc=5, conn=5) ---"
+    echo "--- Memory configuration (defaults: idle=5, disc=0, conn=5) ---"
     if ! ask_yn "  Use defaults?" "y"; then
         read -rp "  Iterations for IDLE scenario [5]: " MEM_IDLE_ITERS
         MEM_IDLE_ITERS="${MEM_IDLE_ITERS:-5}"
-        read -rp "  Iterations for DISCOVERY scenario [5]: " MEM_DISC_ITERS
-        MEM_DISC_ITERS="${MEM_DISC_ITERS:-5}"
+        read -rp "  Iterations for DISCOVERY scenario [0]: " MEM_DISC_ITERS
+        MEM_DISC_ITERS="${MEM_DISC_ITERS:-0}"
         read -rp "  Iterations for CONNECTED scenario [5]: " MEM_CONN_ITERS
         MEM_CONN_ITERS="${MEM_CONN_ITERS:-5}"
     fi
     echo ""
 fi
 
-# --- CPU ---
+# --- CPU (idle + connected, no discovery by default) ---
 if [[ "$RUN_CPU" == true ]]; then
     CPU_IDLE_ITERS=5
-    CPU_DISC_ITERS=5
+    CPU_DISC_ITERS=0
     CPU_CONN_ITERS=5
     CPU_TRACE_DURATION=60
 
-    echo "--- CPU configuration (defaults: idle=5, disc=5, conn=5, trace=60s) ---"
+    echo "--- CPU configuration (defaults: idle=5, disc=0, conn=5, trace=60s) ---"
     if ! ask_yn "  Use defaults?" "y"; then
         read -rp "  Iterations for IDLE scenario [5]: " CPU_IDLE_ITERS
         CPU_IDLE_ITERS="${CPU_IDLE_ITERS:-5}"
-        read -rp "  Iterations for DISCOVERY scenario [5]: " CPU_DISC_ITERS
-        CPU_DISC_ITERS="${CPU_DISC_ITERS:-5}"
+        read -rp "  Iterations for DISCOVERY scenario [0]: " CPU_DISC_ITERS
+        CPU_DISC_ITERS="${CPU_DISC_ITERS:-0}"
         read -rp "  Iterations for CONNECTED scenario [5]: " CPU_CONN_ITERS
         CPU_CONN_ITERS="${CPU_CONN_ITERS:-5}"
         read -rp "  Perfetto trace duration, seconds [60]: " CPU_TRACE_DURATION
@@ -144,23 +148,44 @@ if [[ "$RUN_CPU" == true ]]; then
     echo ""
 fi
 
-# --- Battery ---
+# --- Battery (idle + connected, no discovery by default, 2 min duration) ---
 if [[ "$RUN_BATTERY" == true ]]; then
     BAT_IDLE_ITERS=3
-    BAT_DISC_ITERS=3
+    BAT_DISC_ITERS=0
     BAT_CONN_ITERS=3
-    BAT_MEASURE_DURATION=600
+    BAT_MEASURE_DURATION=120
 
-    echo "--- Battery configuration (defaults: idle=3, disc=3, conn=3, duration=600s / 10 min) ---"
+    echo "--- Battery configuration (defaults: idle=3, disc=0, conn=3, duration=120s / 2 min) ---"
     if ! ask_yn "  Use defaults?" "y"; then
         read -rp "  Iterations for IDLE scenario [3]: " BAT_IDLE_ITERS
         BAT_IDLE_ITERS="${BAT_IDLE_ITERS:-3}"
-        read -rp "  Iterations for DISCOVERY scenario [3]: " BAT_DISC_ITERS
-        BAT_DISC_ITERS="${BAT_DISC_ITERS:-3}"
+        read -rp "  Iterations for DISCOVERY scenario [0]: " BAT_DISC_ITERS
+        BAT_DISC_ITERS="${BAT_DISC_ITERS:-0}"
         read -rp "  Iterations for CONNECTED scenario [3]: " BAT_CONN_ITERS
         BAT_CONN_ITERS="${BAT_CONN_ITERS:-3}"
-        read -rp "  Measurement duration, seconds [600]: " BAT_MEASURE_DURATION
-        BAT_MEASURE_DURATION="${BAT_MEASURE_DURATION:-600}"
+        read -rp "  Measurement duration, seconds [120]: " BAT_MEASURE_DURATION
+        BAT_MEASURE_DURATION="${BAT_MEASURE_DURATION:-120}"
+    fi
+    echo ""
+fi
+
+# --- Cast Sessions ---
+if [[ "$RUN_CAST_SESSIONS" == true ]]; then
+    CS_SESSIONS=10
+    CS_ITERS=3
+    CS_PLAY_TIME=30
+    CS_AFTER_TIME=45
+
+    echo "--- Cast Sessions configuration (defaults: sessions=10, iters=3, play=30s, after=45s) ---"
+    if ! ask_yn "  Use defaults?" "y"; then
+        read -rp "  Sessions per iteration [10]: " CS_SESSIONS
+        CS_SESSIONS="${CS_SESSIONS:-10}"
+        read -rp "  Iterations [3]: " CS_ITERS
+        CS_ITERS="${CS_ITERS:-3}"
+        read -rp "  Play time per session, seconds [30]: " CS_PLAY_TIME
+        CS_PLAY_TIME="${CS_PLAY_TIME:-30}"
+        read -rp "  Wait after disconnect, seconds [45]: " CS_AFTER_TIME
+        CS_AFTER_TIME="${CS_AFTER_TIME:-45}"
     fi
     echo ""
 fi
@@ -168,6 +193,8 @@ fi
 # =============================================
 # 4. Estimate total time & confirm
 # =============================================
+
+DISC_ACTION_WAIT=10  # kept for scripts that accept it, but 0 iters by default
 
 est_total=0
 
@@ -186,6 +213,11 @@ if [[ "$RUN_BATTERY" == true ]]; then
     est_total=$((est_total + est_bat))
 fi
 
+if [[ "$RUN_CAST_SESSIONS" == true ]]; then
+    est_cs=$(( CS_ITERS * (SETTLE_TIME + CS_SESSIONS * (CONN_ACTION_WAIT + CS_PLAY_TIME + CS_AFTER_TIME + 20)) ))
+    est_total=$((est_total + est_cs))
+fi
+
 est_min=$((est_total / 60))
 
 echo "================================================"
@@ -195,7 +227,6 @@ echo "  Device:            $DEVICE (Android $ANDROID_VER)"
 echo "  Branch:            $BRANCH"
 echo "  Device name:       $DEVICE_NAME"
 echo "  Settle time:       ${SETTLE_TIME}s"
-echo "  Discovery wait:    ${DISC_ACTION_WAIT}s"
 echo "  Cast settle:       ${CONN_ACTION_WAIT}s"
 echo ""
 if [[ "$RUN_MEMORY" == true ]]; then
@@ -206,6 +237,9 @@ if [[ "$RUN_CPU" == true ]]; then
 fi
 if [[ "$RUN_BATTERY" == true ]]; then
     echo "  Battery: idle=${BAT_IDLE_ITERS} disc=${BAT_DISC_ITERS} conn=${BAT_CONN_ITERS}  duration=${BAT_MEASURE_DURATION}s"
+fi
+if [[ "$RUN_CAST_SESSIONS" == true ]]; then
+    echo "  Cast Sessions: ${CS_SESSIONS} sessions × ${CS_ITERS} iters  play=${CS_PLAY_TIME}s after=${CS_AFTER_TIME}s"
 fi
 echo ""
 echo "  Estimated total time: ~${est_min} min"
@@ -295,6 +329,26 @@ if [[ "$RUN_BATTERY" == true ]]; then
         --conn-action-wait "$CONN_ACTION_WAIT"; then
         echo "  WARNING: Battery benchmark exited with errors."
         FAILED_METRICS+=("battery")
+    fi
+fi
+
+if [[ "$RUN_CAST_SESSIONS" == true ]]; then
+    echo ""
+    echo "############################################"
+    echo "#  Starting: CAST SESSIONS memory benchmark"
+    echo "############################################"
+    echo ""
+    if ! bash "$SCRIPT_DIR/measure_cast_sessions.sh" \
+        --skip-build \
+        --device-name "$DEVICE_NAME" \
+        --sessions "$CS_SESSIONS" \
+        --iters "$CS_ITERS" \
+        --settle-time "$SETTLE_TIME" \
+        --action-wait "$CONN_ACTION_WAIT" \
+        --play-time "$CS_PLAY_TIME" \
+        --after-time "$CS_AFTER_TIME"; then
+        echo "  WARNING: Cast sessions benchmark exited with errors."
+        FAILED_METRICS+=("cast-sessions")
     fi
 fi
 
