@@ -169,23 +169,20 @@ if [[ "$RUN_BATTERY" == true ]]; then
     echo ""
 fi
 
-# --- Cast Sessions ---
+# --- Cast Sessions (single run, matches iOS methodology) ---
 if [[ "$RUN_CAST_SESSIONS" == true ]]; then
     CS_SESSIONS=10
-    CS_ITERS=3
     CS_PLAY_TIME=30
-    CS_AFTER_TIME=45
+    CS_AFTER_TIME=30
 
-    echo "--- Cast Sessions configuration (defaults: sessions=10, iters=3, play=30s, after=45s) ---"
+    echo "--- Cast Sessions configuration (defaults: sessions=10, play=30s, after=30s) ---"
     if ! ask_yn "  Use defaults?" "y"; then
-        read -rp "  Sessions per iteration [10]: " CS_SESSIONS
+        read -rp "  Number of sessions [10]: " CS_SESSIONS
         CS_SESSIONS="${CS_SESSIONS:-10}"
-        read -rp "  Iterations [3]: " CS_ITERS
-        CS_ITERS="${CS_ITERS:-3}"
         read -rp "  Play time per session, seconds [30]: " CS_PLAY_TIME
         CS_PLAY_TIME="${CS_PLAY_TIME:-30}"
-        read -rp "  Wait after disconnect, seconds [45]: " CS_AFTER_TIME
-        CS_AFTER_TIME="${CS_AFTER_TIME:-45}"
+        read -rp "  Wait after disconnect, seconds [30]: " CS_AFTER_TIME
+        CS_AFTER_TIME="${CS_AFTER_TIME:-30}"
     fi
     echo ""
 fi
@@ -214,7 +211,7 @@ if [[ "$RUN_BATTERY" == true ]]; then
 fi
 
 if [[ "$RUN_CAST_SESSIONS" == true ]]; then
-    est_cs=$(( CS_ITERS * (SETTLE_TIME + CS_SESSIONS * (CONN_ACTION_WAIT + CS_PLAY_TIME + CS_AFTER_TIME + 20)) ))
+    est_cs=$(( SETTLE_TIME + CS_SESSIONS * (CONN_ACTION_WAIT + CS_PLAY_TIME + CS_AFTER_TIME + 20) ))
     est_total=$((est_total + est_cs))
 fi
 
@@ -239,7 +236,7 @@ if [[ "$RUN_BATTERY" == true ]]; then
     echo "  Battery: idle=${BAT_IDLE_ITERS} disc=${BAT_DISC_ITERS} conn=${BAT_CONN_ITERS}  duration=${BAT_MEASURE_DURATION}s"
 fi
 if [[ "$RUN_CAST_SESSIONS" == true ]]; then
-    echo "  Cast Sessions: ${CS_SESSIONS} sessions × ${CS_ITERS} iters  play=${CS_PLAY_TIME}s after=${CS_AFTER_TIME}s"
+    echo "  Cast Sessions: ${CS_SESSIONS} sessions  play=${CS_PLAY_TIME}s after=${CS_AFTER_TIME}s"
 fi
 echo ""
 echo "  Estimated total time: ~${est_min} min"
@@ -342,7 +339,6 @@ if [[ "$RUN_CAST_SESSIONS" == true ]]; then
         --skip-build \
         --device-name "$DEVICE_NAME" \
         --sessions "$CS_SESSIONS" \
-        --iters "$CS_ITERS" \
         --settle-time "$SETTLE_TIME" \
         --action-wait "$CONN_ACTION_WAIT" \
         --play-time "$CS_PLAY_TIME" \
