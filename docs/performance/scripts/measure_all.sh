@@ -160,7 +160,7 @@ if [[ "$RUN_CPU" == true ]]; then
         if ! ask_yn "  Use defaults?" "y"; then
             read -rp "  Iterations for IDLE scenario [5]: " CPU_IDLE_ITERS
             CPU_IDLE_ITERS="${CPU_IDLE_ITERS:-5}"
-            read -rp "  Perfetto trace duration, seconds [60]: " CPU_TRACE_DURATION
+            read -rp "  CPU measurement window, seconds [60]: " CPU_TRACE_DURATION
             CPU_TRACE_DURATION="${CPU_TRACE_DURATION:-60}"
         fi
     else
@@ -172,7 +172,7 @@ if [[ "$RUN_CPU" == true ]]; then
             CPU_DISC_ITERS="${CPU_DISC_ITERS:-5}"
             read -rp "  Iterations for CONNECTED scenario [5]: " CPU_CONN_ITERS
             CPU_CONN_ITERS="${CPU_CONN_ITERS:-5}"
-            read -rp "  Perfetto trace duration, seconds [60]: " CPU_TRACE_DURATION
+            read -rp "  CPU measurement window, seconds [60]: " CPU_TRACE_DURATION
             CPU_TRACE_DURATION="${CPU_TRACE_DURATION:-60}"
         fi
     fi
